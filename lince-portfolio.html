@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lince — Automatización para negocios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F7F5F0;
+    --ink: #1B2B23;
+    --moss: #3D5A45;
+    --rust: #C9622E;
+    --card: #EFEAE0;
+    --sage: #6E8579;
+    --line: rgba(27,43,35,0.12);
+    --line-strong: rgba(27,43,35,0.22);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .mono{
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .wrap{
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 44px;
+  }
+
+  /* DECORATIVE LINE PATTERN (echoes the technical mountain linework) */
+  .band{
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--bg);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(61,90,69,0.07) 0px,
+      rgba(61,90,69,0.07) 1px,
+      transparent 1px,
+      transparent 9px
+    );
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .band::after{
+    /* soft fade on the edges so the lines don't feel like a hard block */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%);
+  }
+  .band-tall{ height: 88px; }
+
+  /* HEADER */
+  header{
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-size: 21px;
+    font-weight: 600;
+  }
+  .logo-mark{
+    width: 30px;
+    height: 30px;
+    flex-shrink:0;
+  }
+  nav a{
+    color: var(--moss);
+    text-decoration:none;
+    font-size: 15px;
+    margin-left: 28px;
+    transition: color 0.15s;
+  }
+  nav a:hover{ color: var(--rust); }
+
+  /* HERO */
+  .hero{
+    position: relative;
+    padding: 80px 0 64px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .hero-copy{
+    position: relative;
+    z-index: 2;
+  }
+  .hero-art{
+    position: relative;
+    z-index: 1;
+    margin-right: calc(50% - 50vw); /* let image bleed to the right edge */
+  }
+  .hero-art img{
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    animation: lynxIn 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+  }
+  @keyframes lynxIn{
+    from{ opacity: 0; transform: scale(1.04); }
+    to{ opacity: 1; transform: scale(1); }
+  }
+  @media (max-width: 860px){
+    .hero-grid{ grid-template-columns: 1fr; gap: 8px; }
+    .hero-art{
+      margin: 0 calc(50% - 50vw);
+      order: -1;
+      opacity: 0.92;
+    }
+    .hero-copy{ margin-top: -8px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-art img{ opacity:1; animation:none; }
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 18px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--rust);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%, 100%{ opacity:1; transform: scale(1); }
+    50%{ opacity:0.4; transform: scale(0.8); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .eyebrow .dot{ animation: none; }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal{
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.is-visible{
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+
+  /* HERO ENTRANCE */
+  .hero .eyebrow, .hero h1, .hero p, .hero-foot{
+    opacity: 0;
+    animation: heroIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero .eyebrow{ animation-delay: 0.05s; }
+  .hero h1{ animation-delay: 0.15s; }
+  .hero p{ animation-delay: 0.38s; }
+  .hero-foot{ animation-delay: 0.55s; }
+  @keyframes heroIn{
+    from{ opacity: 0; transform: translateY(14px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero .eyebrow, .hero h1, .hero p, .hero-foot{ opacity:1; animation:none; }
+  }
+  .hero h1{
+    font-size: clamp(34px, 4.6vw, 52px);
+    line-height: 1.08;
+    margin-bottom: 24px;
+  }
+  .hero h1 em{
+    font-style: italic;
+    color: var(--moss);
+  }
+  .hero p{
+    font-size: 19px;
+    color: var(--sage);
+    max-width: 540px;
+  }
+  .hero-foot{
+    margin-top: 40px;
+    display:flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .btn{
+    font-family:'Source Sans 3', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 13px 24px;
+    border-radius: 7px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .btn:hover{ transform: translateY(-1px); }
+  .btn-ghost{
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+  }
+
+  /* SECTION LABELS */
+  .section{
+    padding: 72px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap: 24px;
+    margin-bottom: 48px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size: clamp(26px, 4vw, 34px);
+  }
+  .section-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--sage);
+    letter-spacing: 0.08em;
+  }
+  .section-intro{
+    color: var(--sage);
+    max-width: 720px;
+    font-size: 16.5px;
+  }
+
+  /* CASE STUDIES */
+  .case{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    overflow:hidden;
+    margin-bottom: 28px;
+    background: var(--bg);
+    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease;
+  }
+  .case:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px -22px rgba(27,43,35,0.35);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .case:hover{ transform:none; }
+  }
+  .case:last-child{ margin-bottom: 0; }
+  .case-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+  }
+  @media (max-width: 760px){
+    .case-grid{ grid-template-columns: 1fr; }
+  }
+  .case-info{
+    padding: 36px;
+    border-right: 1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+  }
+  @media (max-width: 760px){
+    .case-info{ border-right:none; border-bottom: 1px solid var(--line); }
+  }
+  .case-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moss);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 4px 10px;
+    display:inline-block;
+    width: fit-content;
+    margin-bottom: 16px;
+  }
+  .case-info h3{
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+  .case-pain{
+    color: var(--sage);
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+  .case-pain strong{
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .case-hook{
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    border-left: 2px solid var(--rust);
+    padding-left: 14px;
+    margin-bottom: 22px;
+  }
+  .case-try{
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 1.2;
+    color: var(--rust);
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .case-try svg{
+    flex-shrink: 0;
+    animation: nudge 1.6s ease-in-out infinite;
+  }
+  @keyframes nudge{
+    0%, 100%{ transform: translateX(0); }
+    50%{ transform: translateX(5px); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .case-try svg{ animation: none; }
+  }
+  @media (max-width: 760px){
+    .case-try{ font-size: 21px; }
+  }
+  .case-result{
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .case-result svg{ flex-shrink: 0; }
+  .case-result strong{
+    font-weight: 600;
+    color: var(--moss);
+  }
+
+  /* TICKET / RECEIPT VISUAL */
+  .case-receipt{
+    background: var(--card);
+    padding: 36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .receipt{
+    background: var(--bg);
+    width: 100%;
+    max-width: 320px;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 var(--line-strong), 0 14px 32px -18px rgba(27,43,35,0.35);
+    position: relative;
+  }
+  .receipt::before, .receipt::after{
+    content:'';
+    position:absolute;
+    left:0; right:0;
+    height: 10px;
+    background:
+      linear-gradient(135deg, var(--bg) 50%, transparent 50%) 0 0/10px 10px repeat-x,
+      linear-gradient(-135deg, var(--bg) 50%, transparent 50%) 0 0/10px 10px repeat-x;
+  }
+  .receipt::before{ top: -9px; background-color: var(--card); }
+  .receipt::after{ bottom: -9px; transform: rotate(180deg); background-color: var(--card); }
+  .receipt-inner{
+    padding: 26px 22px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+  .receipt-title{
+    text-align:center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .receipt-sub{
+    text-align:center;
+    color: var(--sage);
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .receipt-divider{
+    border-top: 1px dashed var(--line-strong);
+    margin: 14px 0;
+  }
+  .receipt-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom: 7px;
+    gap: 12px;
+  }
+  .receipt-row span:first-child{
+    color: var(--sage);
+  }
+  .receipt-row span:last-child{
+    text-align:right;
+  }
+  .receipt-row.total{
+    font-weight: 600;
+    font-size: 13.5px;
+    margin-top: 4px;
+  }
+  .receipt-row.total span:last-child{
+    color: var(--rust);
+  }
+  .receipt-badge{
+    display:inline-block;
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(61,90,69,0.12);
+    color: var(--moss);
+  }
+  .receipt-badge.warn{
+    background: rgba(201,98,46,0.14);
+    color: var(--rust);
+  }
+
+  /* LIVE REVIEW MONITOR (animated demo) */
+  .live-card{
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 320px;
+    overflow: hidden;
+  }
+  .live-card-header{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+  }
+  .live-card-header .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--rust);
+    animation: pulse 2.4s ease-in-out infinite;
+    flex-shrink:0;
+  }
+  .live-stage{
+    position: relative;
+    height: 196px;
+  }
+  .live-frame{
+    position: absolute;
+    inset: 0;
+    padding: 18px 18px;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    opacity: 0;
+    animation: frameCycle 16s infinite;
+  }
+  .live-frame:nth-child(1){ animation-delay: 0s; }
+  .live-frame:nth-child(2){ animation-delay: 4s; }
+  .live-frame:nth-child(3){ animation-delay: 8s; }
+  .live-frame:nth-child(4){ animation-delay: 12s; }
+  @keyframes frameCycle{
+    0%{ opacity:0; transform: translateY(8px); }
+    3%{ opacity:1; transform: translateY(0); }
+    22%{ opacity:1; transform: translateY(0); }
+    27%{ opacity:0; transform: translateY(-8px); }
+    100%{ opacity:0; }
+  }
+  .live-frame-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+  }
+  .live-stars{
+    font-size: 16px;
+    color: var(--rust);
+    letter-spacing: 2px;
+  }
+  .live-quote, .live-response{
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .live-meta{
+    font-size: 12.5px;
+    color: var(--sage);
+    margin-top: auto;
+  }
+  .live-thinking{
+    display:flex;
+    gap: 5px;
+    align-items:center;
+    height: 8px;
+  }
+  .live-thinking span{
+    width: 6px; height: 6px; border-radius:50%;
+    background: var(--sage);
+    animation: thinkBounce 1.1s ease-in-out infinite;
+  }
+  .live-thinking span:nth-child(2){ animation-delay: 0.15s; }
+  .live-thinking span:nth-child(3){ animation-delay: 0.3s; }
+  @keyframes thinkBounce{
+    0%, 100%{ opacity: 0.3; transform: translateY(0); }
+    50%{ opacity: 1; transform: translateY(-3px); }
+  }
+  .live-tags{
+    display:flex;
+    gap: 8px;
+    flex-wrap:wrap;
+  }
+  .live-check{
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--moss);
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .live-check svg{ flex-shrink:0; }
+  .live-dots{
+    display:flex;
+    gap: 6px;
+    padding: 0 18px 16px;
+  }
+  .live-dots span{
+    height: 3px;
+    flex: 1;
+    border-radius: 2px;
+    background: var(--line-strong);
+    animation: dotCycle 16s infinite;
+  }
+  .live-dots span:nth-child(1){ animation-delay: 0s; }
+  .live-dots span:nth-child(2){ animation-delay: 4s; }
+  .live-dots span:nth-child(3){ animation-delay: 8s; }
+  .live-dots span:nth-child(4){ animation-delay: 12s; }
+  @keyframes dotCycle{
+    0%, 100%{ background: var(--line-strong); }
+    3%, 22%{ background: var(--rust); }
+    27%{ background: var(--line-strong); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .live-frame, .live-dots span, .live-thinking span, .live-card-header .dot{ animation: none; }
+    .live-frame:first-child{ opacity:1; position: static; }
+    .live-frame:not(:first-child){ display:none; }
+  }
+
+  /* INTERACTIVE WHATSAPP CHAT */
+  .wa{
+    width: 100%;
+    max-width: 330px;
+    background: #ECE5DD;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 32px -20px rgba(27,43,35,0.45);
+    display: flex;
+    flex-direction: column;
+    height: 460px;
+  }
+  .wa-header{
+    background: #1B2B23;
+    color: #fff;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .wa-avatar{
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--rust);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .wa-name{
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .wa-status{
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+  }
+  .wa-body{
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-image: linear-gradient(rgba(236,229,221,0.6), rgba(236,229,221,0.6));
+    scroll-behavior: smooth;
+  }
+  .wa-msg{
+    max-width: 82%;
+    padding: 7px 11px;
+    border-radius: 9px;
+    font-size: 13.5px;
+    line-height: 1.42;
+    font-family: 'Source Sans 3', sans-serif;
+    position: relative;
+    animation: waPop 0.32s cubic-bezier(0.16,1,0.3,1);
+    white-space: pre-line;
+  }
+  @keyframes waPop{
+    from{ opacity: 0; transform: translateY(6px) scale(0.98); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .wa-msg.bot{
+    align-self: flex-start;
+    background: #fff;
+    color: var(--ink);
+    border-top-left-radius: 2px;
+  }
+  .wa-msg.user{
+    align-self: flex-end;
+    background: #DCF8C6;
+    color: #102a13;
+    border-top-right-radius: 2px;
+  }
+  .wa-time{
+    display: block;
+    font-size: 9.5px;
+    color: rgba(27,43,35,0.4);
+    text-align: right;
+    margin-top: 3px;
+  }
+  .wa-typing{
+    align-self: flex-start;
+    background: #fff;
+    padding: 9px 13px;
+    border-radius: 9px;
+    border-top-left-radius: 2px;
+    display: flex;
+    gap: 4px;
+  }
+  .wa-typing span{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--sage);
+    animation: thinkBounce 1.1s ease-in-out infinite;
+  }
+  .wa-typing span:nth-child(2){ animation-delay: 0.15s; }
+  .wa-typing span:nth-child(3){ animation-delay: 0.3s; }
+  .wa-options{
+    flex-shrink: 0;
+    padding: 10px 12px;
+    background: #ECE5DD;
+    border-top: 1px solid rgba(27,43,35,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .wa-opt{
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    padding: 9px 13px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.12s, border-color 0.12s, background 0.12s;
+    animation: waPop 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .wa-opt:hover{
+    border-color: var(--rust);
+    background: #fff7f2;
+    transform: translateY(-1px);
+  }
+  .wa-opt:disabled{
+    opacity: 0.5;
+    cursor: default;
+  }
+  .wa-restart{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--moss);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 9px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .wa-restart:hover{ color: var(--rust); }
+  .wa-confirm{
+    align-self: stretch;
+    background: #fff;
+    border: 1px solid var(--moss);
+    border-radius: 9px;
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    animation: waPop 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .wa-confirm-head{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 500;
+    color: var(--moss);
+    margin-bottom: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 11px;
+  }
+  .wa-confirm-row{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 5px;
+  }
+  .wa-confirm-row span:first-child{ color: var(--sage); }
+  .wa-confirm-row span:last-child{ text-align: right; }
+  .wa-input-row{
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    animation: waPop 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .wa-input-row input{
+    flex: 1;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    padding: 9px 13px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .wa-input-row input:focus{ border-color: var(--rust); }
+  .wa-send{
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--moss);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.12s, background 0.12s;
+  }
+  .wa-send:hover{ background: var(--rust); transform: scale(1.05); }
+  .wa-send:disabled{ opacity: 0.4; cursor: default; transform: none; }
+
+  /* STATS STRIP */
+  .stats{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    overflow:hidden;
+    margin-top: 48px;
+  }
+  @media (max-width: 600px){
+    .stats{ grid-template-columns: 1fr; }
+  }
+  .stat{
+    background: var(--bg);
+    padding: 28px;
+  }
+  .stat-num{
+    font-family:'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 500;
+    color: var(--moss);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label{
+    font-size: 14px;
+    color: var(--sage);
+  }
+
+  /* PROCESS */
+  .process-list{
+    display:flex;
+    flex-direction:column;
+  }
+  .process-item{
+    display:grid;
+    grid-template-columns: 64px 1fr;
+    gap: 20px;
+    padding: 26px 0;
+    border-top: 1px solid var(--line);
+  }
+  .process-item:first-child{ border-top:none; padding-top:0; }
+  .process-week{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--rust);
+    padding-top: 4px;
+  }
+  .process-item h3{
+    font-size: 19px;
+    margin-bottom: 6px;
+  }
+  .process-item p{
+    color: var(--sage);
+    font-size: 15.5px;
+    max-width: 680px;
+  }
+
+  /* CONTACT */
+  .contact{
+    padding: 88px 0;
+  }
+  .contact-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
+    align-items:start;
+  }
+  @media (max-width: 760px){
+    .contact-grid{ grid-template-columns: 1fr; gap: 32px; }
+  }
+  .contact h2{
+    font-size: clamp(28px, 4.5vw, 40px);
+    margin-bottom: 18px;
+  }
+  .contact p{
+    color: var(--sage);
+    max-width: 460px;
+  }
+  .contact-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .contact-card-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moss);
+    margin-bottom: 16px;
+  }
+  .contact-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap: 14px;
+  }
+  .contact-list li{
+    display:flex;
+    justify-content:space-between;
+    font-size: 15px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+  }
+  .contact-list li:last-child{ border-bottom:none; padding-bottom:0; }
+  .contact-list span:first-child{ color: var(--sage); }
+
+  footer{
+    padding: 32px 0 48px;
+    text-align:center;
+    color: var(--sage);
+    font-size: 13.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lince">
+        <path d="M20 4 L34 13 L34 27 L20 36 L6 27 L6 13 Z" stroke="#1B2B23" stroke-width="1.6" fill="none"/>
+        <path d="M14 17 L20 23 L26 17" stroke="#C9622E" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="14" cy="14" r="1.6" fill="#1B2B23"/>
+        <circle cx="26" cy="14" r="1.6" fill="#1B2B23"/>
+      </svg>
+      Lince
+    </div>
+    <nav>
+      <a href="#casos">Casos</a>
+      <a href="#proceso">Cómo trabajamos</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="dot"></span>Automatización para negocios de Rosario</div>
+        <h1>Tu negocio pierde plata en lugares <em>que no se ven</em>. Nosotros los encontramos.</h1>
+        <p>Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio responda solo, sin perder el control de lo que pasa.</p>
+        <div class="hero-foot">
+          <a class="btn" href="#casos">Ver casos en funcionamiento</a>
+          <a class="btn btn-ghost" href="#contacto">Contar mi caso</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="lince-faded.png" alt="Un lince observando un valle desde una roca, atento a todo el paisaje" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band band-tall" aria-hidden="true"></div>
+
+<section class="section" id="casos">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Tres formas en que esto ya está funcionando</h2>
+      <div class="section-num mono">003 casos · datos simulados</div>
+    </div>
+    <p class="section-intro">Tres situaciones que cualquier negocio reconoce, con el sistema funcionando de verdad. Probá el primero vos mismo — respondé como si fueras el cliente y mirá lo que pasa.</p>
+
+    <div class="case reveal">
+      <div class="case-grid">
+        <div class="case-info">
+          <span class="case-tag">Atención al cliente</span>
+          <h3>El WhatsApp que nunca duerme</h3>
+          <p class="case-hook">¿Cuántos clientes se fueron a otro lado mientras tu teléfono sonaba sin parar?</p>
+          <p class="case-pain">Un restaurante recibe entre 20 y 40 mensajes por día con las mismas preguntas. Mientras alguien cocina o atiende mesas, esos mensajes se acumulan — y algunos clientes se van a otro lado antes de recibir respuesta.</p>
+          <p class="case-try"><span>Probalo vos mismo</span><svg width="26" height="20" viewBox="0 0 26 20" fill="none"><path d="M2 10 H22 M16 4 L22 10 L16 16" stroke="#C9622E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+        </div>
+        <div class="case-receipt">
+          <div class="wa" id="wa-demo">
+            <div class="wa-header">
+              <div class="wa-avatar">
+                <svg width="18" height="18" viewBox="0 0 40 40" fill="none"><path d="M20 5 L33 13 L33 27 L20 35 L7 27 L7 13 Z" stroke="#fff" stroke-width="2" fill="none"/><path d="M14 18 L20 23 L26 18" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="wa-name">Parrilla El Fogón</div>
+                <div class="wa-status" id="wa-status">en línea</div>
+              </div>
+            </div>
+            <div class="wa-body" id="wa-body"></div>
+            <div class="wa-options" id="wa-options"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case reveal">
+      <div class="case-grid">
+        <div class="case-info">
+          <span class="case-tag">Reputación</span>
+          <h3>La reseña de una estrella que nadie vio</h3>
+          <p class="case-hook">¿Cuándo fue la última vez que miraste lo que dice Google de tu negocio?</p>
+          <p class="case-pain">Una peluquería tiene buena reputación en Instagram pero nunca revisa Google Maps. Una reseña negativa quedó sin respuesta durante tres semanas — visible para cada persona que buscó el negocio antes de decidir si entrar.</p>
+          <div class="case-result">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5"/><path d="M6 10.5 L9 13.5 L14 7" stroke="#3D5A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Ninguna reseña queda sin respuesta. <strong>Te enterás en minutos, no en semanas.</strong></span>
+          </div>
+        </div>
+        <div class="case-receipt">
+          <div class="live-card">
+            <div class="live-card-header"><span class="dot"></span>Monitor en vivo · Estudio Marrón</div>
+            <div class="live-stage">
+              <div class="live-frame">
+                <div class="live-frame-label">Reseña detectada · Google Maps</div>
+                <div class="live-stars">★☆☆☆☆</div>
+                <div class="live-quote">"Esperé 40 minutos pasado mi turno y nadie me avisó nada. Una falta de respeto."</div>
+                <div class="live-meta">hace 8 minutos · sin responder</div>
+              </div>
+              <div class="live-frame">
+                <div class="live-frame-label">Analizando tono</div>
+                <div class="live-thinking"><span></span><span></span><span></span></div>
+                <div class="live-quote">Cliente molesto por demora. Riesgo alto: menciona falta de respeto y puede influir a otros.</div>
+                <div class="live-meta">prioridad: urgente</div>
+              </div>
+              <div class="live-frame">
+                <div class="live-frame-label">Respuesta sugerida</div>
+                <div class="live-response">"Lamentamos mucho la demora, Ana. No es la experiencia que queremos dar. Nos encantaría compensarte en tu próxima visita — te escribimos por privado."</div>
+                <div class="live-meta">tono: cercano · listo para enviar</div>
+              </div>
+              <div class="live-frame">
+                <div class="live-frame-label">Resuelto</div>
+                <div class="live-check">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5"/><path d="M6 10.5 L9 13.5 L14 7" stroke="#3D5A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Respondida en 12 minutos
+                </div>
+                <div class="live-quote" style="font-size:14px;">El dueño recibió un aviso al instante. La reseña ya no quedó colgada tres semanas.</div>
+                <div class="live-meta">tiempo promedio de respuesta: 14 min</div>
+              </div>
+            </div>
+            <div class="live-dots"><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case reveal">
+      <div class="case-grid">
+        <div class="case-info">
+          <span class="case-tag">Ventas</span>
+          <h3>El presupuesto que se enfría solo</h3>
+          <p class="case-hook">¿Cuánta plata se fue en presupuestos que mandaste y nadie volvió a tocar?</p>
+          <p class="case-pain">Un taller de service envía cotizaciones por WhatsApp y nunca hace seguimiento. Algunos clientes simplemente se olvidan de responder — y esa plata nunca vuelve a aparecer en ningún lado.</p>
+          <div class="case-result">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5"/><path d="M6 10.5 L9 13.5 L14 7" stroke="#3D5A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Cada presupuesto recibe seguimiento solo. <strong>La plata deja de enfriarse.</strong></span>
+          </div>
+        </div>
+        <div class="case-receipt">
+          <div class="receipt">
+            <div class="receipt-inner">
+              <div class="receipt-title">Seguimiento de presupuestos</div>
+              <div class="receipt-sub">Taller Ríos · últimos 30 días</div>
+              <div class="receipt-divider"></div>
+              <div class="receipt-row"><span>Presupuestos enviados</span><span>22</span></div>
+              <div class="receipt-row"><span>Sin respuesta a las 48 hs</span><span>9</span></div>
+              <div class="receipt-row"><span>Recuperados con recordatorio</span><span><span class="receipt-badge">4</span></span></div>
+              <div class="receipt-divider"></div>
+              <div class="receipt-row total"><span>Ingreso recuperado</span><span>≈ $310.000</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats reveal">
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">canales conectados por sistema en promedio (WhatsApp, planillas, reseñas)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">~2 sem.</div>
+        <div class="stat-label">desde el primer diagnóstico hasta el sistema funcionando</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">cambios que el equipo del negocio tiene que aprender a operar</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<section class="section" id="proceso">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Cómo trabajamos</h2>
+      <div class="section-num mono">proceso</div>
+    </div>
+    <div class="process-list">
+      <div class="process-item reveal">
+        <div class="process-week mono">01</div>
+        <div>
+          <h3>Diagnóstico</h3>
+          <p>Una conversación corta para entender por dónde se está perdiendo tiempo o dinero hoy. No hace falta tener nada digitalizado todavía.</p>
+        </div>
+      </div>
+      <div class="process-item reveal">
+        <div class="process-week mono">02</div>
+        <div>
+          <h3>Armado</h3>
+          <p>Construimos el sistema conectando las herramientas que ya usás — WhatsApp, planillas, redes — sin pedirte que cambies de plataforma.</p>
+        </div>
+      </div>
+      <div class="process-item reveal">
+        <div class="process-week mono">03</div>
+        <div>
+          <h3>Prueba con datos reales</h3>
+          <p>El sistema corre en paralelo durante unos días para ajustar respuestas y reglas antes de que dependa de él el día a día.</p>
+        </div>
+      </div>
+      <div class="process-item reveal">
+        <div class="process-week mono">04</div>
+        <div>
+          <h3>Acompañamiento</h3>
+          <p>Una vez en marcha, monitoreamos y ajustamos. El sistema mejora con el tiempo, no se queda fijo el día que se entrega.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<section class="contact" id="contacto">
+  <div class="wrap">
+    <div class="contact-grid reveal">
+      <div>
+        <h2>¿Algo de esto te suena conocido?</h2>
+        <p>Si hay una tarea que se repite todos los días en tu negocio — y que te das cuenta de que podría hacerse sola — esa es la conversación que queremos tener.</p>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-label">Contacto</div>
+        <ul class="contact-list">
+          <li><span>Email</span><span>hola@lince.dev</span></li>
+          <li><span>WhatsApp</span><span>Rosario, Santa Fe</span></li>
+          <li><span>Respuesta</span><span>dentro de 24 hs</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band band-tall" aria-hidden="true"></div>
+
+<footer>
+  Lince — sistemas de automatización para negocios locales. Casos ilustrativos con datos simulados.
+</footer>
+
+<script>
+/* ===== Interactive WhatsApp demo ===== */
+(function(){
+  var body = document.getElementById('wa-body');
+  var opts = document.getElementById('wa-options');
+  var statusEl = document.getElementById('wa-status');
+  if(!body || !opts) return;
+
+  function now(){
+    var d = new Date();
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  }
+
+  // Conversation tree. Each node: bot messages + options leading to next nodes.
+  var tree = {
+    start: {
+      bot: ["¡Hola! 👋 Soy el asistente de Parrilla El Fogón. ¿En qué te puedo ayudar?"],
+      options: [
+        { label: "Quiero reservar una mesa", next: "reserva_personas" },
+        { label: "Quiero pedir delivery", next: "delivery_zona" },
+        { label: "¿Hasta qué hora abren?", next: "consulta_horario" },
+        { label: "¿Tienen opciones sin TACC / veggie?", next: "consulta_dieta" }
+      ]
+    },
+
+    /* ---- RESERVA ---- */
+    reserva_personas: {
+      user: "Quiero reservar una mesa",
+      bot: ["¡Buenísimo! ¿Para cuántas personas sería?"],
+      options: [
+        { label: "2 personas", next: "reserva_dia", set: {personas: "2 personas"} },
+        { label: "4 personas", next: "reserva_dia", set: {personas: "4 personas"} },
+        { label: "6 o más", next: "reserva_grupo", set: {personas: "6+ personas"} }
+      ]
+    },
+    reserva_grupo: {
+      user: "Somos 6 o más",
+      bot: ["Para grupos grandes reservamos con un poco más de anticipación, pero no hay problema 💪 ¿Para qué día lo necesitás?"],
+      options: [
+        { label: "Este viernes", next: "reserva_hora", set: {dia: "viernes"} },
+        { label: "Este sábado", next: "reserva_hora", set: {dia: "sábado"} },
+        { label: "Otro día", next: "reserva_dia_libre", set: {} }
+      ]
+    },
+    reserva_dia: {
+      user: "Listo",
+      bot: ["Perfecto. ¿Qué día te queda cómodo?"],
+      options: [
+        { label: "Hoy", next: "reserva_hora", set: {dia: "hoy"} },
+        { label: "Mañana", next: "reserva_hora", set: {dia: "mañana"} },
+        { label: "Este viernes", next: "reserva_hora", set: {dia: "viernes"} },
+        { label: "Este sábado", next: "reserva_hora", set: {dia: "sábado"} }
+      ]
+    },
+    reserva_dia_libre: {
+      user: "Otro día",
+      bot: ["Decime qué día y lo vemos 👇"],
+      input: { placeholder: "Ej: jueves que viene", key: "dia", next: "reserva_hora" }
+    },
+    reserva_hora: {
+      user: "Ese día",
+      bot: ["¡Anotado! ¿A qué horario?"],
+      options: [
+        { label: "20:30", next: "reserva_nombre", set: {hora: "20:30"} },
+        { label: "21:00", next: "reserva_nombre", set: {hora: "21:00"} },
+        { label: "21:30", next: "reserva_nombre", set: {hora: "21:30"} },
+        { label: "22:00", next: "reserva_nombre", set: {hora: "22:00"} }
+      ]
+    },
+    reserva_nombre: {
+      user: "Ese horario",
+      bot: ["¡Genial! ¿A nombre de quién hago la reserva?"],
+      input: { placeholder: "Tu nombre", key: "nombre", next: "reserva_confirma", clean: capitalizar }
+    },
+    reserva_confirma: {
+      bot: function(s){ return ["Listo " + (s.nombre || "") + ", dejame confirmar con vos 👇"]; },
+      confirm: function(s){
+        return {
+          type: "Reserva confirmada",
+          rows: [
+            ["A nombre de", s.nombre || "—"],
+            ["Personas", s.personas || "—"],
+            ["Día", s.dia || "—"],
+            ["Horario", s.hora || "—"]
+          ]
+        };
+      },
+      after: function(s){ return ["Tu mesa quedó reservada, " + (s.nombre || "") + ". Te llega un recordatorio por acá una hora antes. ¡Te esperamos! 🔥"]; },
+      end: true
+    },
+
+    /* ---- DELIVERY ---- */
+    delivery_zona: {
+      user: "Quiero pedir delivery",
+      bot: ["¡Dale! Hacemos envío propio en zona Centro y alrededores, y también llegamos por PedidosYa y Rappi. ¿A qué zona sería?"],
+      options: [
+        { label: "Centro", next: "delivery_plato", set: {zona: "Centro (envío propio)"} },
+        { label: "Pichincha", next: "delivery_plato", set: {zona: "Pichincha (envío propio)"} },
+        { label: "Otra zona", next: "delivery_zona_libre", set: {} }
+      ]
+    },
+    delivery_zona_libre: {
+      user: "Otra zona",
+      bot: ["Decime tu barrio y te confirmo si llegamos con envío propio o te conviene por PedidosYa 👇"],
+      input: { placeholder: "Ej: Fisherton, Echesortu...", key: "zona", next: "delivery_zona_check" }
+    },
+    delivery_zona_check: {
+      bot: function(s){ return ["¡Sí, llegamos a " + (s.zona || "tu zona") + "! 🛵 Para esa distancia el envío sale $1.200. ¿Qué te gustaría pedir?"]; },
+      options: [
+        { label: "Bife de chorizo + guarnición", next: "delivery_bebida", set: {plato: "Bife de chorizo"} },
+        { label: "Provoleta + empanadas", next: "delivery_bebida", set: {plato: "Provoleta + empanadas"} },
+        { label: "Milanesa napolitana", next: "delivery_bebida", set: {plato: "Milanesa napolitana"} },
+        { label: "Parrillada para 2", next: "delivery_bebida", set: {plato: "Parrillada para 2"} }
+      ]
+    },
+    delivery_plato: {
+      user: "Esa zona",
+      bot: ["¿Qué te gustaría pedir? Estos son los más elegidos hoy:"],
+      options: [
+        { label: "Bife de chorizo + guarnición", next: "delivery_bebida", set: {plato: "Bife de chorizo"} },
+        { label: "Provoleta + empanadas", next: "delivery_bebida", set: {plato: "Provoleta + empanadas"} },
+        { label: "Milanesa napolitana", next: "delivery_bebida", set: {plato: "Milanesa napolitana"} },
+        { label: "Parrillada para 2", next: "delivery_bebida", set: {plato: "Parrillada para 2"} }
+      ]
+    },
+    delivery_bebida: {
+      user: "Eso quiero",
+      bot: ["Buena elección 😋 ¿Sumás algo para tomar?"],
+      options: [
+        { label: "Gaseosa 1,5L", next: "delivery_nombre", set: {bebida: "Gaseosa 1,5L"} },
+        { label: "Una cerveza artesanal", next: "delivery_nombre", set: {bebida: "Cerveza artesanal"} },
+        { label: "Solo la comida, gracias", next: "delivery_nombre", set: {bebida: "—"} }
+      ]
+    },
+    delivery_nombre: {
+      bot: ["¿A nombre de quién preparo el pedido?"],
+      input: { placeholder: "Tu nombre", key: "nombre", next: "delivery_confirma", clean: capitalizar }
+    },
+    delivery_confirma: {
+      bot: function(s){ return ["¡Gracias " + (s.nombre || "") + "! Confirmamos el pedido 👇"]; },
+      confirm: function(s){
+        return {
+          type: "Pedido confirmado",
+          rows: [
+            ["A nombre de", s.nombre || "—"],
+            ["Pedido", s.plato || "—"],
+            ["Para tomar", s.bebida || "—"],
+            ["Entrega", s.zona || "—"],
+            ["Tiempo estimado", "35–45 min"],
+            ["Pago", "al recibir"]
+          ]
+        };
+      },
+      after: function(s){ return ["¡Listo " + (s.nombre || "") + "! Tu pedido entró a la cocina. Te avisamos por acá cuando salga para tu dirección. 🛵"]; },
+      end: true
+    },
+
+    /* ---- CONSULTAS -> derivan a acción ---- */
+    consulta_horario: {
+      user: "¿Hasta qué hora abren?",
+      bot: ["Hoy atendemos de 20:00 a 00:00 🕗 (y al mediodía de 12 a 15). Estamos en San Martín 1234, Rosario.", "¿Querés que te reserve una mesa así no esperás?"],
+      options: [
+        { label: "Sí, reservame una mesa", next: "reserva_personas" },
+        { label: "Mejor pido delivery", next: "delivery_zona" },
+        { label: "No, solo era la consulta", next: "consulta_cierre" }
+      ]
+    },
+    consulta_dieta: {
+      user: "¿Tienen opciones sin TACC / veggie?",
+      bot: ["¡Sí! 🌱 Tenemos provoleta, ensaladas, papas y guarniciones sin TACC, y opciones veggie a la parrilla. Avisanos al pedir y la cocina lo prepara aparte.", "¿Querés reservar o pedir delivery?"],
+      options: [
+        { label: "Reservar una mesa", next: "reserva_personas" },
+        { label: "Pedir delivery", next: "delivery_zona" },
+        { label: "Solo era la consulta", next: "consulta_cierre" }
+      ]
+    },
+    consulta_cierre: {
+      user: "Solo era eso, gracias",
+      bot: ["¡De nada! Cualquier cosa escribinos por acá cuando quieras. ¡Que tengas buen día! ☀️"],
+      after: [],
+      end: true,
+      softend: true
+    }
+  };
+
+  var state = {};
+
+  function scrollDown(){ body.scrollTop = body.scrollHeight; }
+
+  function addMsg(text, who){
+    var m = document.createElement('div');
+    m.className = 'wa-msg ' + who;
+    m.textContent = text;
+    var t = document.createElement('span');
+    t.className = 'wa-time';
+    t.textContent = now();
+    m.appendChild(t);
+    body.appendChild(m);
+    scrollDown();
+  }
+
+  function showTyping(){
+    var t = document.createElement('div');
+    t.className = 'wa-typing';
+    t.id = 'wa-typing';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    body.appendChild(t);
+    scrollDown();
+  }
+  function hideTyping(){
+    var t = document.getElementById('wa-typing');
+    if(t) t.remove();
+  }
+
+  function clearOptions(){ opts.innerHTML = ''; }
+
+  function renderOptions(node){
+    clearOptions();
+    node.options.forEach(function(opt){
+      var b = document.createElement('button');
+      b.className = 'wa-opt';
+      b.textContent = opt.label;
+      b.onclick = function(){
+        // echo user choice
+        addMsg(opt.userEcho || opt.label, 'user');
+        if(opt.set){ for(var k in opt.set){ state[k] = opt.set[k]; } }
+        clearOptions();
+        goTo(opt.next);
+      };
+      opts.appendChild(b);
+    });
+  }
+
+  function renderConfirm(node){
+    var data = node.confirm(state);
+    var box = document.createElement('div');
+    box.className = 'wa-confirm';
+    var head = '<div class="wa-confirm-head"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.6"/><path d="M6 10.5 L9 13.5 L14 7" stroke="#3D5A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' + data.type + '</div>';
+    var rows = data.rows.map(function(r){
+      return '<div class="wa-confirm-row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>';
+    }).join('');
+    box.innerHTML = head + rows;
+    body.appendChild(box);
+    scrollDown();
+  }
+
+  function renderRestart(soft){
+    clearOptions();
+    var b = document.createElement('button');
+    b.className = 'wa-restart';
+    b.textContent = soft ? '↺ Probar de nuevo' : '↺ Empezar otra conversación';
+    b.onclick = function(){ state = {}; body.innerHTML = ''; start(); };
+    opts.appendChild(b);
+  }
+
+  // resolve bot/after that may be an array or a function returning an array
+  function resolveMsgs(field){
+    if(!field) return [];
+    if(typeof field === 'function') return field(state).slice();
+    return field.slice();
+  }
+
+  // Capitalize each word (for names)
+  function capitalizar(v){
+    return v.split(' ').map(function(w){
+      return w.length ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w;
+    }).join(' ');
+  }
+
+  // Input validators: return null if OK, or an error string the bot will reply.
+  var validators = {
+    nombre: function(v){
+      if(v.length < 2) return "Necesito un nombre para anotar la reserva 🙂 ¿Cómo te llamás?";
+      if(/[0-9]/.test(v)) return "Mmm, eso no parece un nombre. ¿Me decís tu nombre así anoto la reserva?";
+      if(v.length > 30) return "Con tu nombre o apodo alcanza 🙂";
+      return null;
+    },
+    dia: function(v){
+      var t = v.toLowerCase();
+      var dias = ['lunes','martes','miércoles','miercoles','jueves','viernes','sábado','sabado','domingo'];
+      var palabras = ['hoy','mañana','manana','pasado','finde','fin de semana','semana','viene','próximo','proximo'];
+      var tieneDia = dias.some(function(d){ return t.indexOf(d) !== -1; });
+      var tienePalabra = palabras.some(function(p){ return t.indexOf(p) !== -1; });
+      var tieneFecha = /\d{1,2}([\/\-]\d{1,2})?/.test(t); // 15, 15/3, 15-3
+      if(!tieneDia && !tienePalabra && !tieneFecha){
+        return "No me quedó claro el día 🤔 Decime un día de la semana o una fecha (ej: \"sábado\", \"el 20\", \"mañana\").";
+      }
+      return null;
+    },
+    zona: function(v){
+      if(v.length < 3) return "¿Me decís el nombre de tu barrio o zona? Así te confirmo el envío.";
+      if(/^\d+$/.test(v)) return "Necesito el nombre de la zona o barrio, no un número 🙂";
+      return null;
+    }
+  };
+
+  function renderInput(node){
+    clearOptions();
+    var cfg = node.input;
+    var row = document.createElement('div');
+    row.className = 'wa-input-row';
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.placeholder = cfg.placeholder || 'Escribí acá...';
+    inp.maxLength = 40;
+    var send = document.createElement('button');
+    send.className = 'wa-send';
+    send.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12 L20 4 L13 20 L11 13 Z" fill="#fff"/></svg>';
+    send.disabled = true;
+    inp.addEventListener('input', function(){ send.disabled = inp.value.trim().length === 0; });
+    function submit(){
+      var val = inp.value.trim();
+      if(!val) return;
+      // echo the user's message first
+      addMsg(val, 'user');
+      // validate
+      var validate = validators[cfg.validate || cfg.key];
+      var err = validate ? validate(val) : null;
+      if(err){
+        // bot replies with the correction request, then re-shows the same input
+        clearOptions();
+        statusEl.textContent = 'escribiendo...';
+        showTyping();
+        setTimeout(function(){
+          hideTyping();
+          statusEl.textContent = 'en línea';
+          addMsg(err, 'bot');
+          setTimeout(function(){ renderInput(node); }, 250);
+        }, 600);
+        return;
+      }
+      // valid: clean up the value for display, store, advance
+      state[cfg.key] = cfg.clean ? cfg.clean(val) : val;
+      clearOptions();
+      goTo(cfg.next);
+    }
+    send.onclick = submit;
+    inp.addEventListener('keydown', function(e){ if(e.key === 'Enter') submit(); });
+    row.appendChild(inp);
+    row.appendChild(send);
+    opts.appendChild(row);
+    inp.focus();
+  }
+
+  function goTo(key){
+    var node = tree[key];
+    if(!node) return;
+    statusEl.textContent = 'escribiendo...';
+    showTyping();
+    var delay = 650;
+    setTimeout(function(){
+      hideTyping();
+      statusEl.textContent = 'en línea';
+      var msgs = resolveMsgs(node.bot);
+      function emit(){
+        if(msgs.length){
+          addMsg(msgs.shift(), 'bot');
+          if(msgs.length){ setTimeout(emit, 560); return; }
+        }
+        // confirm card
+        if(node.confirm){
+          setTimeout(function(){
+            renderConfirm(node);
+            var afterMsgs = resolveMsgs(node.after);
+            if(afterMsgs.length){
+              setTimeout(function(){ addMsg(afterMsgs[0], 'bot'); }, 650);
+              setTimeout(function(){ renderRestart(false); }, 1100);
+            } else {
+              setTimeout(function(){ renderRestart(false); }, 700);
+            }
+          }, 450);
+          return;
+        }
+        if(node.input){ setTimeout(function(){ renderInput(node); }, 200); return; }
+        if(node.options){ renderOptions(node); return; }
+        if(node.end){ renderRestart(node.softend); return; }
+      }
+      emit();
+    }, delay);
+  }
+
+  function start(){
+    var node = tree.start;
+    addMsg(node.bot[0], 'bot');
+    setTimeout(function(){ renderOptions(node); }, 350);
+  }
+
+  // Start when the chat scrolls into view (once)
+  var started = false;
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !started){
+          started = true;
+          start();
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(document.getElementById('wa-demo'));
+  } else {
+    start();
+  }
+})();
+</script>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      els.forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
