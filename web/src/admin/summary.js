@@ -3,6 +3,7 @@
  * Muestra métricas rápidas (conteos por estado) desde GET /api/stats.
  */
 import { apiFetch } from '../lib/api.js';
+import { loadErrorMessage } from '../lib/format.js';
 
 export async function loadSummary(container, token) {
   container.innerHTML = `
@@ -36,8 +37,7 @@ export async function loadSummary(container, token) {
       ]),
     ].join('');
   } catch (err) {
-    statusEl.textContent =
-      err.status === 401 ? 'Tu sesión no tiene permisos de admin.' : 'No pudimos cargar las métricas.';
+    statusEl.textContent = loadErrorMessage(err, 'No pudimos cargar las métricas.');
   }
 }
 

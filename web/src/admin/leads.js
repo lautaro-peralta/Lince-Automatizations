@@ -4,7 +4,7 @@
  * estado y editar notas internas (PATCH /api/leads/:id).
  */
 import { apiFetch } from '../lib/api.js';
-import { esc, fmtDate, statusSelect, downloadCsv } from '../lib/format.js';
+import { esc, fmtDate, statusSelect, downloadCsv, loadErrorMessage } from '../lib/format.js';
 
 const LEAD_STATUSES = ['nuevo', 'contactado', 'en_conversacion', 'ganado', 'descartado'];
 
@@ -79,8 +79,7 @@ export async function loadLeads(container, token) {
     } catch (err) {
       currentLeads = [];
       exportBtn.disabled = true;
-      statusEl.textContent =
-        err.status === 401 ? 'Tu sesión no tiene permisos de admin.' : 'No pudimos cargar los leads.';
+      statusEl.textContent = loadErrorMessage(err, 'No pudimos cargar los leads.');
     }
   }
 

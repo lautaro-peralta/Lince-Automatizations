@@ -4,7 +4,7 @@
  * (recordatorios) lo hace el cron de Supabase, no esta pantalla.
  */
 import { apiFetch } from '../lib/api.js';
-import { esc, fmtDate, fmtMoney, statusSelect, downloadCsv } from '../lib/format.js';
+import { esc, fmtDate, fmtMoney, statusSelect, downloadCsv, loadErrorMessage } from '../lib/format.js';
 
 const BUDGET_STATUSES = ['enviado', 'sin_respuesta', 'recordado', 'ganado', 'perdido'];
 
@@ -97,8 +97,7 @@ export async function loadBudgets(container, token) {
     } catch (err) {
       currentBudgets = [];
       exportBtn.disabled = true;
-      statusEl.textContent =
-        err.status === 401 ? 'Tu sesión no tiene permisos de admin.' : 'No pudimos cargar los presupuestos.';
+      statusEl.textContent = loadErrorMessage(err, 'No pudimos cargar los presupuestos.');
     }
   }
 

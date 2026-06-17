@@ -4,7 +4,7 @@
  * respondidas. (El monitor de la landing sigue siendo ilustrativo.)
  */
 import { apiFetch } from '../lib/api.js';
-import { esc, fmtDate, statusSelect } from '../lib/format.js';
+import { esc, fmtDate, statusSelect, loadErrorMessage } from '../lib/format.js';
 
 const REVIEW_STATUSES = ['nueva', 'analizando', 'respondida'];
 
@@ -31,8 +31,7 @@ export async function loadReviews(container, token) {
       wrap.innerHTML = reviews.map(renderCard).join('');
       wireEvents(wrap);
     } catch (err) {
-      statusEl.textContent =
-        err.status === 401 ? 'Tu sesión no tiene permisos de admin.' : 'No pudimos cargar las reseñas.';
+      statusEl.textContent = loadErrorMessage(err, 'No pudimos cargar las reseñas.');
     }
   }
 

@@ -59,3 +59,13 @@ export function downloadCsv(filename, columns, data) {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+/**
+ * Mensaje claro para errores al cargar datos del panel.
+ * Distingue 403 (logueado pero sin rol admin) de 401 (sesión inválida).
+ */
+export function loadErrorMessage(err, fallback) {
+  if (err?.status === 403) return 'Iniciaste sesión, pero tu usuario no tiene rol admin. Promovelo (ver supabase/README.md).';
+  if (err?.status === 401) return 'Tu sesión expiró o es inválida. Volvé a entrar.';
+  return fallback;
+}
