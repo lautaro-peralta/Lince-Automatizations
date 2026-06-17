@@ -28,6 +28,7 @@ Render (backend) y Supabase (base de datos + auth + cron).
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Fases del CRM |
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | Paso a paso Supabase + Render + Vercel |
 | [`docs/COSTOS.md`](docs/COSTOS.md) | Evaluación de costos (planes gratis vs producción) |
+| [`docs/HOSTING-FRONTEND.md`](docs/HOSTING-FRONTEND.md) | Comparación de hosting de frontend (caso comercial gratis) |
 
 ## Arrancar en local (resumen)
 
