@@ -33,9 +33,12 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 - **Pendiente:** desplegar la función + agendar `pg_cron`, y conectar el envío
   real (WhatsApp Cloud API / email) en el punto de integración marcado.
 
-## 🔮 Fase 5 — Mejoras
-- Aviso al equipo cuando llega un lead. Métricas en el panel.
-- IA para sugerir respuestas a reseñas.
+## 🔄 Fase 5 — Mejoras (en progreso)
+- ✅ **Aviso al equipo cuando llega un lead** (capa de notificaciones por
+  webhook / email Resend; sin credenciales, loguea). Mismo mecanismo en la
+  Edge Function de presupuestos. **Pendiente:** cargar credenciales en el deploy.
+- 🔜 Métricas en el panel.
+- 🔜 IA para sugerir respuestas a reseñas.
 
 ## Estado de endpoints
 

@@ -47,7 +47,9 @@ Las decisiones (y sus alternativas descartadas) están al final.
 1. El visitante completa el formulario de la landing.
 2. `contact.js` hace `POST /api/leads` al backend.
 3. Express valida (zod) + filtra honeypot y guarda en `leads` (Supabase).
-4. El equipo ve los leads en `/admin/`.
+4. El backend avisa al equipo (webhook/email) sin bloquear la respuesta
+   (fire-and-forget; si no hay credenciales, solo loguea).
+5. El equipo ve los leads en `/admin/`.
 
 ### 2. Panel admin
 1. El admin entra a `/admin/` y se loguea con **Supabase Auth** (anon key).

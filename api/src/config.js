@@ -29,4 +29,15 @@ export const config = {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean),
+
+  // Notificaciones (todas opcionales). Si no hay ninguna configurada, el
+  // módulo de notify solo loguea por consola; nunca rompe el flujo principal.
+  notify: {
+    // Webhook genérico (Make, Zapier, Discord, Slack, un bridge de WhatsApp…).
+    webhookUrl: process.env.NOTIFY_WEBHOOK_URL || '',
+    // Email vía Resend (https://resend.com).
+    resendApiKey: process.env.RESEND_API_KEY || '',
+    emailFrom: process.env.NOTIFY_EMAIL_FROM || 'Lince <onboarding@resend.dev>',
+    emailTo: process.env.NOTIFY_EMAIL_TO || '',
+  },
 };

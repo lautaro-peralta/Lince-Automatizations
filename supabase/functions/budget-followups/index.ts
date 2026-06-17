@@ -46,11 +46,12 @@ Deno.serve(async (_req: Request) => {
       `Hola ${b.customer_name}, te recordamos el presupuesto que te pasamos. ` +
       `¿Lo pudiste ver? Quedamos a disposición para cualquier duda.`;
 
-    // ── PUNTO DE INTEGRACIÓN ──────────────────────────────────────────────
-    // TODO: enviar de verdad por WhatsApp Cloud API / Resend.
-    //   await sendReminder(channel, b.customer_contact, message);
-    // Por ahora solo lo registramos para no enviar mensajes en pruebas.
-    // ──────────────────────────────────────────────────────────────────────
+    // Envío real por los canales configurados (o log si no hay credenciales).
+    try {
+      await sendReminder({ channel, contact: String(b.customer_contact), message, budget: b });
+    } catch (sendErr) {
+      console.error('[budget-followups] envío falló:', (sendErr as Error).message);
+    }
 
     // Log del recordatorio.
     const { error: logErr } = await supabase.from('budget_followups').insert({
@@ -81,4 +82,46 @@ function json(body: unknown, status = 200) {
     status,
     headers: { 'Content-Type': 'application/json' },
   });
+}
+
+/**
+ * Envía el recordatorio por los canales configurados (mismo criterio que el
+ * backend): webhook genérico y/o email Resend. Sin credenciales, solo loguea.
+ */
+async function sendReminder(
+  { channel, contact, message, budget }:
+  { channel: string; contact: string; message: string; budget: Record<string, unknown> }
+) {
+  const webhookUrl = Deno.env.get('NOTIFY_WEBHOOK_URL');
+  const resendKey = Deno.env.get('RESEND_API_KEY');
+  const emailFrom = Deno.env.get('NOTIFY_EMAIL_FROM') ?? 'Lince <onboarding@resend.dev>';
+
+  const tasks: Promise<unknown>[] = [];
+
+  if (webhookUrl) {
+    tasks.push(
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'budget_followup', channel, contact, message, budget }),
+      })
+    );
+  }
+
+  // Si el contacto es un email y hay Resend, mandamos el recordatorio por mail.
+  if (channel === 'email' && resendKey) {
+    tasks.push(
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: emailFrom, to: contact, subject: 'Recordatorio de tu presupuesto', text: message }),
+      })
+    );
+  }
+
+  if (tasks.length === 0) {
+    console.log('[budget-followups] (sin proveedores) recordatorio para', contact, '->', message);
+    return;
+  }
+  await Promise.allSettled(tasks);
 }

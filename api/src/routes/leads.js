@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
 import { requireAdmin } from '../middleware/auth.js';
 import { LEAD_STATUSES } from '../constants.js';
+import { notifyNewLead } from '../lib/notify.js';
 
 const router = Router();
 
@@ -62,6 +63,13 @@ router.post('/', async (req, res, next) => {
       status: 'nuevo',
     });
     if (error) throw error;
+
+    // Aviso al equipo. Fire-and-forget: no esperamos ni dejamos que un fallo
+    // de notificación afecte la respuesta al visitante.
+    notifyNewLead(lead).catch((e) => {
+      // eslint-disable-next-line no-console
+      console.error('[notify] error notificando lead:', e?.message || e);
+    });
 
     return res.status(201).json({ ok: true });
   } catch (err) {

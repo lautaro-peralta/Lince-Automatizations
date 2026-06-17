@@ -56,6 +56,14 @@ Cuando se implemente, se despliega la Edge Function y se la agenda con
 supabase functions deploy budget-followups
 ```
 
+`SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` ya están disponibles dentro de la
+función. Para que **envíe** recordatorios (y no solo loguee), cargá los mismos
+secretos opcionales de notificación que usa el backend:
+
+```bash
+supabase secrets set NOTIFY_WEBHOOK_URL=... RESEND_API_KEY=... NOTIFY_EMAIL_FROM="Lince <...>"
+```
+
 ```sql
 -- Habilitar extensiones (una sola vez)
 create extension if not exists pg_cron;

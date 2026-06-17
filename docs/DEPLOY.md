@@ -30,6 +30,10 @@ anterior). Todo en planes gratuitos.
    SUPABASE_SERVICE_ROLE_KEY=...  (service_role, SECRETA)
    FRONTEND_ORIGIN=https://tu-app.vercel.app
    NODE_ENV=production
+   # Opcionales: avisos de leads nuevos (si faltan, solo se loguean)
+   NOTIFY_WEBHOOK_URL=...          (Make/Zapier/Discord/Slack/WhatsApp-bridge)
+   RESEND_API_KEY=...             (email vía Resend)
+   NOTIFY_EMAIL_TO=...
    ```
    > `PORT` lo setea Render solo.
 4. Deploy. Verificar: `https://tu-api.onrender.com/health` → `{ ok: true }`.
