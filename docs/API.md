@@ -76,13 +76,31 @@ Estados: `nueva · analizando · respondida` (al marcar `respondida` se sella `r
 
 ---
 
+## Resumen / métricas · admin
+
+### `GET /api/stats`
+Conteos por estado para el panel de resumen.
+```json
+200 { "data": {
+  "leads":   { "total": 12, "nuevo": 5, "ganado": 3 },
+  "budgets": { "total": 8, "enviado": 4, "recordado": 2 },
+  "reviews": { "total": 6, "nueva": 1, "respondida": 5 }
+} }
+```
+
+---
+
 ## Chatbot · público
 
 | Método | Ruta                                   | Notas |
 |--------|----------------------------------------|-------|
 | GET    | `/api/chatbot/flows/:slug`             | devuelve el árbol (`tree`) del flujo activo |
-| POST   | `/api/chatbot/sessions`                | `{ flow_id }` → crea sesión, devuelve `{ id }` |
+| POST   | `/api/chatbot/sessions`                | `{ flow_id? , flow_slug? }` (ambos opcionales) → `{ id }` |
 | POST   | `/api/chatbot/sessions/:id/messages`   | `{ role, text, current_node?, state?, completed? }` |
+
+> La landing registra la conversación con estos endpoints **solo si** se activa
+> `VITE_CHATBOT_LOGGING=true` (apagado por defecto). El registro es desacoplado
+> y silencioso: nunca afecta la demo.
 
 > Hoy la demo de la landing corre con su árbol embebido (sigue funcionando sin
 > backend). Estos endpoints permiten servir el flujo desde la base y registrar

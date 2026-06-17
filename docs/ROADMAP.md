@@ -21,11 +21,13 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
   **Presupuestos** y **Reseñas**.
 - **Pendiente:** desplegar.
 
-## ✅ Fase 3 — Demos / datos reales (backend listo)
-- `GET /api/chatbot/flows/:slug`, `POST /sessions`, `POST /sessions/:id/messages`.
-- `GET/PATCH /api/reviews`. Flujo y reseñas de ejemplo en `seed.sql`.
-- **Pendiente:** migrar el cliente del chatbot para que renderice desde el
-  flujo de la base (hoy usa el árbol embebido, que sigue funcionando).
+## ✅ Fase 3 — Demos / datos reales
+- `GET /api/chatbot/flows/:slug`, `POST /sessions` (acepta `flow_slug`),
+  `POST /sessions/:id/messages`. `GET/PATCH /api/reviews`. Datos en `seed.sql`.
+- ✅ **Registro de conversaciones del chatbot** desde la landing, desacoplado
+  (no toca la demo) y activable con `VITE_CHATBOT_LOGGING=true`.
+- 🔜 **Opcional:** que el chatbot *renderice* desde el flujo de la base (hoy usa
+  el árbol embebido, más completo; el de la base es la versión de datos).
 
 ## ✅ Fase 4 — Presupuestos + seguimiento (código listo)
 - `GET/POST/PATCH /api/budgets` + sección en el panel.
@@ -37,7 +39,7 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 - ✅ **Aviso al equipo cuando llega un lead** (capa de notificaciones por
   webhook / email Resend; sin credenciales, loguea). Mismo mecanismo en la
   Edge Function de presupuestos. **Pendiente:** cargar credenciales en el deploy.
-- 🔜 Métricas en el panel.
+- ✅ **Métricas en el panel** (pestaña "Resumen" → `GET /api/stats`).
 - 🔜 IA para sugerir respuestas a reseñas.
 
 ## Estado de endpoints
@@ -48,6 +50,7 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 | `POST/GET/PATCH /api/leads`            | ✅          |
 | `GET/POST/PATCH /api/budgets`          | ✅          |
 | `GET/PATCH /api/reviews`               | ✅          |
+| `GET /api/stats`                       | ✅          |
 | `GET /api/chatbot/flows/:slug`         | ✅          |
 | `POST /api/chatbot/sessions[/:id/...]` | ✅          |
 

@@ -11,6 +11,7 @@
  * backend verifica el token y el rol admin antes de responder.
  */
 import { supabase } from '../lib/supabase.js';
+import { loadSummary } from './summary.js';
 import { loadLeads } from './leads.js';
 import { loadBudgets } from './budgets.js';
 import { loadReviews } from './reviews.js';
@@ -26,13 +27,14 @@ const tabButtons = document.querySelectorAll('.tab-btn');
 
 // Cada pestaña asocia su loader. Todos reciben (container, token).
 const TABS = {
+  summary: loadSummary,
   leads: loadLeads,
   budgets: loadBudgets,
   reviews: loadReviews,
 };
 
 let currentToken = null;
-let activeTab = 'leads';
+let activeTab = 'summary';
 
 /** Alterna entre login y panel; al entrar, abre la pestaña activa. */
 function render(session) {

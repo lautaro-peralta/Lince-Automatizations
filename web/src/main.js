@@ -12,3 +12,10 @@ import './landing/reveal.js'; // animación de aparición al hacer scroll
 
 // Funcionalidad nueva: el formulario de contacto que habla con el backend.
 import './landing/contact.js';
+
+// Registro de conversaciones del chatbot: OPCIONAL y apagado por defecto.
+// Import dinámico para no sumar peso ni requests si no está activado.
+// Se enciende poniendo VITE_CHATBOT_LOGGING=true (recién con el backend arriba).
+if (import.meta.env.VITE_CHATBOT_LOGGING === 'true') {
+  import('./landing/chatbot-logging.js');
+}

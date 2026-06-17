@@ -17,11 +17,13 @@ web/
 │   ├── main.js             # Entrada de la landing
 │   ├── styles/landing.css  # CSS original + estilos del formulario
 │   ├── landing/
-│   │   ├── chatbot.js      # Demo de WhatsApp (original)
-│   │   ├── reveal.js       # Scroll-reveal (original)
-│   │   └── contact.js      # Formulario de leads → backend (nuevo)
+│   │   ├── chatbot.js          # Demo de WhatsApp (original, intacto)
+│   │   ├── chatbot-logging.js  # Registro de conversaciones (opcional, gated)
+│   │   ├── reveal.js           # Scroll-reveal (original)
+│   │   └── contact.js          # Formulario de leads → backend (nuevo)
 │   ├── admin/              # Panel: admin.js (orquestador) + secciones
 │   │   ├── admin.css       # estilos del panel
+│   │   ├── summary.js      # sección Resumen (métricas)
 │   │   ├── leads.js        # sección Leads
 │   │   ├── budgets.js      # sección Presupuestos
 │   │   └── reviews.js      # sección Reseñas

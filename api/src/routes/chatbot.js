@@ -34,17 +34,34 @@ router.get('/flows/:slug', async (req, res, next) => {
   }
 });
 
-// POST /api/chatbot/sessions — crea una sesión para un flujo
-const sessionSchema = z.object({ flow_id: z.string().uuid() });
+// POST /api/chatbot/sessions — crea una sesión para un flujo.
+// Acepta flow_id (uuid) o flow_slug (lo que conoce la landing); ambos opcionales.
+const sessionSchema = z.object({
+  flow_id: z.string().uuid().optional(),
+  flow_slug: z.string().max(120).optional(),
+});
 router.post('/sessions', async (req, res, next) => {
   try {
     const parsed = sessionSchema.safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).json({ message: 'flow_id inválido.' });
+      return res.status(400).json({ message: 'Datos inválidos.' });
     }
+
+    // Resolvemos el flow_id: si vino el slug, lo buscamos.
+    let flowId = parsed.data.flow_id ?? null;
+    if (!flowId && parsed.data.flow_slug) {
+      const { data: flow } = await supabase
+        .from('chatbot_flows')
+        .select('id')
+        .eq('slug', parsed.data.flow_slug)
+        .eq('active', true)
+        .maybeSingle();
+      flowId = flow?.id ?? null;
+    }
+
     const { data, error } = await supabase
       .from('chatbot_sessions')
-      .insert({ flow_id: parsed.data.flow_id })
+      .insert({ flow_id: flowId })
       .select('id')
       .single();
     if (error) throw error;
