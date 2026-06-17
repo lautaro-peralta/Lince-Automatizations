@@ -7,66 +7,83 @@ Render en producción). Todo es JSON.
 
 - Errores: `{ "message": "..." }` y, si aplica, `{ "errors": { campo: [...] } }`.
 - Auth del panel: header `Authorization: Bearer <jwt-de-supabase>`.
+- "admin" = JWT válido **y** rol `admin` en `profiles`.
 
 ---
 
 ## `GET /health` · público
 Chequeo de vida (y keep-alive del free tier).
-
 ```json
 200 { "ok": true, "service": "lince-api", "time": "2026-06-16T12:00:00.000Z" }
 ```
 
 ---
 
-## `POST /api/leads` · público
+## Leads
+
+### `POST /api/leads` · público
 Crea un lead desde el formulario de la landing.
-
-**Body**
 ```json
-{
-  "name": "Juana Pérez",
-  "business": "Kiosco La Esquina",   // opcional
-  "contact": "juana@mail.com",        // email o WhatsApp
-  "message": "Quiero automatizar los pedidos por WhatsApp",
-  "website": ""                        // honeypot: debe ir vacío
-}
-```
+// body
+{ "name": "Juana", "business": "Kiosco", "contact": "juana@mail.com",
+  "message": "Quiero automatizar pedidos", "website": "" }  // website = honeypot
 
-**Respuestas**
-```json
 201 { "ok": true }
 400 { "message": "Datos inválidos.", "errors": { "contact": ["Contacto inválido"] } }
 ```
-
 > Si `website` viene con contenido (bot), responde `201` pero **no guarda**.
 
----
-
-## `GET /api/leads` · admin
-Lista los leads, más nuevos primero.
-
+### `GET /api/leads?status=&q=` · admin
+Lista los leads, más nuevos primero. `status` filtra por estado; `q` busca en
+nombre/negocio/contacto/mensaje.
 ```json
-200 { "data": [ { "id": "...", "name": "...", "contact": "...",
-                  "message": "...", "status": "nuevo",
-                  "created_at": "..." } ] }
-401 { "message": "Falta el token de acceso." }
-403 { "message": "No tenés permisos de administrador." }
+200 { "data": [ { "id": "...", "name": "...", "status": "nuevo", "notes": null, "created_at": "..." } ] }
+```
+
+### `PATCH /api/leads/:id` · admin
+Actualiza estado y/o notas. Estados: `nuevo · contactado · en_conversacion · ganado · descartado`.
+```json
+// body (al menos uno)
+{ "status": "contactado", "notes": "Llamar el lunes" }
+200 { "data": { ...lead actualizado } }
 ```
 
 ---
 
-## Planificados (stubs `501`)
+## Presupuestos · admin
 
-### Chatbot (Fase 3)
-- `GET  /api/chatbot/flows/:slug` — árbol de conversación del negocio.
-- `POST /api/chatbot/sessions` — crea una sesión, devuelve `id`.
-- `POST /api/chatbot/sessions/:id` — avanza la conversación (persiste estado).
+| Método | Ruta                | Cuerpo / notas |
+|--------|---------------------|----------------|
+| GET    | `/api/budgets?status=` | lista, filtro opcional |
+| POST   | `/api/budgets`      | `{ customer_name, customer_contact, amount?, description?, business_id? }` |
+| PATCH  | `/api/budgets/:id`  | `{ status?, amount?, description? }` |
 
-### Presupuestos (Fase 4) · admin
-- `GET   /api/budgets` — lista.
-- `POST  /api/budgets` — alta.
-- `PATCH /api/budgets/:id` — actualizar estado.
+Estados: `enviado · sin_respuesta · recordado · ganado · perdido`.
 
 > El **disparo** de recordatorios no es un endpoint: lo hace `pg_cron` +
-> Edge Function en Supabase (ver `supabase/README.md`).
+> la Edge Function `budget-followups` en Supabase (ver `supabase/README.md`).
+
+---
+
+## Reseñas · admin
+
+| Método | Ruta                | Cuerpo / notas |
+|--------|---------------------|----------------|
+| GET    | `/api/reviews?status=` | lista, filtro opcional |
+| PATCH  | `/api/reviews/:id`  | `{ status?, suggested_response?, priority? }` |
+
+Estados: `nueva · analizando · respondida` (al marcar `respondida` se sella `responded_at`).
+
+---
+
+## Chatbot · público
+
+| Método | Ruta                                   | Notas |
+|--------|----------------------------------------|-------|
+| GET    | `/api/chatbot/flows/:slug`             | devuelve el árbol (`tree`) del flujo activo |
+| POST   | `/api/chatbot/sessions`                | `{ flow_id }` → crea sesión, devuelve `{ id }` |
+| POST   | `/api/chatbot/sessions/:id/messages`   | `{ role, text, current_node?, state?, completed? }` |
+
+> Hoy la demo de la landing corre con su árbol embebido (sigue funcionando sin
+> backend). Estos endpoints permiten servir el flujo desde la base y registrar
+> conversaciones; el cliente puede migrar a ellos una vez desplegado.

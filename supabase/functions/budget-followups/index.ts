@@ -7,15 +7,17 @@
 //   pg_cron (ver supabase/README.md), independiente de Render → seguimiento
 //   confiable de presupuestos.
 //
-// Qué hace (cuando se complete la Fase 4):
-//   1. Busca presupuestos en estado 'enviado'/'sin_respuesta' con > 48 hs.
-//   2. Envía un recordatorio (WhatsApp/email) al cliente.
+// Qué hace:
+//   1. Busca presupuestos 'enviado'/'sin_respuesta' con > 48 hs sin respuesta.
+//   2. Por cada uno: "envía" un recordatorio (HOY es un stub que loguea; el
+//      envío real por WhatsApp/email es el punto de integración marcado abajo).
 //   3. Registra el envío en budget_followups y actualiza el presupuesto.
-//
-// Por ahora es un ESQUELETO: detecta los vencidos y los devuelve, sin enviar.
 // ============================================================================
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// Horas sin respuesta a partir de las cuales recordamos.
+const FOLLOWUP_AFTER_HOURS = 48;
 
 Deno.serve(async (_req: Request) => {
   // Estas variables las inyecta Supabase al desplegar la función.
@@ -23,8 +25,9 @@ Deno.serve(async (_req: Request) => {
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const supabase = createClient(supabaseUrl, serviceKey);
 
-  // Presupuestos sin respuesta con más de 48 horas desde el envío.
-  const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+  const cutoff = new Date(Date.now() - FOLLOWUP_AFTER_HOURS * 3600 * 1000).toISOString();
+
+  // Presupuestos candidatos a recordatorio.
   const { data: dueBudgets, error } = await supabase
     .from('budgets')
     .select('*')
@@ -32,22 +35,50 @@ Deno.serve(async (_req: Request) => {
     .lt('sent_at', cutoff);
 
   if (error) {
-    return new Response(JSON.stringify({ ok: false, error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return json({ ok: false, error: error.message }, 500);
   }
 
-  // TODO (Fase 4): por cada presupuesto, enviar el recordatorio por el canal
-  // correspondiente (ej. WhatsApp Cloud API / Resend) y luego:
-  //   - insert en budget_followups
-  //   - update budgets set status='recordado', followup_count = followup_count+1,
-  //     last_followup_at = now()
-  //
-  // for (const b of dueBudgets ?? []) { await sendReminder(b); }
+  let sent = 0;
+  for (const b of dueBudgets ?? []) {
+    // Elegimos el canal según el contacto (heurística simple).
+    const channel = String(b.customer_contact).includes('@') ? 'email' : 'whatsapp';
+    const message =
+      `Hola ${b.customer_name}, te recordamos el presupuesto que te pasamos. ` +
+      `¿Lo pudiste ver? Quedamos a disposición para cualquier duda.`;
 
-  return new Response(
-    JSON.stringify({ ok: true, pending: dueBudgets?.length ?? 0 }),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
+    // ── PUNTO DE INTEGRACIÓN ──────────────────────────────────────────────
+    // TODO: enviar de verdad por WhatsApp Cloud API / Resend.
+    //   await sendReminder(channel, b.customer_contact, message);
+    // Por ahora solo lo registramos para no enviar mensajes en pruebas.
+    // ──────────────────────────────────────────────────────────────────────
+
+    // Log del recordatorio.
+    const { error: logErr } = await supabase.from('budget_followups').insert({
+      budget_id: b.id,
+      channel,
+      message,
+    });
+    if (logErr) continue; // no frenamos todo el lote por uno
+
+    // Actualizamos el presupuesto.
+    await supabase
+      .from('budgets')
+      .update({
+        status: 'recordado',
+        followup_count: (b.followup_count ?? 0) + 1,
+        last_followup_at: new Date().toISOString(),
+      })
+      .eq('id', b.id);
+
+    sent += 1;
+  }
+
+  return json({ ok: true, candidates: dueBudgets?.length ?? 0, sent });
 });
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}

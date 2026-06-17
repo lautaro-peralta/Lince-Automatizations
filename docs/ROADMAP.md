@@ -1,44 +1,52 @@
 # Roadmap por fases — Lince
 
-El CRM completo se construye **por fases**: primero lo que da valor y es
-fiable, después lo más complejo. Cada fase deja algo desplegable.
+El CRM completo se construye **por fases**. Cada fase deja algo desplegable.
+Estado al día de hoy: el código de las fases 2–4 está implementado y verificado
+en build/arranque; falta **desplegar** y, en algunos casos, conectar
+integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 
-## ✅ Fase 0 — Estructura y base (este planeamiento)
+## ✅ Fase 0 — Estructura y base
 - Monorepo `web/` + `api/` + `supabase/` + `docs/`.
 - Landing original migrada a Vite **sin perder nada** (con formulario nuevo).
-- Backend Express con `/health` y la rebanada de **leads de punta a punta**.
-- Esquema de base completo (con RLS) y guías de deploy.
+- Backend Express con `/health` y leads de punta a punta.
+- Esquema de base completo (con RLS) + datos de ejemplo (`seed.sql`).
 
-## 🔜 Fase 1 — Leads en producción
-- Deploy: Supabase (esquema) + Render (API) + Vercel (web).
-- Probar el formulario real guardando en la base.
-- Pinger de keep-alive sobre `/health`.
+## ✅ Fase 1 — Leads (código listo)
+- `POST/GET/PATCH /api/leads` con validación, honeypot, filtros y notas.
+- **Pendiente:** desplegar y probar el formulario real en producción.
 
-## 🔜 Fase 2 — Panel admin
-- Login con Supabase Auth + rol admin (ya scaffoldeado en `/admin/`).
-- Listado de leads (ya scaffoldeado) + cambio de estado y notas.
-- Filtros/búsqueda básicos.
+## ✅ Fase 2 — Panel admin (código listo)
+- Login con Supabase Auth + rol admin.
+- Panel con pestañas: **Leads** (buscar, filtrar, cambiar estado, notas),
+  **Presupuestos** y **Reseñas**.
+- **Pendiente:** desplegar.
 
-## 🔜 Fase 3 — Demos conectadas a backend real
-- Servir el árbol del chatbot desde `chatbot_flows` (hoy está hardcodeado).
-- Persistir sesiones y mensajes (`chatbot_sessions`, `chatbot_messages`).
-- Monitor de reseñas alimentado por la tabla `reviews`.
+## ✅ Fase 3 — Demos / datos reales (backend listo)
+- `GET /api/chatbot/flows/:slug`, `POST /sessions`, `POST /sessions/:id/messages`.
+- `GET/PATCH /api/reviews`. Flujo y reseñas de ejemplo en `seed.sql`.
+- **Pendiente:** migrar el cliente del chatbot para que renderice desde el
+  flujo de la base (hoy usa el árbol embebido, que sigue funcionando).
 
-## 🔜 Fase 4 — Presupuestos con seguimiento
-- ABM de `budgets` desde el panel.
-- Edge Function `budget-followups` + `pg_cron` enviando recordatorios.
-- Integración de envío (WhatsApp Cloud API / email).
+## ✅ Fase 4 — Presupuestos + seguimiento (código listo)
+- `GET/POST/PATCH /api/budgets` + sección en el panel.
+- Edge Function `budget-followups` (detecta vencidos, registra y actualiza).
+- **Pendiente:** desplegar la función + agendar `pg_cron`, y conectar el envío
+  real (WhatsApp Cloud API / email) en el punto de integración marcado.
 
 ## 🔮 Fase 5 — Mejoras
-- Notificación al equipo cuando llega un lead (email/WhatsApp).
-- Métricas en el panel. IA para sugerir respuestas a reseñas.
+- Aviso al equipo cuando llega un lead. Métricas en el panel.
+- IA para sugerir respuestas a reseñas.
 
-## Estado actual de endpoints
+## Estado de endpoints
 
-| Endpoint            | Estado        |
-|---------------------|---------------|
-| `GET /health`       | ✅ funcional   |
-| `POST /api/leads`   | ✅ funcional   |
-| `GET /api/leads`    | ✅ funcional   |
-| `/api/chatbot/*`    | 🔜 stub (F3)  |
-| `/api/budgets/*`    | 🔜 stub (F4)  |
+| Endpoint                               | Estado      |
+|----------------------------------------|-------------|
+| `GET /health`                          | ✅          |
+| `POST/GET/PATCH /api/leads`            | ✅          |
+| `GET/POST/PATCH /api/budgets`          | ✅          |
+| `GET/PATCH /api/reviews`               | ✅          |
+| `GET /api/chatbot/flows/:slug`         | ✅          |
+| `POST /api/chatbot/sessions[/:id/...]` | ✅          |
+
+> "Código listo" = implementado y verificado en build + arranque local. La
+> ejecución contra datos reales requiere el deploy (ver `DEPLOY.md`).

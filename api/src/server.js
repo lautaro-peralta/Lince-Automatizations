@@ -13,6 +13,7 @@ import healthRouter from './routes/health.js';
 import leadsRouter from './routes/leads.js';
 import chatbotRouter from './routes/chatbot.js';
 import budgetsRouter from './routes/budgets.js';
+import reviewsRouter from './routes/reviews.js';
 
 const app = express();
 
@@ -30,8 +31,9 @@ app.use(
 // Rutas
 app.use('/health', healthRouter); // GET /health
 app.use('/api/leads', leadsRouter); // captura y listado de leads
-app.use('/api/chatbot', chatbotRouter); // demo conectado (Fase 3, stub)
-app.use('/api/budgets', budgetsRouter); // presupuestos (Fase 4, stub)
+app.use('/api/chatbot', chatbotRouter); // demo conectado a la base (Fase 3)
+app.use('/api/budgets', budgetsRouter); // presupuestos + seguimiento (Fase 4)
+app.use('/api/reviews', reviewsRouter); // gestión de reseñas (Fase 3)
 
 // 404 y manejador de errores SIEMPRE al final.
 app.use(notFound);

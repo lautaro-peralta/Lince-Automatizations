@@ -6,6 +6,7 @@ Postgres + Auth + cron del CRM de Lince.
 supabase/
 ├── migrations/
 │   └── 0001_init.sql              # Esquema completo + RLS
+├── seed.sql                       # Datos de ejemplo (opcional)
 └── functions/
     └── budget-followups/index.ts  # Edge Function del seguimiento (Fase 4)
 ```
@@ -22,6 +23,10 @@ contenido de `migrations/0001_init.sql` → **Run**.
 supabase link --project-ref TU_REF
 supabase db push
 ```
+
+**Datos de ejemplo (opcional):** después del esquema, corré `seed.sql` igual
+que arriba para tener un negocio, un flujo de chatbot, reseñas y presupuestos
+de prueba (uno ya "vencido" para ver el seguimiento). Es idempotente.
 
 ## 2. Crear el primer usuario admin
 

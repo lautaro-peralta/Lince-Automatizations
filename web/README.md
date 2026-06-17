@@ -3,7 +3,8 @@
 Sitio en **Vite vanilla** (sin framework). Dos páginas:
 
 - `/` → la **landing** (tu HTML original, migrado fielmente).
-- `/admin/` → el **panel interno** (login con Supabase + listado de leads).
+- `/admin/` → el **panel interno** (login con Supabase + pestañas de Leads,
+  Presupuestos y Reseñas).
 
 ## Estructura
 
@@ -19,10 +20,15 @@ web/
 │   │   ├── chatbot.js      # Demo de WhatsApp (original)
 │   │   ├── reveal.js       # Scroll-reveal (original)
 │   │   └── contact.js      # Formulario de leads → backend (nuevo)
-│   ├── admin/              # admin.js + admin.css
+│   ├── admin/              # Panel: admin.js (orquestador) + secciones
+│   │   ├── admin.css       # estilos del panel
+│   │   ├── leads.js        # sección Leads
+│   │   ├── budgets.js      # sección Presupuestos
+│   │   └── reviews.js      # sección Reseñas
 │   └── lib/
 │       ├── api.js          # Cliente HTTP del backend
-│       └── supabase.js     # Cliente Supabase (solo admin, para login)
+│       ├── supabase.js     # Cliente Supabase (solo admin, para login)
+│       └── format.js       # Helpers de presentación (escape, fechas, $)
 ├── vite.config.js
 └── .env.example
 ```
