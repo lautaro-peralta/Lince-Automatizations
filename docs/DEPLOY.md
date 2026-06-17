@@ -48,27 +48,35 @@ anterior). Todo en planes gratuitos.
 
 ---
 
-## 3. Vercel (frontend)
+## 3. Cloudflare Pages (frontend)
 
-1. New Project → importar este repo.
+Plan gratuito con uso comercial permitido. Comparación y alternativas en
+[`HOSTING-FRONTEND.md`](HOSTING-FRONTEND.md).
+
+1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → este repo.
 2. Configurar:
-   - **Root Directory:** `web`
-   - **Framework Preset:** Vite (o "Other")
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-3. **Environment Variables:**
+   - **Production branch:** `main`
+   - **Root directory:** `web`
+   - **Build command:** `npm run build`
+   - **Output directory:** `dist`
+3. **Environment variables** (Production):
    ```
    VITE_API_URL=https://tu-api.onrender.com
    VITE_SUPABASE_URL=...        (Project URL)
    VITE_SUPABASE_ANON_KEY=...   (anon public)
    ```
-4. Deploy. La landing queda en `/` y el panel en `/admin/`.
+4. Deploy → te da `https://<proyecto>.pages.dev`. La landing queda en `/` y el
+   panel en `/admin/`. El archivo `web/public/_headers` aplica cabeceras de
+   seguridad y marca `/admin/` como `noindex` automáticamente.
+
+> (Vercel también funciona, pero su plan Hobby **prohíbe uso comercial**; ver
+> `HOSTING-FRONTEND.md`.)
 
 ---
 
 ## 4. Cerrar el círculo
 
-- Volvé a Render y poné en `FRONTEND_ORIGIN` la URL final de Vercel (CORS).
+- Volvé a Render y poné en `FRONTEND_ORIGIN` la URL final del frontend (CORS).
 - Probá el formulario de la landing → debería aparecer en `/admin/`.
 
 ## Checklist
@@ -76,7 +84,7 @@ anterior). Todo en planes gratuitos.
 - [ ] Esquema aplicado en Supabase
 - [ ] Usuario admin creado y promovido
 - [ ] API en Render responde `/health`
-- [ ] Variables `VITE_*` cargadas en Vercel
-- [ ] `FRONTEND_ORIGIN` apunta a Vercel
+- [ ] Variables `VITE_*` cargadas en el hosting del frontend
+- [ ] `FRONTEND_ORIGIN` (Render) apunta al dominio del frontend
 - [ ] Lead de prueba viaja landing → API → base → panel
 - [ ] Pinger de keep-alive configurado

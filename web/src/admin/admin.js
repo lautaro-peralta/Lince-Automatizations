@@ -43,11 +43,28 @@ function render(session) {
   panelView.hidden = !authed;
   if (authed) {
     currentToken = session.access_token;
-    userEmail.textContent = session.user.email;
-    showTab(activeTab);
+    userEmail.textContent = session.user?.email || '';
+    // Si una sección falla al renderizar, no debe frenar el cambio de vista.
+    try {
+      showTab(activeTab);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('[admin] error al abrir la pestaña:', e);
+    }
   } else {
     currentToken = null;
   }
+}
+
+/** Traduce el error de Supabase a un mensaje claro para el usuario. */
+function loginErrorMessage(error) {
+  const m = (error?.message || '').toLowerCase();
+  if (m.includes('invalid login')) return 'Email o contraseña incorrectos.';
+  if (m.includes('email not confirmed'))
+    return 'Tu email todavía no está confirmado en Supabase (Authentication → Users → confirmar).';
+  if (m.includes('failed to fetch') || m.includes('network'))
+    return 'No pudimos conectar con Supabase. Revisá VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY.';
+  return error?.message ? `No pudimos iniciar sesión: ${error.message}` : 'No pudimos iniciar sesión.';
 }
 
 /** Renderiza una pestaña y marca su botón como activo. */
@@ -64,16 +81,35 @@ tabButtons.forEach((btn) => {
 });
 
 // Login.
+const submitBtn = loginForm.querySelector('button[type="submit"]');
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   loginError.textContent = '';
   const email = loginForm.email.value.trim();
   const password = loginForm.password.value;
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    loginError.textContent = 'No pudimos iniciar sesión. Revisá tus datos.';
+
+  submitBtn.disabled = true;
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Entrando…';
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error('[admin] login error:', error);
+      loginError.textContent = loginErrorMessage(error);
+      return;
+    }
+    // Éxito: movemos la UI directamente. No dependemos solo de onAuthStateChange
+    // (si ese evento no dispara, igual entramos).
+    if (data?.session) render(data.session);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('[admin] login excepción:', err);
+    loginError.textContent = loginErrorMessage(err);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
   }
-  // onAuthStateChange dispara render() automáticamente.
 });
 
 // Logout.

@@ -31,3 +31,41 @@ export function statusSelect(statuses, current) {
     .join('');
   return options;
 }
+
+/**
+ * Genera y descarga un CSV en el navegador (sin backend).
+ * @param {string} filename  Nombre del archivo (ej: 'leads.csv').
+ * @param {{key:string,label:string}[]} columns  Columnas a exportar.
+ * @param {object[]} data  Filas (objetos).
+ */
+export function downloadCsv(filename, columns, data) {
+  const cell = (v) => {
+    const s = v == null ? '' : String(v);
+    // Entrecomilla si hay comas, comillas o saltos de línea (RFC 4180).
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const header = columns.map((c) => cell(c.label)).join(',');
+  const rows = data.map((row) => columns.map((c) => cell(row[c.key])).join(','));
+  // BOM inicial para que Excel respete los acentos (UTF-8).
+  const csv = '﻿' + [header, ...rows].join('\r\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Mensaje claro para errores al cargar datos del panel.
+ * Distingue 403 (logueado pero sin rol admin) de 401 (sesión inválida).
+ */
+export function loadErrorMessage(err, fallback) {
+  if (err?.status === 403) return 'Iniciaste sesión, pero tu usuario no tiene rol admin. Promovelo (ver supabase/README.md).';
+  if (err?.status === 401) return 'Tu sesión expiró o es inválida. Volvé a entrar.';
+  return fallback;
+}

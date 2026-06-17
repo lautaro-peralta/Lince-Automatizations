@@ -4,7 +4,7 @@
  * estado y editar notas internas (PATCH /api/leads/:id).
  */
 import { apiFetch } from '../lib/api.js';
-import { esc, fmtDate, statusSelect } from '../lib/format.js';
+import { esc, fmtDate, statusSelect, downloadCsv, loadErrorMessage } from '../lib/format.js';
 
 const LEAD_STATUSES = ['nuevo', 'contactado', 'en_conversacion', 'ganado', 'descartado'];
 
@@ -19,12 +19,31 @@ export async function loadLeads(container, token) {
         <option value="">Todos los estados</option>
         ${LEAD_STATUSES.map((s) => `<option value="${s}">${s}</option>`).join('')}
       </select>
+      <button id="lead-export" class="toolbar-btn" type="button" disabled>Exportar CSV</button>
     </div>
     <div id="leads-status" class="panel-status"></div>
     <div id="leads-table-wrap"></div>`;
 
   const qInput = container.querySelector('#lead-q');
   const filter = container.querySelector('#lead-filter');
+  const exportBtn = container.querySelector('#lead-export');
+
+  // Guardamos los últimos leads cargados para poder exportarlos.
+  let currentLeads = [];
+  exportBtn.addEventListener('click', () => {
+    if (currentLeads.length === 0) return;
+    const columns = [
+      { key: 'created_at', label: 'Fecha' },
+      { key: 'name', label: 'Nombre' },
+      { key: 'business', label: 'Negocio' },
+      { key: 'contact', label: 'Contacto' },
+      { key: 'message', label: 'Mensaje' },
+      { key: 'status', label: 'Estado' },
+      { key: 'notes', label: 'Notas' },
+    ];
+    const fecha = new Date().toISOString().slice(0, 10);
+    downloadCsv(`leads-${fecha}.csv`, columns, currentLeads);
+  });
 
   // Re-busca con un pequeño debounce al tipear.
   let t;
@@ -48,6 +67,8 @@ export async function loadLeads(container, token) {
     try {
       const { data } = await apiFetch(`/api/leads${qs}`, { token });
       const leads = data || [];
+      currentLeads = leads;
+      exportBtn.disabled = leads.length === 0;
       if (leads.length === 0) {
         statusEl.textContent = 'No hay leads para este filtro.';
         return;
@@ -56,8 +77,9 @@ export async function loadLeads(container, token) {
       wrap.innerHTML = renderTable(leads);
       wireRowEvents(wrap);
     } catch (err) {
-      statusEl.textContent =
-        err.status === 401 ? 'Tu sesión no tiene permisos de admin.' : 'No pudimos cargar los leads.';
+      currentLeads = [];
+      exportBtn.disabled = true;
+      statusEl.textContent = loadErrorMessage(err, 'No pudimos cargar los leads.');
     }
   }
 
