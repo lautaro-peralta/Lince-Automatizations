@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" /><!-- el panel no debe indexarse -->
+  <title>Lince · Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/admin/admin.css" />
+</head>
+<body>
+  <!--
+    PANEL ADMIN (Fase 2+). Dos vistas que alterna admin.js según la sesión:
+      #login-view  -> formulario de acceso (Supabase Auth)
+      #panel-view  -> tablero con pestañas (Leads / Presupuestos / Reseñas)
+  -->
+
+  <!-- Vista de login -->
+  <section id="login-view" class="auth">
+    <form id="login-form" class="auth-card">
+      <div class="auth-logo">Lince · Panel</div>
+      <p class="auth-sub">Acceso para el equipo</p>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
+      <label for="password">Contraseña</label>
+      <input id="password" name="password" type="password" required autocomplete="current-password" />
+      <button type="submit" class="auth-btn">Entrar</button>
+      <p id="login-error" class="auth-error" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- Vista del panel (oculta hasta que haya sesión) -->
+  <section id="panel-view" class="panel" hidden>
+    <header class="panel-bar">
+      <div class="panel-brand">Lince · Panel</div>
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="summary">Resumen</button>
+        <button class="tab-btn" data-tab="leads">Leads</button>
+        <button class="tab-btn" data-tab="budgets">Presupuestos</button>
+        <button class="tab-btn" data-tab="reviews">Reseñas</button>
+      </nav>
+      <div class="panel-user">
+        <span id="user-email"></span>
+        <button id="logout-btn" class="panel-logout">Salir</button>
+      </div>
+    </header>
+
+    <!-- Cada módulo de sección renderiza su contenido acá. -->
+    <main class="panel-main" id="tab-content"></main>
+  </section>
+
+  <script type="module" src="/src/admin/admin.js"></script>
+</body>
+</html>

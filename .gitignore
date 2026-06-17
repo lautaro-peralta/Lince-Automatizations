@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+.vite/
+
+# Variables de entorno (NUNCA commitear secretos; usar los .env.example)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema / editores
+.DS_Store
+.vercel
+.idea/
+.vscode/
