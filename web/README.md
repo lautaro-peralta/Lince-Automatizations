@@ -12,7 +12,7 @@ Sitio en **Vite vanilla** (sin framework). Dos páginas:
 web/
 ├── index.html              # Landing (markup preservado 1:1)
 ├── admin/index.html        # Panel admin
-├── public/                 # Imágenes (servidas en la raíz: /lince-faded.png)
+├── public/                 # Imágenes + _headers (cabeceras para Cloudflare/Netlify)
 ├── src/
 │   ├── main.js             # Entrada de la landing
 │   ├── styles/landing.css  # CSS original + estilos del formulario
@@ -30,7 +30,7 @@ web/
 │   └── lib/
 │       ├── api.js          # Cliente HTTP del backend
 │       ├── supabase.js     # Cliente Supabase (solo admin, para login)
-│       └── format.js       # Helpers de presentación (escape, fechas, $)
+│       └── format.js       # Helpers de presentación (escape, fechas, $, export CSV)
 ├── vite.config.js
 └── .env.example
 ```

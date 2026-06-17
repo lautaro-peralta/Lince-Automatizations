@@ -40,6 +40,7 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
   webhook / email Resend; sin credenciales, loguea). Mismo mecanismo en la
   Edge Function de presupuestos. **Pendiente:** cargar credenciales en el deploy.
 - ✅ **Métricas en el panel** (pestaña "Resumen" → `GET /api/stats`).
+- ✅ **Export CSV de leads** desde el panel (genera el archivo en el navegador).
 - ✅ **IA para sugerir respuestas a reseñas** (`POST /api/reviews/:id/suggest`
   con Claude; sin API key cae a plantilla). **Pendiente:** cargar la API key.
 

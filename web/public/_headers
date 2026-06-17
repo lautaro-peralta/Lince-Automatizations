@@ -1,0 +1,10 @@
+# Cabeceras aplicadas por Cloudflare Pages (y Netlify). Vite copia public/ a dist/.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# El panel interno no debe indexarse en buscadores.
+/admin/*
+  X-Robots-Tag: noindex

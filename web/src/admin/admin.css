@@ -292,3 +292,19 @@ body{
 }
 .btn-suggest:hover{ border-color: var(--rust); color: var(--rust); }
 .btn-suggest:disabled{ opacity: 0.55; cursor: default; }
+
+/* Botón dentro de la toolbar (ej: Exportar CSV) */
+.toolbar-btn{
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--moss);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+.toolbar-btn:hover{ border-color: var(--rust); color: var(--rust); }
+.toolbar-btn:disabled{ opacity: 0.5; cursor: default; }
