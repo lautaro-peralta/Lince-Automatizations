@@ -52,6 +52,15 @@ Probar que vive:
 curl http://localhost:3000/health
 ```
 
+## Tests
+
+Smoke tests sin dependencias ni DB real (notificaciones, fallback de IA,
+protección de rutas):
+
+```bash
+npm test
+```
+
 ## Deploy en Render
 
 Ver `../docs/DEPLOY.md`. En resumen: Root Directory = `api`, Build Command =
