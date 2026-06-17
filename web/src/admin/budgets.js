@@ -4,7 +4,7 @@
  * (recordatorios) lo hace el cron de Supabase, no esta pantalla.
  */
 import { apiFetch } from '../lib/api.js';
-import { esc, fmtDate, fmtMoney, statusSelect } from '../lib/format.js';
+import { esc, fmtDate, fmtMoney, statusSelect, downloadCsv } from '../lib/format.js';
 
 const BUDGET_STATUSES = ['enviado', 'sin_respuesta', 'recordado', 'ganado', 'perdido'];
 
@@ -26,11 +26,32 @@ export async function loadBudgets(container, token) {
       <span class="form-feedback" id="budget-feedback"></span>
     </form>
 
+    <div class="toolbar">
+      <button id="budget-export" class="toolbar-btn" type="button" disabled>Exportar CSV</button>
+    </div>
     <div id="budgets-status" class="panel-status"></div>
     <div id="budgets-table-wrap"></div>`;
 
   const form = container.querySelector('#budget-form');
   const feedback = container.querySelector('#budget-feedback');
+  const exportBtn = container.querySelector('#budget-export');
+
+  // Últimos presupuestos cargados (para exportar).
+  let currentBudgets = [];
+  exportBtn.addEventListener('click', () => {
+    if (currentBudgets.length === 0) return;
+    const columns = [
+      { key: 'sent_at', label: 'Enviado' },
+      { key: 'customer_name', label: 'Cliente' },
+      { key: 'customer_contact', label: 'Contacto' },
+      { key: 'amount', label: 'Monto' },
+      { key: 'description', label: 'Descripción' },
+      { key: 'followup_count', label: 'Recordatorios' },
+      { key: 'status', label: 'Estado' },
+    ];
+    const fecha = new Date().toISOString().slice(0, 10);
+    downloadCsv(`presupuestos-${fecha}.csv`, columns, currentBudgets);
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -64,6 +85,8 @@ export async function loadBudgets(container, token) {
     try {
       const { data } = await apiFetch('/api/budgets', { token });
       const budgets = data || [];
+      currentBudgets = budgets;
+      exportBtn.disabled = budgets.length === 0;
       if (budgets.length === 0) {
         statusEl.textContent = 'Todavía no hay presupuestos.';
         return;
@@ -72,6 +95,8 @@ export async function loadBudgets(container, token) {
       wrap.innerHTML = renderTable(budgets);
       wireRowEvents(wrap);
     } catch (err) {
+      currentBudgets = [];
+      exportBtn.disabled = true;
       statusEl.textContent =
         err.status === 401 ? 'Tu sesión no tiene permisos de admin.' : 'No pudimos cargar los presupuestos.';
     }
