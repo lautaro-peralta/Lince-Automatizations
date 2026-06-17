@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
 import { requireAdmin } from '../middleware/auth.js';
 import { REVIEW_STATUSES } from '../constants.js';
+import { suggestReviewReply } from '../lib/ai.js';
 
 const router = Router();
 
@@ -62,6 +63,32 @@ router.patch('/:id', requireAdmin, async (req, res, next) => {
       .single();
     if (error) throw error;
     if (!data) return res.status(404).json({ message: 'Reseña no encontrada.' });
+    return res.json({ data });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/reviews/:id/suggest — admin. Genera (y guarda) una respuesta sugerida.
+router.post('/:id/suggest', requireAdmin, async (req, res, next) => {
+  try {
+    const { data: review, error } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('id', req.params.id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!review) return res.status(404).json({ message: 'Reseña no encontrada.' });
+
+    const suggestion = await suggestReviewReply(review);
+
+    const { data, error: upErr } = await supabase
+      .from('reviews')
+      .update({ suggested_response: suggestion })
+      .eq('id', req.params.id)
+      .select()
+      .single();
+    if (upErr) throw upErr;
     return res.json({ data });
   } catch (err) {
     next(err);

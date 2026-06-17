@@ -34,6 +34,9 @@ anterior). Todo en planes gratuitos.
    NOTIFY_WEBHOOK_URL=...          (Make/Zapier/Discord/Slack/WhatsApp-bridge)
    RESEND_API_KEY=...             (email vía Resend)
    NOTIFY_EMAIL_TO=...
+   # Opcional: IA para sugerir respuestas a reseñas (si falta, usa plantilla)
+   ANTHROPIC_API_KEY=...
+   ANTHROPIC_MODEL=claude-opus-4-8
    ```
    > `PORT` lo setea Render solo.
 4. Deploy. Verificar: `https://tu-api.onrender.com/health` → `{ ok: true }`.

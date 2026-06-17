@@ -24,13 +24,18 @@ api/
 
 ## Endpoints
 
-| Método | Ruta              | Acceso  | Estado     |
-|--------|-------------------|---------|------------|
-| GET    | `/health`         | público | ✅          |
-| POST   | `/api/leads`      | público | ✅          |
-| GET    | `/api/leads`      | admin   | ✅          |
-| *      | `/api/chatbot/*`  | mixto   | 🔜 Fase 3 |
-| *      | `/api/budgets/*`  | admin   | 🔜 Fase 4 |
+| Método | Ruta                        | Acceso  | Estado |
+|--------|-----------------------------|---------|--------|
+| GET    | `/health`                   | público | ✅     |
+| POST   | `/api/leads`                | público | ✅     |
+| GET/PATCH | `/api/leads[/:id]`       | admin   | ✅     |
+| GET/POST/PATCH | `/api/budgets[/:id]`| admin   | ✅     |
+| GET/PATCH | `/api/reviews[/:id]`     | admin   | ✅     |
+| POST   | `/api/reviews/:id/suggest`  | admin   | ✅ (IA) |
+| GET    | `/api/stats`                | admin   | ✅     |
+| *      | `/api/chatbot/*`            | público | ✅     |
+
+Detalle completo del contrato en [`../docs/API.md`](../docs/API.md).
 
 ## Cómo correrlo en local
 

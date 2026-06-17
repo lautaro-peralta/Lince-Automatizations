@@ -67,12 +67,17 @@ Estados: `enviado · sin_respuesta · recordado · ganado · perdido`.
 
 ## Reseñas · admin
 
-| Método | Ruta                | Cuerpo / notas |
-|--------|---------------------|----------------|
-| GET    | `/api/reviews?status=` | lista, filtro opcional |
-| PATCH  | `/api/reviews/:id`  | `{ status?, suggested_response?, priority? }` |
+| Método | Ruta                     | Cuerpo / notas |
+|--------|--------------------------|----------------|
+| GET    | `/api/reviews?status=`   | lista, filtro opcional |
+| PATCH  | `/api/reviews/:id`       | `{ status?, suggested_response?, priority? }` |
+| POST   | `/api/reviews/:id/suggest` | genera y guarda una respuesta sugerida (IA) |
 
 Estados: `nueva · analizando · respondida` (al marcar `respondida` se sella `responded_at`).
+
+> `POST /api/reviews/:id/suggest` usa **Claude** (`@anthropic-ai/sdk`) si está
+> `ANTHROPIC_API_KEY`; si no, devuelve una respuesta de plantilla. Nunca falla
+> por falta de credenciales. Respuesta: `{ data: { ...reseña con suggested_response } }`.
 
 ---
 

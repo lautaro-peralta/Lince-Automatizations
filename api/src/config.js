@@ -40,4 +40,11 @@ export const config = {
     emailFrom: process.env.NOTIFY_EMAIL_FROM || 'Lince <onboarding@resend.dev>',
     emailTo: process.env.NOTIFY_EMAIL_TO || '',
   },
+
+  // IA (opcional). Si no hay API key, la sugerencia de respuestas usa una
+  // plantilla local en vez de Claude. El modelo es configurable.
+  anthropic: {
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+    model: process.env.ANTHROPIC_MODEL || 'claude-opus-4-8',
+  },
 };

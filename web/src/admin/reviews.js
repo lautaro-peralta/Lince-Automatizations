@@ -46,9 +46,10 @@ export async function loadReviews(container, token) {
           ${r.priority ? `<span class="badge badge-${esc(r.priority)}">${esc(r.priority)}</span>` : ''}
         </div>
         <p class="review-text">${esc(r.text || '')}</p>
-        ${r.suggested_response ? `<p class="review-suggested">Sugerida: ${esc(r.suggested_response)}</p>` : ''}
+        <p class="review-suggested"${r.suggested_response ? '' : ' hidden'}>Sugerida: <span class="review-suggested-text">${esc(r.suggested_response || '')}</span></p>
         <div class="review-foot">
           <select class="row-status">${statusSelect(REVIEW_STATUSES, r.status || 'nueva')}</select>
+          <button class="btn-suggest" type="button">✨ Sugerir respuesta</button>
         </div>
       </div>`;
   }
@@ -64,6 +65,29 @@ export async function loadReviews(container, token) {
           setTimeout(() => e.target.classList.remove('saved'), 1200);
         } catch {
           e.target.classList.add('error');
+        }
+      });
+    });
+
+    // Botón "Sugerir respuesta": pide a la API una respuesta y la muestra.
+    wrap.querySelectorAll('.btn-suggest').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const card = btn.closest('.review-card');
+        const id = card.dataset.id;
+        const original = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Generando…';
+        try {
+          const { data } = await apiFetch(`/api/reviews/${id}/suggest`, { method: 'POST', token });
+          const p = card.querySelector('.review-suggested');
+          const span = card.querySelector('.review-suggested-text');
+          if (span && data) span.textContent = data.suggested_response || '';
+          if (p) p.hidden = false;
+          btn.textContent = original;
+        } catch {
+          btn.textContent = 'Error';
+        } finally {
+          btn.disabled = false;
         }
       });
     });

@@ -275,3 +275,20 @@ body{
   color: var(--sage);
 }
 .stat-line span:last-child{ color: var(--ink); font-weight: 600; }
+
+/* Pie de la tarjeta de reseña: estado + botón de IA */
+.review-foot{ display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.btn-suggest{
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--moss);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+.btn-suggest:hover{ border-color: var(--rust); color: var(--rust); }
+.btn-suggest:disabled{ opacity: 0.55; cursor: default; }

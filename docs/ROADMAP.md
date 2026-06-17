@@ -40,7 +40,8 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
   webhook / email Resend; sin credenciales, loguea). Mismo mecanismo en la
   Edge Function de presupuestos. **Pendiente:** cargar credenciales en el deploy.
 - ✅ **Métricas en el panel** (pestaña "Resumen" → `GET /api/stats`).
-- 🔜 IA para sugerir respuestas a reseñas.
+- ✅ **IA para sugerir respuestas a reseñas** (`POST /api/reviews/:id/suggest`
+  con Claude; sin API key cae a plantilla). **Pendiente:** cargar la API key.
 
 ## Estado de endpoints
 
@@ -50,6 +51,7 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 | `POST/GET/PATCH /api/leads`            | ✅          |
 | `GET/POST/PATCH /api/budgets`          | ✅          |
 | `GET/PATCH /api/reviews`               | ✅          |
+| `POST /api/reviews/:id/suggest` (IA)   | ✅          |
 | `GET /api/stats`                       | ✅          |
 | `GET /api/chatbot/flows/:slug`         | ✅          |
 | `POST /api/chatbot/sessions[/:id/...]` | ✅          |
