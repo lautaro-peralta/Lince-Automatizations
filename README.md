@@ -44,11 +44,12 @@ Detalle en `web/README.md`, `api/README.md` y `supabase/README.md`.
 
 ## Estado
 
-El **código de todas las fases del CRM está implementado y verificado** en
-build/arranque (leads, panel admin con resumen + leads + presupuestos + reseñas,
-notificaciones, chatbot/reseñas servidos desde la base, seguimiento de
-presupuestos). Lo que falta es **desplegar** y cargar credenciales de
-integraciones. Detalle por fase en [`docs/ROADMAP.md`](docs/ROADMAP.md).
+**Desplegado y en producción** (Supabase + Render + frontend; el frontend migra
+de Vercel a Cloudflare Pages). Todas las fases del CRM funcionan: leads, panel
+admin (resumen + leads + presupuestos + reseñas), notificaciones, chatbot/reseñas
+servidos desde la base, seguimiento de presupuestos. Lo que queda son las
+integraciones de pago (WhatsApp/email/IA con credenciales) y el switch del
+chatbot. Detalle por fase en [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 > El HTML original (`lince-portfolio.html`) se conserva intacto como referencia.
 > La versión activa de la landing vive en `web/` (migrada 1:1, con el agregado

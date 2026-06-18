@@ -1,9 +1,9 @@
 # Roadmap por fases — Lince
 
 El CRM completo se construye **por fases**. Cada fase deja algo desplegable.
-Estado al día de hoy: el código de las fases 2–4 está implementado y verificado
-en build/arranque; falta **desplegar** y, en algunos casos, conectar
-integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
+**Estado: desplegado y en producción** (Supabase + Render + frontend; el frontend
+migra de Vercel a Cloudflare Pages). Login y CORS resueltos. Lo que queda son
+integraciones de pago (WhatsApp/email/IA con credenciales) y el switch del chatbot.
 
 ## ✅ Fase 0 — Estructura y base
 - Monorepo `web/` + `api/` + `supabase/` + `docs/`.
@@ -11,15 +11,14 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 - Backend Express con `/health` y leads de punta a punta.
 - Esquema de base completo (con RLS) + datos de ejemplo (`seed.sql`).
 
-## ✅ Fase 1 — Leads (código listo)
+## ✅ Fase 1 — Leads (desplegado)
 - `POST/GET/PATCH /api/leads` con validación, honeypot, filtros y notas.
-- **Pendiente:** desplegar y probar el formulario real en producción.
+- En producción; verificar el formulario real punta a punta.
 
-## ✅ Fase 2 — Panel admin (código listo)
-- Login con Supabase Auth + rol admin.
-- Panel con pestañas: **Leads** (buscar, filtrar, cambiar estado, notas),
+## ✅ Fase 2 — Panel admin (desplegado)
+- Login con Supabase Auth + rol admin (login y CORS ya resueltos).
+- Panel con pestañas: **Leads** (buscar, filtrar, estado, notas, export CSV),
   **Presupuestos** y **Reseñas**.
-- **Pendiente:** desplegar.
 
 ## ✅ Fase 3 — Demos / datos reales
 - `GET /api/chatbot/flows/:slug`, `POST /sessions` (acepta `flow_slug`),
@@ -57,5 +56,6 @@ integraciones externas (envío de WhatsApp/email) y el switch final del cliente.
 | `GET /api/chatbot/flows/:slug`         | ✅          |
 | `POST /api/chatbot/sessions[/:id/...]` | ✅          |
 
-> "Código listo" = implementado y verificado en build + arranque local. La
-> ejecución contra datos reales requiere el deploy (ver `DEPLOY.md`).
+> Todos los endpoints están **desplegados**. Lo pendiente es de configuración
+> (credenciales de WhatsApp/email/IA, `pg_cron`) y el switch del chatbot — ver
+> las notas "Pendiente" de cada fase y `DEPLOY.md`.

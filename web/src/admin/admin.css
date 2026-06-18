@@ -19,6 +19,9 @@ body{
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
+/* El atributo hidden debe ocultar SIEMPRE, aunque la clase tenga display:flex.
+   (Sin esto, #login-view.auth seguía visible al entrar.) */
+[hidden] { display: none !important; }
 
 /* ---- Login ---- */
 .auth{

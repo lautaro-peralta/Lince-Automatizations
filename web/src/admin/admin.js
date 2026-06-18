@@ -43,7 +43,11 @@ function render(session) {
   panelView.hidden = !authed;
   if (authed) {
     currentToken = session.access_token;
-    userEmail.textContent = session.user?.email || '';
+    // Mensaje de bienvenida: saludamos por nombre (parte antes del @).
+    const email = session.user?.email || '';
+    const nombre = email.split('@')[0] || 'equipo';
+    userEmail.textContent = `Hola, ${nombre} 👋`;
+    userEmail.title = email;
     // Si una sección falla al renderizar, no debe frenar el cambio de vista.
     try {
       showTab(activeTab);
