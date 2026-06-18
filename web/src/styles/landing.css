@@ -992,3 +992,102 @@
   }
   .lead-feedback.ok{ color: var(--moss); }
   .lead-feedback.err{ color: #b23b3b; }
+
+  /* ─────────────────────────────────────────────────────────────
+     MEJORA ESTÉTICA: estrella brillosa con trayectoria curva + destellos
+     (decorativo, se inyecta desde /src/landing/sky.js)
+     ───────────────────────────────────────────────────────────── */
+  .sky{
+    position: fixed;
+    inset: 0;
+    z-index: 5;            /* por encima del contenido, debajo del header sticky si lo hubiera */
+    pointer-events: none;  /* nunca interfiere con clicks ni selección */
+    overflow: hidden;
+  }
+  .sky-svg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .sky-guide{
+    stroke: rgba(61,90,69,0.10);
+    stroke-width: 1.2;
+    stroke-dasharray: 2 7;
+    stroke-linecap: round;
+  }
+  .sky-trail{
+    stroke-width: 3;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(240,170,90,0.55));
+  }
+
+  /* La estrella: glow suave + figura de 4 puntas que destella */
+  .sky-star{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 26px;
+    height: 26px;
+    will-change: transform;
+  }
+  .sky-star-glow{
+    position: absolute;
+    inset: -22px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255,224,178,0.9) 0%,
+      rgba(240,170,90,0.45) 30%,
+      rgba(201,98,46,0.12) 60%,
+      transparent 75%
+    );
+    animation: skyPulse 2.6s ease-in-out infinite;
+  }
+  .sky-star-shape{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: #FFF4E2;
+    filter: drop-shadow(0 0 5px rgba(255,210,150,0.95))
+            drop-shadow(0 0 12px rgba(240,170,90,0.7));
+    transform: rotate(var(--spin, 0deg));
+    animation: skyTwinkle 2.6s ease-in-out infinite;
+  }
+  @keyframes skyPulse{
+    0%, 100%{ transform: scale(1); opacity: 0.85; }
+    50%{ transform: scale(1.25); opacity: 1; }
+  }
+  @keyframes skyTwinkle{
+    0%, 100%{ opacity: 0.9; }
+    50%{ opacity: 1; filter: drop-shadow(0 0 7px rgba(255,210,150,1)) drop-shadow(0 0 18px rgba(240,170,90,0.85)); }
+  }
+
+  /* Partículas/motas flotantes que suben lentamente */
+  .sky-dust{
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .sky-mote{
+    position: absolute;
+    border-radius: 50%;
+    background: var(--tone, rgba(201,98,46,0.5));
+    box-shadow: 0 0 6px var(--tone, rgba(201,98,46,0.5));
+    opacity: 0;
+    animation: skyFloat var(--dur, 22s) linear var(--delay, 0s) infinite;
+  }
+  @keyframes skyFloat{
+    0%{ transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
+    10%{ opacity: 1; }
+    50%{ transform: translateY(-52vh) translateX(var(--drift, 0px)) scale(1); }
+    90%{ opacity: 0.7; }
+    100%{ transform: translateY(-104vh) translateX(0) scale(0.5); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .sky, .sky-dust{ display: none; }
+  }
