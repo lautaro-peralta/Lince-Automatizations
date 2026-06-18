@@ -21,11 +21,20 @@ const app = express();
 // Cuerpo JSON con límite chico: una landing/CRM no necesita payloads grandes.
 app.use(express.json({ limit: '10kb' }));
 
-// CORS: en producción restringimos al/los origen(es) del frontend (Vercel).
-// Si la lista está vacía (dev) permitimos cualquier origen.
+// CORS: en producción restringimos al/los origen(es) del frontend.
+// Si la lista está vacía (dev) permitimos cualquier origen. La comparación
+// ignora la barra final y mayúsculas para evitar el error más típico de config.
+const normalizeOrigin = (o) => (o || '').trim().replace(/\/+$/, '').toLowerCase();
+const allowedOrigins = config.corsOrigins.map(normalizeOrigin);
 app.use(
   cors({
-    origin: config.corsOrigins.length ? config.corsOrigins : true,
+    origin(origin, callback) {
+      // Sin Origin (curl, health-check, server-to-server) → permitir.
+      if (!origin) return callback(null, true);
+      // Sin lista configurada → permitir todo (solo conviene en desarrollo).
+      if (allowedOrigins.length === 0) return callback(null, true);
+      return callback(null, allowedOrigins.includes(normalizeOrigin(origin)));
+    },
   })
 );
 

@@ -159,10 +159,46 @@ async function testRoutes() {
   }
 }
 
+async function testCors() {
+  console.log('cors');
+  const port = 4097;
+  const base = `http://localhost:${port}`;
+  // FRONTEND_ORIGIN con barra final a propósito (el error de config más común).
+  const child = spawn('node', ['src/server.js'], {
+    cwd: API_DIR,
+    env: { ...process.env, PORT: String(port), NODE_ENV: 'test', FRONTEND_ORIGIN: 'https://app.example.com/' },
+    stdio: 'ignore',
+  });
+
+  // Devuelve el header access-control-allow-origin para un Origin dado.
+  const acao = (origin) =>
+    new Promise((resolve, reject) => {
+      const r = http.request(base + '/health', { method: 'GET', headers: { Origin: origin } }, (res) => {
+        res.resume();
+        resolve(res.headers['access-control-allow-origin']);
+      });
+      r.on('error', reject);
+      r.end();
+    });
+
+  try {
+    await waitUp(base);
+    // El navegador manda el Origin SIN barra final; debe permitirse igual.
+    const allowed = await acao('https://app.example.com');
+    check('origen permitido recibe ACAO (tolera barra final en config)', !!allowed);
+    // Un origen distinto NO debe recibir ACAO.
+    const blocked = await acao('https://malicioso.com');
+    check('origen no permitido NO recibe ACAO', !blocked);
+  } finally {
+    child.kill();
+  }
+}
+
 (async () => {
   await testNotify();
   await testAi();
   await testRoutes();
+  await testCors();
   console.log(`\n${passed} OK, ${failed} fallidos`);
   process.exit(failed === 0 ? 0 : 1);
 })().catch((e) => {

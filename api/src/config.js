@@ -25,9 +25,11 @@ export const config = {
   supabaseServiceKey: required('SUPABASE_SERVICE_ROLE_KEY'),
 
   // Lista blanca de orígenes para CORS. Vacío => se permite todo (solo dev).
+  // Normalizamos: sin espacios y SIN barra final (el header Origin nunca la trae,
+  // así que una barra de más en la env rompería la comparación).
   corsOrigins: (process.env.FRONTEND_ORIGIN || '')
     .split(',')
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/+$/, ''))
     .filter(Boolean),
 
   // Notificaciones (todas opcionales). Si no hay ninguna configurada, el
