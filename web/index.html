@@ -248,28 +248,32 @@
           submit y hace POST a {VITE_API_URL}/api/leads. El backend (Express)
           valida de nuevo y guarda el lead en Supabase.
         -->
-        <form class="lead-form" id="lead-form" novalidate>
+        <form class="lead-form" id="prospect-form" novalidate>
           <div class="lead-field">
-            <label for="lead-name">Tu nombre</label>
-            <input id="lead-name" name="name" type="text" required maxlength="80" autocomplete="name" placeholder="Cómo te llamás" />
+            <label for="prospect-nombre">Tu nombre</label>
+            <input id="prospect-nombre" name="nombre" type="text" required maxlength="100" autocomplete="name" placeholder="Cómo te llamás" />
           </div>
           <div class="lead-field">
-            <label for="lead-business">Tu negocio <span class="lead-opt">(opcional)</span></label>
-            <input id="lead-business" name="business" type="text" maxlength="120" autocomplete="organization" placeholder="Nombre del local o rubro" />
+            <label for="prospect-email">Email</label>
+            <input id="prospect-email" name="email" type="email" required maxlength="200" autocomplete="email" placeholder="tu@mail.com" />
           </div>
           <div class="lead-field">
-            <label for="lead-contact">Email o WhatsApp</label>
-            <input id="lead-contact" name="contact" type="text" required maxlength="120" placeholder="Por dónde te respondemos" />
+            <label for="prospect-telefono">Teléfono <span class="lead-opt">(opcional)</span></label>
+            <input id="prospect-telefono" name="telefono" type="tel" maxlength="30" autocomplete="tel" placeholder="+54 9 341 000-0000" />
           </div>
           <div class="lead-field">
-            <label for="lead-message">¿Qué tarea se repite todos los días?</label>
-            <textarea id="lead-message" name="message" required maxlength="1000" rows="3" placeholder="Contanos brevemente tu caso"></textarea>
+            <label for="prospect-rubro">Rubro <span class="lead-opt">(opcional)</span></label>
+            <input id="prospect-rubro" name="rubro" type="text" maxlength="120" placeholder="Ej: panadería, estudio contable, gimnasio" />
+          </div>
+          <div class="lead-field">
+            <label for="prospect-mensaje">¿Qué tarea se repite todos los días? <span class="lead-opt">(opcional)</span></label>
+            <textarea id="prospect-mensaje" name="mensaje" maxlength="2000" rows="3" placeholder="Contanos brevemente tu caso"></textarea>
           </div>
           <!-- Honeypot anti-spam: invisible para humanos; si viene lleno, se descarta en el backend. -->
           <input class="lead-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <button class="btn" type="submit" id="lead-submit">Contar mi caso</button>
-          <!-- Zona de feedback (éxito/error) que rellena contact.js -->
-          <p class="lead-feedback" id="lead-feedback" role="status" aria-live="polite"></p>
+          <button class="btn" type="submit" id="prospect-submit">Contar mi caso</button>
+          <!-- Zona de feedback (éxito/error) que rellena prospects.js -->
+          <p class="lead-feedback" id="prospect-feedback" role="status" aria-live="polite"></p>
         </form>
       </div>
       <div class="contact-card">

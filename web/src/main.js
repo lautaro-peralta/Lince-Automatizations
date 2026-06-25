@@ -11,8 +11,10 @@ import './landing/chatbot.js'; // chatbot interactivo de WhatsApp (datos simulad
 import './landing/reveal.js'; // animación de aparición al hacer scroll
 import './landing/sky.js'; // estrella brillosa + destellos decorativos (puramente estético)
 
-// Funcionalidad nueva: el formulario de contacto que habla con el backend.
+// Formulario de contacto original (leads internos del CRM).
 import './landing/contact.js';
+// Formulario de prospectos del sitio web → POST /api/prospects.
+import './landing/prospects.js';
 
 // Registro de conversaciones del chatbot: OPCIONAL y apagado por defecto.
 // Import dinámico para no sumar peso ni requests si no está activado.
