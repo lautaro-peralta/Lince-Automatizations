@@ -49,4 +49,11 @@ export const config = {
     apiKey: process.env.ANTHROPIC_API_KEY || '',
     model: process.env.ANTHROPIC_MODEL || 'claude-opus-4-8',
   },
+
+  // n8n (webhook de prospectos). Opcional: si no se configura, el endpoint
+  // igualmente guarda el prospecto en Supabase y omite el aviso.
+  n8n: {
+    webhookUrl:    process.env.N8N_WEBHOOK_URL    || '',
+    webhookSecret: process.env.N8N_WEBHOOK_SECRET || '',
+  },
 };
