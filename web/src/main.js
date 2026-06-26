@@ -9,7 +9,6 @@
 // Demos y comportamiento de la landing (código original, preservado tal cual).
 import './landing/chatbot.js'; // chatbot interactivo de WhatsApp (datos simulados)
 import './landing/reveal.js'; // animación de aparición al hacer scroll
-import './landing/sky.js'; // estrella brillosa + destellos decorativos (puramente estético)
 
 // Funcionalidad nueva: el formulario de contacto que habla con el backend.
 import './landing/contact.js';

@@ -56,7 +56,7 @@
     inset: 0;
     background: linear-gradient(90deg, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%);
   }
-  .band-tall{ height: 88px; }
+  .band-tall{ height: 88px; position: relative; z-index: 3; }
 
   /* HEADER */
   header{
@@ -93,29 +93,41 @@
   /* HERO */
   .hero{
     position: relative;
-    padding: 80px 0 64px;
-    border-bottom: 1px solid var(--line);
-    overflow: hidden;
-  }
-  .hero-grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 24px;
+    padding: 80px 0 0;
+    /* no bottom border: the band right below acts as the "ledge" the lynx peeks over */
+    overflow: visible;
   }
   .hero-copy{
     position: relative;
     z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
   }
-  .hero-art{
+  /* Lynx spans the full page width and dissolves at its edges, rising up
+     out of the band below (which tucks over its lower edge). */
+  .hero-lynx{
     position: relative;
     z-index: 1;
-    margin-right: calc(50% - 50vw); /* let image bleed to the right edge */
+    margin: 48px calc(50% - 50vw) -26px; /* full-bleed width; negative bottom tucks behind the band */
+    height: clamp(200px, 40vw, 560px);   /* tall enough to frame chest → ears */
+    overflow: hidden;
+    /* fade the edges so the image melts into the page background */
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 9%, #000 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 9%, #000 100%);
+    mask-composite: intersect;
   }
-  .hero-art img{
-    display: block;
+  .hero-lynx img{
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: 58% 4%;    /* ears stay just below the top fade; chest meets the band */
+    display: block;
     opacity: 0;
     animation: lynxIn 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
   }
@@ -123,17 +135,15 @@
     from{ opacity: 0; transform: scale(1.04); }
     to{ opacity: 1; transform: scale(1); }
   }
+  /* center the copy elements to match the centered lynx */
+  .hero .eyebrow{ justify-content: center; }
+  .hero p{ margin-left: auto; margin-right: auto; }
+  .hero-foot{ justify-content: center; }
   @media (max-width: 860px){
-    .hero-grid{ grid-template-columns: 1fr; gap: 8px; }
-    .hero-art{
-      margin: 0 calc(50% - 50vw);
-      order: -1;
-      opacity: 0.92;
-    }
-    .hero-copy{ margin-top: -8px; }
+    .hero-lynx{ height: clamp(180px, 44vw, 340px); margin-top: 32px; }
   }
   @media (prefers-reduced-motion: reduce){
-    .hero-art img{ opacity:1; animation:none; }
+    .hero-lynx img{ opacity:1; animation:none; }
   }
   .eyebrow{
     font-family:'JetBrains Mono', monospace;
@@ -992,102 +1002,3 @@
   }
   .lead-feedback.ok{ color: var(--moss); }
   .lead-feedback.err{ color: #b23b3b; }
-
-  /* ─────────────────────────────────────────────────────────────
-     MEJORA ESTÉTICA: estrella brillosa con trayectoria curva + destellos
-     (decorativo, se inyecta desde /src/landing/sky.js)
-     ───────────────────────────────────────────────────────────── */
-  .sky{
-    position: fixed;
-    inset: 0;
-    z-index: 5;            /* por encima del contenido, debajo del header sticky si lo hubiera */
-    pointer-events: none;  /* nunca interfiere con clicks ni selección */
-    overflow: hidden;
-  }
-  .sky-svg{
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .sky-guide{
-    stroke: rgba(61,90,69,0.10);
-    stroke-width: 1.2;
-    stroke-dasharray: 2 7;
-    stroke-linecap: round;
-  }
-  .sky-trail{
-    stroke-width: 3;
-    stroke-linecap: round;
-    filter: drop-shadow(0 0 6px rgba(240,170,90,0.55));
-  }
-
-  /* La estrella: glow suave + figura de 4 puntas que destella */
-  .sky-star{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 26px;
-    height: 26px;
-    will-change: transform;
-  }
-  .sky-star-glow{
-    position: absolute;
-    inset: -22px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba(255,224,178,0.9) 0%,
-      rgba(240,170,90,0.45) 30%,
-      rgba(201,98,46,0.12) 60%,
-      transparent 75%
-    );
-    animation: skyPulse 2.6s ease-in-out infinite;
-  }
-  .sky-star-shape{
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    fill: #FFF4E2;
-    filter: drop-shadow(0 0 5px rgba(255,210,150,0.95))
-            drop-shadow(0 0 12px rgba(240,170,90,0.7));
-    transform: rotate(var(--spin, 0deg));
-    animation: skyTwinkle 2.6s ease-in-out infinite;
-  }
-  @keyframes skyPulse{
-    0%, 100%{ transform: scale(1); opacity: 0.85; }
-    50%{ transform: scale(1.25); opacity: 1; }
-  }
-  @keyframes skyTwinkle{
-    0%, 100%{ opacity: 0.9; }
-    50%{ opacity: 1; filter: drop-shadow(0 0 7px rgba(255,210,150,1)) drop-shadow(0 0 18px rgba(240,170,90,0.85)); }
-  }
-
-  /* Partículas/motas flotantes que suben lentamente */
-  .sky-dust{
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .sky-mote{
-    position: absolute;
-    border-radius: 50%;
-    background: var(--tone, rgba(201,98,46,0.5));
-    box-shadow: 0 0 6px var(--tone, rgba(201,98,46,0.5));
-    opacity: 0;
-    animation: skyFloat var(--dur, 22s) linear var(--delay, 0s) infinite;
-  }
-  @keyframes skyFloat{
-    0%{ transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
-    10%{ opacity: 1; }
-    50%{ transform: translateY(-52vh) translateX(var(--drift, 0px)) scale(1); }
-    90%{ opacity: 0.7; }
-    100%{ transform: translateY(-104vh) translateX(0) scale(0.5); opacity: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .sky, .sky-dust{ display: none; }
-  }
