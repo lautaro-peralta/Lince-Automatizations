@@ -56,7 +56,7 @@
     inset: 0;
     background: linear-gradient(90deg, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%);
   }
-  .band-tall{ height: 88px; }
+  .band-tall{ height: 88px; position: relative; z-index: 3; }
 
   /* HEADER */
   header{
@@ -93,29 +93,35 @@
   /* HERO */
   .hero{
     position: relative;
-    padding: 80px 0 64px;
-    border-bottom: 1px solid var(--line);
-    overflow: hidden;
-  }
-  .hero-grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 24px;
+    padding: 80px 0 0;
+    /* no bottom border: the band right below acts as the "ledge" the lynx peeks over */
+    overflow: visible;
   }
   .hero-copy{
     position: relative;
     z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
   }
-  .hero-art{
+  /* Lynx peeks up from behind the band, centered, chest-up.
+     The image is a wide landscape, so we frame a window onto the animal
+     (head + chest) and let the band below tuck over its lower edge. */
+  .hero-lynx{
     position: relative;
     z-index: 1;
-    margin-right: calc(50% - 50vw); /* let image bleed to the right edge */
+    width: min(560px, 86vw);
+    aspect-ratio: 986 / 830;   /* the chest-up window onto the source image */
+    margin: 44px auto -18px;    /* centered; negative bottom tucks it behind the band */
+    overflow: hidden;
   }
-  .hero-art img{
-    display: block;
-    width: 100%;
+  .hero-lynx img{
+    position: absolute;
+    width: 200%;                /* show the 50% horizontal slice centered on the lynx */
     height: auto;
+    left: -60%;                 /* pan to x:30%–80% of the source */
+    top: -3.7%;                 /* pan to y:2%–56% of the source (ears to chest) */
+    display: block;
     opacity: 0;
     animation: lynxIn 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
   }
@@ -123,17 +129,15 @@
     from{ opacity: 0; transform: scale(1.04); }
     to{ opacity: 1; transform: scale(1); }
   }
+  /* center the copy elements to match the centered lynx */
+  .hero .eyebrow{ justify-content: center; }
+  .hero p{ margin-left: auto; margin-right: auto; }
+  .hero-foot{ justify-content: center; }
   @media (max-width: 860px){
-    .hero-grid{ grid-template-columns: 1fr; gap: 8px; }
-    .hero-art{
-      margin: 0 calc(50% - 50vw);
-      order: -1;
-      opacity: 0.92;
-    }
-    .hero-copy{ margin-top: -8px; }
+    .hero-lynx{ width: min(440px, 82vw); margin-top: 36px; }
   }
   @media (prefers-reduced-motion: reduce){
-    .hero-art img{ opacity:1; animation:none; }
+    .hero-lynx img{ opacity:1; animation:none; }
   }
   .eyebrow{
     font-family:'JetBrains Mono', monospace;
