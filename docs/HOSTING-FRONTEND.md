@@ -1,7 +1,13 @@
 # Hosting del frontend — comparación para el caso gratis
 
-> Objetivo: elegir a dónde migrar la landing + panel (`web/`, build estático de
-> Vite) para poder usarla **comercialmente sin pagar**. Precios/limites ≈ junio 2026.
+> Objetivo: elegir a dónde migrar la landing + panel (`web/`, app **SvelteKit**:
+> landing prerenderizada + panel SPA) para usarla **comercialmente sin pagar**.
+> Precios/limites ≈ junio 2026.
+>
+> Nota: el proyecto viene con `@sveltejs/adapter-vercel`. Como la landing se
+> prerenderiza y el panel es client-only (`ssr=false`), la app es **estática**:
+> para Cloudflare/Render/Netlify cambiá a `@sveltejs/adapter-static` (con
+> `fallback: 'index.html'` para el panel); la salida pasa a ser `build/`.
 
 ## Por qué migrar de Vercel
 El plan **Hobby de Vercel prohíbe el uso comercial** en sus términos. Para un
@@ -11,7 +17,7 @@ La buena noticia: hay varios, y el sitio es estático (migración trivial).
 
 ## Comparación
 
-| Servicio | Comercial gratis | Ancho de banda (free) | Builds | Dominio + SSL gratis | Variables `VITE_*` | Notas |
+| Servicio | Comercial gratis | Ancho de banda (free) | Builds | Dominio + SSL gratis | Variables `PUBLIC_*` | Notas |
 |---|---|---|---|---|---|---|
 | **Cloudflare Pages** | ✅ **Sí** | **Ilimitado** | 500/mes | ✅ (5/proyecto) | ✅ | El más generoso. **Recomendado.** |
 | **Render Static Sites** | ✅ Sí | 100 GB/mes | auto en push | ✅ (2 gratis, +$0.25 c/u) | ✅ | Consolidás con tu API que ya está en Render. |
@@ -37,7 +43,8 @@ de ancho de banda; Render gana por simplicidad operativa (todo en un lugar).
 
 ## Cómo migrar (mismo build, sin tocar código)
 
-El build es idéntico en cualquiera: `npm run build` en `web/` → carpeta `dist/`.
+Con `adapter-static`, el build es `npm run build` en `web/` → carpeta `build/`
+(antes era `dist/` con Vite vanilla).
 
 ### Opción A — Cloudflare Pages
 1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → este repo.
@@ -45,19 +52,19 @@ El build es idéntico en cualquiera: `npm run build` en `web/` → carpeta `dist
    - **Production branch:** `main`
    - **Root directory:** `web`
    - **Build command:** `npm run build`
-   - **Output directory:** `dist`
+   - **Output directory:** `build` (con `adapter-static`)
 3. **Environment variables** (Production):
    ```
-   VITE_API_URL=https://lince-automatizations-backend.onrender.com
-   VITE_SUPABASE_URL=https://TU-PROYECTO.supabase.co
-   VITE_SUPABASE_ANON_KEY=tu-anon-key
+   PUBLIC_API_URL=https://lince-automatizations-backend.onrender.com
+   PUBLIC_SUPABASE_URL=https://TU-PROYECTO.supabase.co
+   PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
    ```
 4. Deploy → te da `https://<proyecto>.pages.dev`.
 
 ### Opción B — Render Static Site
 1. Render → **New → Static Site** → este repo.
-2. **Root Directory:** `web` · **Build Command:** `npm run build` · **Publish:** `dist`.
-3. Mismas variables `VITE_*` del paso anterior.
+2. **Root Directory:** `web` · **Build Command:** `npm run build` · **Publish:** `build` (con `adapter-static`).
+3. Mismas variables `PUBLIC_*` del paso anterior.
 
 ## ⚠️ El paso que todos olvidan: CORS
 Al cambiar el dominio del frontend, hay que avisarle al backend. En **Render →

@@ -1,6 +1,6 @@
 # Contrato de API — Lince
 
-Base URL: `VITE_API_URL` (ej. `http://localhost:3000` en local, la URL de
+Base URL: `PUBLIC_API_URL` (ej. `http://localhost:3000` en local, la URL de
 Render en producción). Todo es JSON.
 
 ## Convenciones
@@ -103,9 +103,9 @@ Conteos por estado para el panel de resumen.
 | POST   | `/api/chatbot/sessions`                | `{ flow_id? , flow_slug? }` (ambos opcionales) → `{ id }` |
 | POST   | `/api/chatbot/sessions/:id/messages`   | `{ role, text, current_node?, state?, completed? }` |
 
-> La landing registra la conversación con estos endpoints **solo si** se activa
-> `VITE_CHATBOT_LOGGING=true` (apagado por defecto). El registro es desacoplado
-> y silencioso: nunca afecta la demo.
+> Estos endpoints permiten registrar la conversación del chatbot. El frontend
+> SvelteKit todavía **no** los llama (la demo corre con su árbol embebido en
+> `web/src/lib/data/chatbot.ts`); reconectar el logging queda como mejora futura.
 
 > Hoy la demo de la landing corre con su árbol embebido (sigue funcionando sin
 > backend). Estos endpoints permiten servir el flujo desde la base y registrar

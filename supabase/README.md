@@ -43,8 +43,8 @@ de prueba (uno ya "vencido" para ver el seguimiento). Es idempotente.
 
 En **Project Settings → API**:
 
-- `Project URL` → `SUPABASE_URL` (backend) y `VITE_SUPABASE_URL` (panel).
-- `anon public` → `VITE_SUPABASE_ANON_KEY` (panel; segura de exponer).
+- `Project URL` → `SUPABASE_URL` (backend) y `PUBLIC_SUPABASE_URL` (panel).
+- `anon public` → `PUBLIC_SUPABASE_ANON_KEY` (panel; segura de exponer).
 - `service_role` → `SUPABASE_SERVICE_ROLE_KEY` (backend; **SECRETA**).
 
 ## 4. Programar el seguimiento de presupuestos (Fase 4)

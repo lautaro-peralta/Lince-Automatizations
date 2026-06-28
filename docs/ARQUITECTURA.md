@@ -12,7 +12,7 @@ todo desplegable en planes gratuitos y con foco en que **funcione fiablemente**.
 
 | Capa            | Tecnología                 | Hosting (free)        |
 |-----------------|----------------------------|-----------------------|
-| Frontend        | Vite (vanilla JS, sin framework) | **Vercel**      |
+| Frontend        | SvelteKit + Tailwind v4 (TS)     | **Vercel**      |
 | Backend / API   | Node.js + Express          | **Render**            |
 | Base de datos   | Postgres                   | **Supabase**          |
 | Auth (panel)    | Supabase Auth              | Supabase              |
