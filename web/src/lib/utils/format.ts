@@ -28,10 +28,10 @@ export interface CsvColumn {
  * Genera y descarga un CSV en el navegador (sin backend).
  * Solo corre en el cliente (usa document/Blob/URL).
  */
-export function downloadCsv(
+export function downloadCsv<T extends object>(
 	filename: string,
 	columns: CsvColumn[],
-	data: Record<string, unknown>[]
+	data: T[]
 ): void {
 	const cell = (v: unknown) => {
 		const s = v == null ? '' : String(v);
@@ -39,7 +39,9 @@ export function downloadCsv(
 		return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 	};
 	const header = columns.map((c) => cell(c.label)).join(',');
-	const rows = data.map((row) => columns.map((c) => cell(row[c.key])).join(','));
+	const rows = data.map((row) =>
+		columns.map((c) => cell((row as Record<string, unknown>)[c.key])).join(',')
+	);
 	// BOM inicial para que Excel respete los acentos (UTF-8).
 	const csv = '﻿' + [header, ...rows].join('\r\n');
 

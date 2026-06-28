@@ -38,7 +38,12 @@ export default defineConfig(
 			// Deploy en root sin base path: los <a href> con anclas (#seccion) y "/"
 			// son correctos sin resolve(). Desactivamos la regla (pensada para apps
 			// con base path configurado).
-			'svelte/no-navigation-without-resolve': 'off'
+			'svelte/no-navigation-without-resolve': 'off',
+			// Convención: variables/args con prefijo _ son intencionalmente sin usar.
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{ argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
+			]
 		}
 	}
 );
