@@ -1,57 +1,42 @@
-# Frontend de Lince (`web/`)
+# sv
 
-Sitio en **Vite vanilla** (sin framework). Dos páginas:
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-- `/` → la **landing** (tu HTML original, migrado fielmente).
-- `/admin/` → el **panel interno** (login con Supabase + pestañas de Leads,
-  Presupuestos y Reseñas).
+## Creating a project
 
-## Estructura
+If you're seeing this, you've probably already done this step. Congrats!
 
-```
-web/
-├── index.html              # Landing (markup preservado 1:1)
-├── admin/index.html        # Panel admin
-├── public/                 # Imágenes + _headers (cabeceras para Cloudflare/Netlify)
-├── src/
-│   ├── main.js             # Entrada de la landing
-│   ├── styles/landing.css  # CSS original + estilos del formulario
-│   ├── landing/
-│   │   ├── chatbot.js          # Demo de WhatsApp (original, intacto)
-│   │   ├── chatbot-logging.js  # Registro de conversaciones (opcional, gated)
-│   │   ├── reveal.js           # Scroll-reveal (original)
-│   │   └── contact.js          # Formulario de leads → backend (nuevo)
-│   ├── admin/              # Panel: admin.js (orquestador) + secciones
-│   │   ├── admin.css       # estilos del panel
-│   │   ├── summary.js      # sección Resumen (métricas)
-│   │   ├── leads.js        # sección Leads
-│   │   ├── budgets.js      # sección Presupuestos
-│   │   └── reviews.js      # sección Reseñas
-│   └── lib/
-│       ├── api.js          # Cliente HTTP del backend
-│       ├── supabase.js     # Cliente Supabase (solo admin, para login)
-│       └── format.js       # Helpers de presentación (escape, fechas, $, export CSV)
-├── vite.config.js
-└── .env.example
+```sh
+# create a new project
+npx sv create my-app
 ```
 
-## Cómo correrlo en local
+To recreate this project with the same configuration:
 
-```bash
-cd web
-cp .env.example .env      # completá VITE_API_URL y, si vas a usar el panel, las de Supabase
-npm install
-npm run dev               # http://localhost:5173
+```sh
+# recreate this project
+npx sv@0.16.1 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" vitest="usages:unit" sveltekit-adapter="adapter:vercel" --no-download-check --install npm lince-sk
 ```
 
-## Build de producción
+## Developing
 
-```bash
-npm run build             # genera web/dist/
-npm run preview           # previsualiza el build
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```sh
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
 
-## Deploy en Vercel
+## Building
 
-Ver `../docs/DEPLOY.md`. En resumen: Root Directory = `web`, Build Command =
-`npm run build`, Output Directory = `dist`, y cargar las variables `VITE_*`.
+To create a production version of your app:
+
+```sh
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
