@@ -55,12 +55,12 @@
 	</div>
 {:else if !auth.session}
 	<!-- LOGIN -->
-	<div class="grid min-h-dvh place-items-center bg-bg px-5">
+	<main class="grid min-h-dvh place-items-center bg-bg px-5">
 		<form
 			class="w-full max-w-[360px] rounded-xl border border-line bg-surface p-7 shadow-card"
 			onsubmit={onLogin}
 		>
-			<div class="font-display text-[20px] font-semibold">Lince · Panel</div>
+			<h1 class="font-display text-[20px] font-semibold">Lince · Panel</h1>
 			<p class="mb-5 text-sm text-sage">Acceso para el equipo</p>
 
 			{#if !supabaseConfigured}
@@ -100,7 +100,7 @@
 				<p class="mt-4 text-[13px] text-danger" role="alert">{loginError}</p>
 			{/if}
 		</form>
-	</div>
+	</main>
 {:else}
 	<!-- PANEL -->
 	<div class="min-h-dvh bg-bg">

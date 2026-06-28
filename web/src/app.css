@@ -17,7 +17,7 @@
 	--color-night: #14211a; /* secciones oscuras dramáticas */
 	--color-moss: #3d5a45; /* verde secundario */
 	--color-moss-deep: #2c4434;
-	--color-sage: #6e8579; /* texto terciario */
+	--color-sage: #5a6f62; /* texto terciario (oscurecido para contraste AA) */
 
 	/* ---- Acento rust ---- */
 	--color-rust: #c9622e; /* acento principal / CTA */
@@ -132,7 +132,9 @@
 		font-size: 13px;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: var(--color-rust);
+		/* rust-deep para que el texto chico cumpla contraste AA (el rust vibrante
+		   se reserva para acentos y texto grande). */
+		color: var(--color-rust-deep);
 	}
 
 	/* Motivo de líneas diagonales (la "veta" de la marca). */
