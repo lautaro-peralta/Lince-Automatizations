@@ -34,8 +34,11 @@ export default defineConfig(
 		}
 	},
 	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
-		rules: {}
+		rules: {
+			// Deploy en root sin base path: los <a href> con anclas (#seccion) y "/"
+			// son correctos sin resolve(). Desactivamos la regla (pensada para apps
+			// con base path configurado).
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	}
 );

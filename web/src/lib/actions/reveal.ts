@@ -16,8 +16,7 @@ interface RevealOptions {
  */
 export const reveal: Action<HTMLElement, RevealOptions | undefined> = (node, options) => {
 	const prefersReduced =
-		typeof matchMedia !== 'undefined' &&
-		matchMedia('(prefers-reduced-motion: reduce)').matches;
+		typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	if (prefersReduced || typeof IntersectionObserver === 'undefined') {
 		node.classList.add('is-visible');

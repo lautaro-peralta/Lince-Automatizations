@@ -155,8 +155,10 @@
 		);
 	}
 
-	/* Aparición al hacer scroll (la togglea la acción use:reveal). */
-	.reveal {
+	/* Aparición al hacer scroll (la togglea la acción use:reveal).
+	   Solo se oculta si hay JS (html.js): sin JS el contenido se ve igual,
+	   clave para SEO y resiliencia de la landing prerenderizada. */
+	html.js .reveal {
 		opacity: 0;
 		transform: translateY(24px);
 		transition:
@@ -164,7 +166,7 @@
 			transform 0.8s var(--ease-out-expo);
 		will-change: opacity, transform;
 	}
-	.reveal.is-visible {
+	html.js .reveal.is-visible {
 		opacity: 1;
 		transform: none;
 	}

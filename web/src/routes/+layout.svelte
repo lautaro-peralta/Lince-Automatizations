@@ -4,8 +4,8 @@
 	// mejoran LCP + privacidad. Fraunces con eje óptico para el look editorial.
 	import '@fontsource-variable/fraunces/opsz.css';
 	import '@fontsource-variable/fraunces/opsz-italic.css';
-	import '@fontsource-variable/source-sans-3';
-	import '@fontsource-variable/jetbrains-mono';
+	import '@fontsource-variable/source-sans-3/index.css';
+	import '@fontsource-variable/jetbrains-mono/index.css';
 
 	let { children } = $props();
 </script>
