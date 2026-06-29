@@ -1,57 +1,78 @@
-# Frontend de Lince (`web/`)
+# Lince — Frontend
 
-Sitio en **Vite vanilla** (sin framework). Dos páginas:
+Frontend de Lince: **landing pública** + **panel admin/CRM**, construido con
+**SvelteKit (Svelte 5) + TypeScript + Tailwind v4**. Se deploya en Vercel
+(free-tier) y habla con el backend (Express en Render) y con Supabase (auth).
 
-- `/` → la **landing** (tu HTML original, migrado fielmente).
-- `/admin/` → el **panel interno** (login con Supabase + pestañas de Leads,
-  Presupuestos y Reseñas).
+## Stack
+
+- **SvelteKit 2 / Svelte 5 (runes)** sobre Vite — adapter `@sveltejs/adapter-vercel`.
+- **Tailwind CSS v4** con tokens de marca en `@theme` (ver `src/app.css`).
+- **Fuentes self-host** con Fontsource (Fraunces, Source Sans 3, JetBrains Mono).
+- **Imágenes** optimizadas con `@sveltejs/enhanced-img` (AVIF/WebP responsive).
+- **Iconos** tree-shakeable con `unplugin-icons` + Lucide (`~icons/lucide/*`).
+- **Supabase** (`@supabase/supabase-js`) solo para el login del panel.
+- **Bits UI** disponible para componentes accesibles del panel.
 
 ## Estructura
 
 ```
-web/
-├── index.html              # Landing (markup preservado 1:1)
-├── admin/index.html        # Panel admin
-├── public/                 # Imágenes + _headers (cabeceras para Cloudflare/Netlify)
-├── src/
-│   ├── main.js             # Entrada de la landing
-│   ├── styles/landing.css  # CSS original + estilos del formulario
-│   ├── landing/
-│   │   ├── chatbot.js          # Demo de WhatsApp (original, intacto)
-│   │   ├── chatbot-logging.js  # Registro de conversaciones (opcional, gated)
-│   │   ├── reveal.js           # Scroll-reveal (original)
-│   │   └── contact.js          # Formulario de leads → backend (nuevo)
-│   ├── admin/              # Panel: admin.js (orquestador) + secciones
-│   │   ├── admin.css       # estilos del panel
-│   │   ├── summary.js      # sección Resumen (métricas)
-│   │   ├── leads.js        # sección Leads
-│   │   ├── budgets.js      # sección Presupuestos
-│   │   └── reviews.js      # sección Reseñas
-│   └── lib/
-│       ├── api.js          # Cliente HTTP del backend
-│       ├── supabase.js     # Cliente Supabase (solo admin, para login)
-│       └── format.js       # Helpers de presentación (escape, fechas, $, export CSV)
-├── vite.config.js
-└── .env.example
+src/
+├── app.css                 # Design system: tokens (@theme) + base + utilidades
+├── app.html                # Shell HTML (marca html.js para las animaciones)
+├── lib/
+│   ├── api.ts              # Cliente HTTP del backend (apiFetch tipado)
+│   ├── supabase.ts         # Cliente Supabase (browser, anon key)
+│   ├── actions/reveal.ts   # Acción de aparición al hacer scroll
+│   ├── utils/              # format (fechas/moneda/CSV), cx
+│   ├── data/chatbot.ts     # Árbol de conversación del chatbot demo
+│   ├── admin/              # auth (sesión reactiva) + tipos del dominio
+│   └── components/
+│       ├── Button.svelte, Badge.svelte
+│       ├── landing/        # Chatbot, LiveMonitor, Receipt, ContactForm
+│       └── admin/          # Skeleton, ErrorState, RowStatus, NotesInput
+└── routes/
+    ├── +layout.svelte      # CSS + fuentes globales
+    ├── +page.svelte        # Landing (prerender=true)
+    └── admin/              # Panel SPA (ssr=false, noindex)
+        ├── +layout.svelte  # Guard de auth + login + chrome
+        ├── +page.svelte    # Resumen
+        ├── leads/, presupuestos/, resenas/
 ```
 
-## Cómo correrlo en local
+## Desarrollo
 
-```bash
-cd web
-cp .env.example .env      # completá VITE_API_URL y, si vas a usar el panel, las de Supabase
+```sh
+cp .env.example .env     # completá las claves (ver abajo)
 npm install
-npm run dev               # http://localhost:5173
+npm run dev              # http://localhost:5173
 ```
 
-## Build de producción
+Otros scripts: `npm run build`, `npm run preview`, `npm run check`
+(svelte-check), `npm run lint`, `npm run format`, `npm run test`.
 
-```bash
-npm run build             # genera web/dist/
-npm run preview           # previsualiza el build
-```
+## Variables de entorno
 
-## Deploy en Vercel
+Solo las `PUBLIC_*` se exponen al navegador (ver `.env.example`):
 
-Ver `../docs/DEPLOY.md`. En resumen: Root Directory = `web`, Build Command =
-`npm run build`, Output Directory = `dist`, y cargar las variables `VITE_*`.
+| Variable                   | Para qué                               |
+| -------------------------- | -------------------------------------- |
+| `PUBLIC_API_URL`           | URL del backend (Express en Render)    |
+| `PUBLIC_SUPABASE_URL`      | Proyecto de Supabase (login del panel) |
+| `PUBLIC_SUPABASE_ANON_KEY` | Anon key (pública, protegida por RLS)  |
+
+## Deploy (Vercel)
+
+- **Root Directory:** `web`
+- **Build Command:** `npm run build` · **Framework:** SvelteKit (autodetectado)
+- Cargá las variables `PUBLIC_*` en el proyecto de Vercel.
+- Cabeceras de seguridad y `noindex` del panel: `vercel.json`
+  (y `static/_headers` para Cloudflare/Netlify).
+
+## Notas
+
+- La **landing** se prerenderiza a HTML estático (Core Web Vitals + SEO). Con el
+  patrón `html.js`, el contenido es visible incluso sin JavaScript.
+- El **panel** es una SPA detrás de login (auth en el cliente con Supabase). Las
+  lecturas/escrituras sensibles pasan por el backend, que verifica el JWT y el
+  rol admin.

@@ -8,9 +8,9 @@ Render (backend) y Supabase (base de datos + auth + cron).
 
 ```
 .
-├── web/                 # Frontend (Vite vanilla) → Vercel
-│   ├── index.html       #   landing (HTML original, preservado)
-│   └── admin/           #   panel interno
+├── web/                 # Frontend (SvelteKit + Tailwind v4) → Vercel
+│   ├── src/routes/+page.svelte  # landing pública (prerenderizada)
+│   └── src/routes/admin/        # panel interno (SPA con auth)
 ├── api/                 # Backend (Node + Express) → Render
 ├── supabase/            # Esquema SQL (con RLS) + Edge Function del cron
 ├── docs/                # Planeamiento (leer acá primero 👇)
@@ -50,6 +50,8 @@ notificaciones, chatbot/reseñas servidos desde la base, seguimiento de
 presupuestos). Lo que falta es **desplegar** y cargar credenciales de
 integraciones. Detalle por fase en [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
-> El HTML original (`lince-portfolio.html`) se conserva intacto como referencia.
-> La versión activa de la landing vive en `web/` (migrada 1:1, con el agregado
-> del formulario de contacto).
+> El frontend se migró a **SvelteKit + Tailwind v4** con un rediseño anclado en
+> la marca (paleta tierra, lince, tipografías). La landing se prerenderiza para
+> SEO/performance y el panel es una SPA detrás de login. Detalle en
+> [`web/README.md`](web/README.md). El HTML original (`lince-portfolio.html`) se
+> conserva como referencia.

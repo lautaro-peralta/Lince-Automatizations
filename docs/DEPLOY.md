@@ -58,19 +58,20 @@ Plan gratuito con uso comercial permitido. Comparación y alternativas en
    - **Production branch:** `main`
    - **Root directory:** `web`
    - **Build command:** `npm run build`
-   - **Output directory:** `dist`
+   - **Framework preset:** SvelteKit (la salida la maneja el adapter)
 3. **Environment variables** (Production):
    ```
-   VITE_API_URL=https://tu-api.onrender.com
-   VITE_SUPABASE_URL=...        (Project URL)
-   VITE_SUPABASE_ANON_KEY=...   (anon public)
+   PUBLIC_API_URL=https://tu-api.onrender.com
+   PUBLIC_SUPABASE_URL=...        (Project URL)
+   PUBLIC_SUPABASE_ANON_KEY=...   (anon public)
    ```
-4. Deploy → te da `https://<proyecto>.pages.dev`. La landing queda en `/` y el
-   panel en `/admin/`. El archivo `web/public/_headers` aplica cabeceras de
-   seguridad y marca `/admin/` como `noindex` automáticamente.
+4. Deploy → la landing queda en `/` y el panel en `/admin`. Las cabeceras de
+   seguridad y el `noindex` del panel se definen en `web/vercel.json` (Vercel) y
+   en `web/static/_headers` (Cloudflare/Netlify).
 
-> (Vercel también funciona, pero su plan Hobby **prohíbe uso comercial**; ver
-> `HOSTING-FRONTEND.md`.)
+> El frontend ahora es **SvelteKit** (ver `web/README.md`). Está configurado con
+> `@sveltejs/adapter-vercel`; para desplegar en Cloudflare/Netlify hay que
+> cambiar al adapter correspondiente.
 
 ---
 
@@ -84,7 +85,7 @@ Plan gratuito con uso comercial permitido. Comparación y alternativas en
 - [ ] Esquema aplicado en Supabase
 - [ ] Usuario admin creado y promovido
 - [ ] API en Render responde `/health`
-- [ ] Variables `VITE_*` cargadas en el hosting del frontend
+- [ ] Variables `PUBLIC_*` cargadas en el hosting del frontend
 - [ ] `FRONTEND_ORIGIN` (Render) apunta al dominio del frontend
 - [ ] Lead de prueba viaja landing → API → base → panel
 - [ ] Pinger de keep-alive configurado
