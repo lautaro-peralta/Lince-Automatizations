@@ -12,6 +12,11 @@
 	--color-surface: #efeae0; /* tarjetas */
 	--color-surface-2: #e7e0d3; /* tarjeta profunda / hover */
 
+	/* Crema fija (NO cambia entre temas): texto claro sobre secciones que son
+	   oscuras en ambos temas (ej. la sección "proceso"). A diferencia de `bg`,
+	   que se invierte en oscuro, `cream` siempre es claro. */
+	--color-cream: #f7f5f0;
+
 	/* ---- Tinta y verdes ---- */
 	--color-ink: #1b2b23; /* texto principal (casi negro verdoso) */
 	--color-night: #14211a; /* secciones oscuras dramáticas */
@@ -54,6 +59,56 @@
 	/* ---- Motion ---- */
 	--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 	--ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================================
+   TEMA OSCURO — paleta "carbón" de marca
+   Tailwind v4 genera las utilidades (bg-bg, text-ink, …) como `var(--color-*)`,
+   así que basta con re-pintar las variables bajo [data-theme='dark'] para que
+   TODO el sistema responda en cascada, sin rebuild ni clases `dark:` regadas.
+   El negro es un carbón verdoso derivado de los oscuros de marca (night/ink),
+   no un gris neutro: conserva el alma de la paleta tierra.
+   ========================================================================== */
+:root {
+	color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+
+	/* ---- Superficies oscuras (carbón verdoso) ---- */
+	--color-bg: #11140e; /* carbón base */
+	--color-surface: #191d16; /* tarjetas */
+	--color-surface-2: #232820; /* tarjeta profunda / hover */
+
+	/* `cream` se mantiene claro a propósito: no se re-declara acá. */
+
+	/* ---- Tinta y verdes (invertidos para legibilidad sobre carbón) ---- */
+	--color-ink: #ece6da; /* texto principal (crema cálido) */
+	--color-night: #0b0e09; /* secciones aún más profundas */
+	--color-moss: #8fb39a; /* verde secundario, aclarado para contraste AA */
+	--color-moss-deep: #a7c4b0;
+	--color-sage: #9aa79c; /* texto terciario, aclarado para contraste AA */
+
+	/* ---- Acento rust (un punto más vivo sobre oscuro) ---- */
+	--color-rust: #e07a45;
+	--color-rust-deep: #c9622e;
+	--color-rust-soft: #241710; /* tint cálido oscuro */
+
+	/* ---- Líneas (claras sobre oscuro) ---- */
+	--color-line: rgba(247, 245, 240, 0.1);
+	--color-line-strong: rgba(247, 245, 240, 0.2);
+	--color-line-light: rgba(247, 245, 240, 0.14);
+
+	/* ---- Estados ---- */
+	--color-success: #8fb39a;
+	--color-warning: #e07a45;
+	--color-danger: #e0796f; /* aclarado para legibilidad sobre carbón */
+
+	/* ---- Sombras (más profundas, basadas en negro) ---- */
+	--shadow-card: 0 1px 0 rgba(0, 0, 0, 0.4), 0 18px 40px -28px rgba(0, 0, 0, 0.8);
+	--shadow-lift: 0 28px 64px -30px rgba(0, 0, 0, 0.85);
+	--shadow-glow: 0 0 0 3px rgba(224, 122, 69, 0.25);
 }
 
 /* ============================================================================

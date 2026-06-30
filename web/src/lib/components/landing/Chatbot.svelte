@@ -1,14 +1,18 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import {
-		tree,
-		validators,
+		getChatbot,
 		type ChatNode,
 		type ChatOption,
 		type ChatInput,
 		type ChatState,
 		type ConfirmData
 	} from '$lib/data/chatbot';
+	import { t, getLocale, type Locale } from '$lib/i18n/index.svelte';
+
+	// Árbol y validadores del idioma actual (reactivo): cambiar de idioma
+	// reconstruye la conversación al instante.
+	const chatbot = $derived(getChatbot(getLocale()));
 
 	type Msg =
 		| { kind: 'msg'; who: 'bot' | 'user'; text: string; time: string }
@@ -22,7 +26,7 @@
 
 	let messages = $state<Msg[]>([]);
 	let typing = $state(false);
-	let status = $state('en línea');
+	let status = $state(t('chat.online'));
 	let controls = $state<Controls>({ kind: 'none' });
 	let inputValue = $state('');
 
@@ -63,15 +67,15 @@
 	}
 
 	async function goTo(key: string) {
-		const node = tree[key];
+		const node = chatbot.tree[key];
 		if (!node) return;
-		status = 'escribiendo...';
+		status = t('chat.typing');
 		typing = true;
 		scrollDown();
 		await sleep(650);
 		if (destroyed) return;
 		typing = false;
-		status = 'en línea';
+		status = t('chat.online');
 
 		const msgs = resolveMsgs(node.bot);
 		for (let i = 0; i < msgs.length; i++) {
@@ -130,17 +134,17 @@
 		addMsg(val, 'user');
 		inputValue = '';
 
-		const validate = validators[cfg.validate || cfg.key];
+		const validate = chatbot.validators[cfg.validate || cfg.key];
 		const err = validate ? validate(val) : null;
 		if (err) {
 			controls = { kind: 'none' };
-			status = 'escribiendo...';
+			status = t('chat.typing');
 			typing = true;
 			scrollDown();
 			await sleep(600);
 			if (destroyed) return;
 			typing = false;
-			status = 'en línea';
+			status = t('chat.online');
 			addMsg(err, 'bot');
 			await sleep(250);
 			if (destroyed) return;
@@ -160,10 +164,17 @@
 	}
 
 	function start() {
+		// Cancela timers en vuelo: si había un `goTo` esperando un `sleep`, su
+		// promesa nunca se resuelve y la cadena vieja queda detenida sin inyectar
+		// mensajes en la conversación nueva (clave al reiniciar por cambio de idioma).
+		timers.forEach(clearTimeout);
+		timers.length = 0;
 		conv = {};
 		messages = [];
+		typing = false;
+		status = t('chat.online');
 		controls = { kind: 'none' };
-		const node = tree.start;
+		const node = chatbot.tree.start;
 		const first = Array.isArray(node.bot) ? node.bot[0] : '';
 		addMsg(first, 'bot');
 		timers.push(
@@ -173,11 +184,29 @@
 		);
 	}
 
+	// Flags no reactivos: solo queremos que el efecto de abajo reaccione al idioma.
+	let begun = false;
+	let activeLocale: Locale | null = null;
+
+	// Reinicia la conversación en el nuevo idioma cuando el usuario cambia el idioma
+	// (pero no en el primer render: ahí solo registramos el idioma activo).
+	$effect(() => {
+		const locale = getLocale();
+		if (!begun) {
+			activeLocale = locale;
+			return;
+		}
+		if (locale !== activeLocale) {
+			activeLocale = locale;
+			start();
+		}
+	});
+
 	onMount(() => {
-		let started = false;
 		const begin = () => {
-			if (started) return;
-			started = true;
+			if (begun) return;
+			begun = true;
+			activeLocale = getLocale();
 			start();
 		};
 		if ('IntersectionObserver' in window) {
@@ -228,7 +257,7 @@
 			</svg>
 		</div>
 		<div>
-			<div class="wa-name">Parrilla El Fogón</div>
+			<div class="wa-name">{t('chat.businessName')}</div>
 			<div class="wa-status">{status}</div>
 		</div>
 	</div>
@@ -238,7 +267,7 @@
 		bind:this={bodyEl}
 		role="log"
 		aria-live="polite"
-		aria-label="Conversación de demostración"
+		aria-label={t('chat.logAria')}
 	>
 		{#each messages as msg, i (i)}
 			{#if msg.kind === 'msg'}
@@ -268,7 +297,9 @@
 		{/each}
 
 		{#if typing}
-			<div class="wa-typing" aria-label="Escribiendo"><span></span><span></span><span></span></div>
+			<div class="wa-typing" aria-label={t('chat.typingAria')}>
+				<span></span><span></span><span></span>
+			</div>
 		{/if}
 	</div>
 
@@ -286,13 +317,13 @@
 					maxlength="40"
 					placeholder={controls.cfg.placeholder}
 					onkeydown={(e) => e.key === 'Enter' && submitInput()}
-					aria-label="Tu respuesta"
+					aria-label={t('chat.inputAria')}
 				/>
 				<button
 					class="wa-send"
 					onclick={submitInput}
 					disabled={!inputValue.trim()}
-					aria-label="Enviar"
+					aria-label={t('chat.sendAria')}
 				>
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
 						<path d="M4 12 L20 4 L13 20 L11 13 Z" fill="#fff" />
@@ -301,7 +332,7 @@
 			</div>
 		{:else if controls.kind === 'restart'}
 			<button class="wa-restart" onclick={start}>
-				{controls.soft ? '↺ Probar de nuevo' : '↺ Empezar otra conversación'}
+				{controls.soft ? t('chat.restartSoft') : t('chat.restartHard')}
 			</button>
 		{/if}
 	</div>
@@ -319,8 +350,10 @@
 		flex-direction: column;
 		height: 460px;
 	}
+	/* El chatbot imita una pantalla de WhatsApp (clara), así que sus colores de
+	   contraste se fijan en hex de marca y NO se invierten en el tema oscuro. */
 	.wa-header {
-		background: var(--color-ink);
+		background: #1b2b23;
 		color: #fff;
 		padding: 11px 14px;
 		display: flex;
@@ -381,7 +414,7 @@
 	.wa-msg.bot {
 		align-self: flex-start;
 		background: #fff;
-		color: var(--color-ink);
+		color: #1b2b23;
 		border-top-left-radius: 2px;
 	}
 	.wa-msg.user {
@@ -410,7 +443,7 @@
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: var(--color-sage);
+		background: #5a6f62;
 		animation: thinkBounce 1.1s ease-in-out infinite;
 	}
 	.wa-typing span:nth-child(2) {
@@ -447,9 +480,9 @@
 		text-align: left;
 		padding: 9px 13px;
 		border-radius: 8px;
-		border: 1px solid var(--color-line-strong);
+		border: 1px solid rgba(27, 43, 35, 0.22);
 		background: #fff;
-		color: var(--color-ink);
+		color: #1b2b23;
 		cursor: pointer;
 		transition:
 			transform 0.12s,
@@ -465,7 +498,7 @@
 	.wa-restart {
 		font-family: var(--font-mono);
 		font-size: 12px;
-		color: var(--color-moss);
+		color: #3d5a45;
 		background: none;
 		border: none;
 		cursor: pointer;
@@ -479,12 +512,12 @@
 	.wa-confirm {
 		align-self: stretch;
 		background: #fff;
-		border: 1px solid var(--color-moss);
+		border: 1px solid #3d5a45;
 		border-radius: 9px;
 		padding: 12px 14px;
 		font-family: var(--font-mono);
 		font-size: 12px;
-		color: var(--color-ink);
+		color: #1b2b23;
 		animation: waPop 0.4s var(--ease-out-expo);
 	}
 	.wa-confirm-head {
@@ -492,7 +525,7 @@
 		align-items: center;
 		gap: 7px;
 		font-weight: 500;
-		color: var(--color-moss);
+		color: #3d5a45;
 		margin-bottom: 9px;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
@@ -505,7 +538,7 @@
 		margin-bottom: 5px;
 	}
 	.wa-confirm-row span:first-child {
-		color: var(--color-sage);
+		color: #5a6f62;
 	}
 	.wa-confirm-row span:last-child {
 		text-align: right;
@@ -522,9 +555,9 @@
 		font-size: 13px;
 		padding: 9px 13px;
 		border-radius: 8px;
-		border: 1px solid var(--color-line-strong);
+		border: 1px solid rgba(27, 43, 35, 0.22);
 		background: #fff;
-		color: var(--color-ink);
+		color: #1b2b23;
 		outline: none;
 		transition: border-color 0.12s;
 	}
@@ -537,7 +570,7 @@
 		height: 38px;
 		border-radius: 50%;
 		border: none;
-		background: var(--color-moss);
+		background: #3d5a45;
 		color: #fff;
 		cursor: pointer;
 		display: flex;

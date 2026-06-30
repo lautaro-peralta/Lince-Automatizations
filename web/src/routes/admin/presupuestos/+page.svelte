@@ -9,11 +9,16 @@
 		loadErrorMessage,
 		type CsvColumn
 	} from '$lib/utils/format';
+	import { t } from '$lib/i18n/index.svelte';
 	import { BUDGET_STATUSES, type Budget, type ApiData } from '$lib/admin/types';
 	import RowStatus from '$lib/components/admin/RowStatus.svelte';
 	import Skeleton from '$lib/components/admin/Skeleton.svelte';
 	import ErrorState from '$lib/components/admin/ErrorState.svelte';
 	import Button from '$lib/components/Button.svelte';
+
+	const statusLabels = $derived(
+		Object.fromEntries(BUDGET_STATUSES.map((s) => [s, t(`admin.status.budget.${s}`)]))
+	);
 
 	let budgets = $state<Budget[]>([]);
 	let loading = $state(true);
@@ -35,7 +40,7 @@
 			budgets = res.data ?? [];
 		} catch (err) {
 			budgets = [];
-			error = loadErrorMessage(err as { status?: number }, 'No pudimos cargar los presupuestos.');
+			error = loadErrorMessage(err as { status?: number }, t('admin.budgets.error'));
 		} finally {
 			loading = false;
 		}
@@ -54,10 +59,10 @@
 		try {
 			await apiFetch('/api/budgets', { method: 'POST', body, token: token() });
 			customerName = customerContact = amount = description = '';
-			feedback = { text: 'Agregado ✓', kind: 'ok' };
+			feedback = { text: t('admin.budgets.added'), kind: 'ok' };
 			await load();
 		} catch (err) {
-			feedback = { text: (err as ApiError).message || 'No se pudo guardar.', kind: 'err' };
+			feedback = { text: (err as ApiError).message || t('admin.budgets.saveError'), kind: 'err' };
 		} finally {
 			saving = false;
 		}
@@ -70,13 +75,13 @@
 	function exportCsv() {
 		if (budgets.length === 0) return;
 		const columns: CsvColumn[] = [
-			{ key: 'sent_at', label: 'Enviado' },
-			{ key: 'customer_name', label: 'Cliente' },
-			{ key: 'customer_contact', label: 'Contacto' },
-			{ key: 'amount', label: 'Monto' },
-			{ key: 'description', label: 'Descripción' },
-			{ key: 'followup_count', label: 'Recordatorios' },
-			{ key: 'status', label: 'Estado' }
+			{ key: 'sent_at', label: t('admin.csv.sent') },
+			{ key: 'customer_name', label: t('admin.csv.customer') },
+			{ key: 'customer_contact', label: t('admin.csv.contact') },
+			{ key: 'amount', label: t('admin.csv.amount') },
+			{ key: 'description', label: t('admin.csv.description') },
+			{ key: 'followup_count', label: t('admin.csv.followups') },
+			{ key: 'status', label: t('admin.csv.status') }
 		];
 		downloadCsv(`presupuestos-${new Date().toISOString().slice(0, 10)}.csv`, columns, budgets);
 	}
@@ -87,22 +92,22 @@
 		'rounded-[8px] border border-line-strong bg-bg px-3.5 py-2 text-[14px] outline-none focus:border-rust focus:shadow-glow';
 </script>
 
-<h1 class="text-[26px]">Presupuestos</h1>
-<p class="mb-5 text-[15px] text-sage">Cotizaciones enviadas y su seguimiento.</p>
+<h1 class="text-[26px]">{t('admin.budgets.title')}</h1>
+<p class="mb-5 text-[15px] text-sage">{t('admin.budgets.subtitle')}</p>
 
 <form class="mb-6 rounded-xl border border-line bg-surface p-5" onsubmit={onAdd}>
 	<div class="grid gap-3 sm:grid-cols-2">
 		<input
 			class={inputClass}
 			bind:value={customerName}
-			placeholder="Cliente"
+			placeholder={t('admin.budgets.customer')}
 			required
 			maxlength="120"
 		/>
 		<input
 			class={inputClass}
 			bind:value={customerContact}
-			placeholder="Email o WhatsApp"
+			placeholder={t('admin.budgets.contact')}
 			required
 			maxlength="120"
 		/>
@@ -112,13 +117,18 @@
 			type="number"
 			min="0"
 			step="0.01"
-			placeholder="Monto"
+			placeholder={t('admin.budgets.amount')}
 		/>
-		<input class={inputClass} bind:value={description} placeholder="Descripción" maxlength="1000" />
+		<input
+			class={inputClass}
+			bind:value={description}
+			placeholder={t('admin.budgets.description')}
+			maxlength="1000"
+		/>
 	</div>
 	<div class="mt-3 flex items-center gap-3">
 		<Button type="submit" size="sm" disabled={saving}>
-			{saving ? 'Agregando…' : 'Agregar presupuesto'}
+			{saving ? t('admin.budgets.adding') : t('admin.budgets.add')}
 		</Button>
 		{#if feedback.text}
 			<span
@@ -132,7 +142,7 @@
 
 <div class="mb-4 flex justify-end">
 	<Button size="sm" variant="subtle" onclick={exportCsv} disabled={budgets.length === 0}>
-		Exportar CSV
+		{t('admin.budgets.exportCsv')}
 	</Button>
 </div>
 
@@ -142,21 +152,23 @@
 	<ErrorState message={error} onRetry={load} />
 {:else if budgets.length === 0}
 	<p class="rounded-[10px] border border-line bg-surface p-6 text-center text-[15px] text-sage">
-		Todavía no hay presupuestos.
+		{t('admin.budgets.empty')}
 	</p>
 {:else}
-	<p class="mb-2 font-mono text-[12px] text-sage">{budgets.length} presupuesto(s).</p>
+	<p class="mb-2 font-mono text-[12px] text-sage">
+		{t('admin.budgets.count', { n: budgets.length })}
+	</p>
 	<div class="overflow-x-auto rounded-[10px] border border-line">
 		<table class="w-full border-collapse text-[14px]">
 			<thead>
 				<tr class="bg-surface text-left font-mono text-[11px] tracking-wide text-sage uppercase">
-					<th class="px-3 py-2.5 font-medium">Enviado</th>
-					<th class="px-3 py-2.5 font-medium">Cliente</th>
-					<th class="px-3 py-2.5 font-medium">Contacto</th>
-					<th class="px-3 py-2.5 font-medium">Monto</th>
-					<th class="px-3 py-2.5 font-medium">Descripción</th>
-					<th class="px-3 py-2.5 font-medium">Recordatorios</th>
-					<th class="px-3 py-2.5 font-medium">Estado</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colSent')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colCustomer')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colContact')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colAmount')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colDescription')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colFollowups')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.budgets.colStatus')}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -174,6 +186,7 @@
 							<RowStatus
 								value={b.status || 'enviado'}
 								options={BUDGET_STATUSES}
+								labels={statusLabels}
 								save={(v) => patchBudget(b.id, v)}
 							/>
 						</td>

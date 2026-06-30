@@ -3,6 +3,7 @@
 	import { apiFetch } from '$lib/api';
 	import { token } from '$lib/admin/auth.svelte';
 	import { loadErrorMessage } from '$lib/utils/format';
+	import { t } from '$lib/i18n/index.svelte';
 	import type { ApiData, Stats } from '$lib/admin/types';
 	import Skeleton from '$lib/components/admin/Skeleton.svelte';
 	import ErrorState from '$lib/components/admin/ErrorState.svelte';
@@ -18,7 +19,7 @@
 			const res = await apiFetch<ApiData<Stats>>('/api/stats', { token: token() });
 			stats = res.data;
 		} catch (err) {
-			error = loadErrorMessage(err as { status?: number }, 'No pudimos cargar las métricas.');
+			error = loadErrorMessage(err as { status?: number }, t('admin.summary.error'));
 		} finally {
 			loading = false;
 		}
@@ -30,30 +31,30 @@
 		stats
 			? [
 					{
-						title: 'Leads',
+						title: t('admin.summary.leads'),
 						total: stats.leads.total ?? 0,
 						lines: [
-							['Nuevos', stats.leads.nuevo],
-							['En conversación', stats.leads.en_conversacion],
-							['Ganados', stats.leads.ganado]
+							[t('admin.summary.leadsNew'), stats.leads.nuevo],
+							[t('admin.summary.leadsInConvo'), stats.leads.en_conversacion],
+							[t('admin.summary.leadsWon'), stats.leads.ganado]
 						] as [string, number | undefined][]
 					},
 					{
-						title: 'Presupuestos',
+						title: t('admin.summary.budgets'),
 						total: stats.budgets.total ?? 0,
 						lines: [
-							['Enviados', stats.budgets.enviado],
-							['Sin respuesta', stats.budgets.sin_respuesta],
-							['Ganados', stats.budgets.ganado]
+							[t('admin.summary.budgetsSent'), stats.budgets.enviado],
+							[t('admin.summary.budgetsNoReply'), stats.budgets.sin_respuesta],
+							[t('admin.summary.budgetsWon'), stats.budgets.ganado]
 						] as [string, number | undefined][]
 					},
 					{
-						title: 'Reseñas',
+						title: t('admin.summary.reviews'),
 						total: stats.reviews.total ?? 0,
 						lines: [
-							['Nuevas', stats.reviews.nueva],
-							['Analizando', stats.reviews.analizando],
-							['Respondidas', stats.reviews.respondida]
+							[t('admin.summary.reviewsNew'), stats.reviews.nueva],
+							[t('admin.summary.reviewsAnalyzing'), stats.reviews.analizando],
+							[t('admin.summary.reviewsAnswered'), stats.reviews.respondida]
 						] as [string, number | undefined][]
 					}
 				]
@@ -61,8 +62,8 @@
 	);
 </script>
 
-<h1 class="text-[26px]">Resumen</h1>
-<p class="mb-6 text-[15px] text-sage">Una mirada rápida del estado del negocio.</p>
+<h1 class="text-[26px]">{t('admin.summary.title')}</h1>
+<p class="mb-6 text-[15px] text-sage">{t('admin.summary.subtitle')}</p>
 
 {#if loading}
 	<Skeleton rows={3} />

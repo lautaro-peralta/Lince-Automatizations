@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { apiFetch, type ApiError } from '$lib/api';
 	import Button from '$lib/components/Button.svelte';
+	import { t } from '$lib/i18n/index.svelte';
 
 	let name = $state('');
 	let business = $state('');
@@ -19,19 +20,19 @@
 		wasValidated = true;
 
 		if (!formEl.checkValidity()) {
-			feedback = { text: 'Revisá los campos marcados, por favor.', kind: 'err' };
+			feedback = { text: t('form.invalid'), kind: 'err' };
 			return;
 		}
 
 		// Trampa anti-bots: un humano nunca completa este campo oculto.
 		if (website.trim() !== '') {
-			feedback = { text: '¡Gracias! Te vamos a contactar.', kind: 'ok' };
+			feedback = { text: t('form.botThanks'), kind: 'ok' };
 			reset();
 			return;
 		}
 
 		loading = true;
-		feedback = { text: 'Enviando…', kind: '' };
+		feedback = { text: t('form.sending'), kind: '' };
 
 		try {
 			await apiFetch('/api/leads', {
@@ -47,15 +48,12 @@
 			reset();
 			wasValidated = false;
 			feedback = {
-				text: '¡Listo! Recibimos tu mensaje. Te respondemos dentro de 24 hs.',
+				text: t('form.success'),
 				kind: 'ok'
 			};
 		} catch (e) {
 			const err = e as ApiError;
-			const msg =
-				err.status === 0
-					? 'No pudimos conectar con el servidor. Probá de nuevo en un minuto.'
-					: err.message || 'Algo salió mal. Intentá otra vez.';
+			const msg = err.status === 0 ? t('errors.networkRetry') : err.message || t('errors.generic');
 			feedback = { text: msg, kind: 'err' };
 		} finally {
 			loading = false;
@@ -80,7 +78,7 @@
 	onsubmit={onSubmit}
 >
 	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-name">Tu nombre</label>
+		<label class={labelClass} for="lead-name">{t('form.name')}</label>
 		<input
 			id="lead-name"
 			class={fieldClass}
@@ -90,13 +88,13 @@
 			required
 			maxlength="80"
 			autocomplete="name"
-			placeholder="Cómo te llamás"
+			placeholder={t('form.namePh')}
 		/>
 	</div>
 
 	<div class="flex flex-col gap-1.5">
 		<label class={labelClass} for="lead-business">
-			Tu negocio <span class="font-normal text-sage">(opcional)</span>
+			{t('form.business')} <span class="font-normal text-sage">{t('form.businessOptional')}</span>
 		</label>
 		<input
 			id="lead-business"
@@ -105,12 +103,12 @@
 			type="text"
 			maxlength="120"
 			autocomplete="organization"
-			placeholder="Nombre del local o rubro"
+			placeholder={t('form.businessPh')}
 		/>
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-contact">Email o WhatsApp</label>
+		<label class={labelClass} for="lead-contact">{t('form.contact')}</label>
 		<input
 			id="lead-contact"
 			class={fieldClass}
@@ -119,12 +117,12 @@
 			type="text"
 			required
 			maxlength="120"
-			placeholder="Por dónde te respondemos"
+			placeholder={t('form.contactPh')}
 		/>
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-message">¿Qué tarea se repite todos los días?</label>
+		<label class={labelClass} for="lead-message">{t('form.message')}</label>
 		<textarea
 			id="lead-message"
 			class="{fieldClass} resize-y"
@@ -133,7 +131,7 @@
 			required
 			maxlength="1000"
 			rows="3"
-			placeholder="Contanos brevemente tu caso"></textarea>
+			placeholder={t('form.messagePh')}></textarea>
 	</div>
 
 	<!-- Honeypot anti-spam: invisible para humanos; si viene lleno, se descarta. -->
@@ -148,7 +146,7 @@
 	/>
 
 	<Button type="submit" disabled={loading} class="self-start">
-		{loading ? 'Enviando…' : 'Contar mi caso'}
+		{loading ? t('form.submitting') : t('form.submit')}
 	</Button>
 
 	<p

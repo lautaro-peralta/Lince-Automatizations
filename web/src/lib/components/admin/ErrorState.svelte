@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import { t } from '$lib/i18n/index.svelte';
 
 	let { message, onRetry }: { message: string; onRetry?: () => void } = $props();
 </script>
@@ -10,6 +11,6 @@
 >
 	<p>{message}</p>
 	{#if onRetry}
-		<Button size="sm" variant="subtle" onclick={onRetry}>Reintentar</Button>
+		<Button size="sm" variant="subtle" onclick={onRetry}>{t('admin.retry')}</Button>
 	{/if}
 </div>

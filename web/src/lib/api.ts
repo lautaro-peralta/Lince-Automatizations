@@ -6,6 +6,7 @@
  * local sin romper el build si la variable no está definida.
  */
 import { env } from '$env/dynamic/public';
+import { t } from '$lib/i18n/index.svelte';
 
 const API_URL = (env.PUBLIC_API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
@@ -43,9 +44,7 @@ export async function apiFetch<T = unknown>(
 		});
 	} catch (networkErr) {
 		// El servidor de Render puede estar "despertando" (cold start) o sin red.
-		const err = new Error(
-			'No pudimos conectar con el servidor. Reintentá en un momento.'
-		) as ApiError;
+		const err = new Error(t('errors.network')) as ApiError;
 		err.cause = networkErr;
 		err.status = 0;
 		throw err;
@@ -59,7 +58,7 @@ export async function apiFetch<T = unknown>(
 		const message =
 			(data && typeof data === 'object' && 'message' in data
 				? String((data as { message: unknown }).message)
-				: null) || `Error ${res.status}`;
+				: null) || t('errors.genericServer', { status: res.status });
 		const err = new Error(message) as ApiError;
 		err.status = res.status;
 		err.data = data;
