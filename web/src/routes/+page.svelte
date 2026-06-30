@@ -5,6 +5,7 @@
 	import LiveMonitor from '$lib/components/landing/LiveMonitor.svelte';
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
+	import DotField from '$lib/components/landing/DotField.svelte';
 	import lince from '$lib/assets/images/lince.png?enhanced';
 
 	const title = 'Lince — Automatización para negocios';
@@ -95,7 +96,8 @@
 <main>
 	<!-- HERO -->
 	<section class="relative overflow-hidden pt-16 sm:pt-24">
-		<div class="wrap">
+		<DotField theme="light" />
+		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
 				<p
 					class="hero-anim kicker mb-5 inline-flex items-center justify-center gap-2.5"
@@ -276,8 +278,12 @@
 	</section>
 
 	<!-- PROCESO (sección oscura: alternancia tierra clara/oscura) -->
-	<section id="proceso" class="hatch-light bg-night py-[clamp(56px,9vw,88px)] text-bg">
-		<div class="wrap">
+	<section
+		id="proceso"
+		class="relative overflow-hidden hatch-light bg-night py-[clamp(56px,9vw,88px)] text-bg"
+	>
+		<DotField theme="dark" />
+		<div class="wrap relative z-10">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
 				<h2 class="text-[clamp(26px,4vw,38px)] text-bg">Cómo trabajamos</h2>
 				<div class="kicker text-[rgba(247,245,240,0.55)]">proceso</div>
