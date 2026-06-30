@@ -1,8 +1,13 @@
 /**
  * Árbol de conversación del chatbot demo de la landing (datos simulados).
- * Portado del antiguo web/src/landing/chatbot.js, ahora tipado. La lógica de
- * render/timing vive en components/landing/Chatbot.svelte.
+ *
+ * Hay un árbol y un set de validadores por idioma. `getChatbot(locale)` devuelve
+ * el par correcto, de forma que el componente puede reconstruir la conversación
+ * al instante cuando el usuario cambia de idioma (sin build ni fetch).
+ * La estructura (claves de nodo, `next`, `key`) es idéntica entre idiomas: solo
+ * cambia el texto.
  */
+import type { Locale } from '$lib/i18n/index.svelte';
 
 export type ChatState = Record<string, string>;
 
@@ -39,6 +44,7 @@ export interface ChatNode {
 }
 
 export type ChatTree = Record<string, ChatNode>;
+export type Validators = Record<string, (v: string) => string | null>;
 
 /** Capitaliza cada palabra (para nombres). */
 export function capitalizar(v: string): string {
@@ -48,8 +54,10 @@ export function capitalizar(v: string): string {
 		.join(' ');
 }
 
-/** Validadores de input: devuelven null si OK, o un string de error que responde el bot. */
-export const validators: Record<string, (v: string) => string | null> = {
+/* ============================================================================
+   ESPAÑOL
+   ========================================================================== */
+const esValidators: Validators = {
 	nombre(v) {
 		if (v.length < 2) return 'Necesito un nombre para anotar la reserva 🙂 ¿Cómo te llamás?';
 		if (/[0-9]/.test(v))
@@ -97,7 +105,7 @@ export const validators: Record<string, (v: string) => string | null> = {
 	}
 };
 
-export const tree: ChatTree = {
+const esTree: ChatTree = {
 	start: {
 		bot: ['¡Hola! 👋 Soy el asistente de Parrilla El Fogón. ¿En qué te puedo ayudar?'],
 		options: [
@@ -320,3 +328,267 @@ export const tree: ChatTree = {
 		softend: true
 	}
 };
+
+/* ============================================================================
+   ENGLISH
+   ========================================================================== */
+const enValidators: Validators = {
+	nombre(v) {
+		if (v.length < 2) return "I need a name to note the booking 🙂 What's your name?";
+		if (/[0-9]/.test(v))
+			return "Hmm, that doesn't look like a name. Could you tell me your name so I can note the booking?";
+		if (v.length > 30) return 'Your name or nickname is enough 🙂';
+		return null;
+	},
+	dia(v) {
+		const t = v.toLowerCase();
+		const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+		const words = ['today', 'tomorrow', 'tonight', 'weekend', 'next', 'this', 'coming'];
+		const hasDay = days.some((d) => t.indexOf(d) !== -1);
+		const hasWord = words.some((p) => t.indexOf(p) !== -1);
+		const hasDate = /\d{1,2}([/-]\d{1,2})?/.test(t);
+		if (!hasDay && !hasWord && !hasDate) {
+			return 'I didn\'t catch the day 🤔 Tell me a day of the week or a date (e.g. "Saturday", "the 20th", "tomorrow").';
+		}
+		return null;
+	},
+	zona(v) {
+		if (v.length < 3)
+			return 'Could you tell me your neighborhood or area? So I can confirm delivery.';
+		if (/^\d+$/.test(v)) return 'I need the name of the area or neighborhood, not a number 🙂';
+		return null;
+	}
+};
+
+const enTree: ChatTree = {
+	start: {
+		bot: ["Hi! 👋 I'm the assistant for El Fogón Grill House. How can I help?"],
+		options: [
+			{ label: "I'd like to book a table", next: 'reserva_personas' },
+			{ label: "I'd like to order delivery", next: 'delivery_zona' },
+			{ label: 'What time do you close?', next: 'consulta_horario' },
+			{ label: 'Do you have gluten-free / veggie options?', next: 'consulta_dieta' }
+		]
+	},
+
+	/* ---- BOOKING ---- */
+	reserva_personas: {
+		user: "I'd like to book a table",
+		bot: ['Great! For how many people?'],
+		options: [
+			{ label: '2 people', next: 'reserva_dia', set: { personas: '2 people' } },
+			{ label: '4 people', next: 'reserva_dia', set: { personas: '4 people' } },
+			{ label: '6 or more', next: 'reserva_grupo', set: { personas: '6+ people' } }
+		]
+	},
+	reserva_grupo: {
+		user: "We're 6 or more",
+		bot: [
+			'For large groups we book a little more in advance, but no problem 💪 Which day do you need it?'
+		],
+		options: [
+			{ label: 'This Friday', next: 'reserva_hora', set: { dia: 'Friday' } },
+			{ label: 'This Saturday', next: 'reserva_hora', set: { dia: 'Saturday' } },
+			{ label: 'Another day', next: 'reserva_dia_libre', set: {} }
+		]
+	},
+	reserva_dia: {
+		user: 'Done',
+		bot: ['Perfect. Which day works for you?'],
+		options: [
+			{ label: 'Today', next: 'reserva_hora', set: { dia: 'today' } },
+			{ label: 'Tomorrow', next: 'reserva_hora', set: { dia: 'tomorrow' } },
+			{ label: 'This Friday', next: 'reserva_hora', set: { dia: 'Friday' } },
+			{ label: 'This Saturday', next: 'reserva_hora', set: { dia: 'Saturday' } }
+		]
+	},
+	reserva_dia_libre: {
+		user: 'Another day',
+		bot: ["Tell me which day and we'll sort it out 👇"],
+		input: { placeholder: 'e.g. next Thursday', key: 'dia', next: 'reserva_hora' }
+	},
+	reserva_hora: {
+		user: 'That day',
+		bot: ['Noted! What time?'],
+		options: [
+			{ label: '8:30 PM', next: 'reserva_nombre', set: { hora: '8:30 PM' } },
+			{ label: '9:00 PM', next: 'reserva_nombre', set: { hora: '9:00 PM' } },
+			{ label: '9:30 PM', next: 'reserva_nombre', set: { hora: '9:30 PM' } },
+			{ label: '10:00 PM', next: 'reserva_nombre', set: { hora: '10:00 PM' } }
+		]
+	},
+	reserva_nombre: {
+		user: 'That time',
+		bot: ['Great! Under what name should I book it?'],
+		input: { placeholder: 'Your name', key: 'nombre', next: 'reserva_confirma', clean: capitalizar }
+	},
+	reserva_confirma: {
+		bot: (s) => ['All set ' + (s.nombre || '') + ', let me confirm with you 👇'],
+		confirm: (s) => ({
+			type: 'Booking confirmed',
+			rows: [
+				['Under the name', s.nombre || '—'],
+				['People', s.personas || '—'],
+				['Day', s.dia || '—'],
+				['Time', s.hora || '—']
+			]
+		}),
+		after: (s) => [
+			'Your table is booked, ' +
+				(s.nombre || '') +
+				". You'll get a reminder here an hour before. See you! 🔥"
+		],
+		end: true
+	},
+
+	/* ---- DELIVERY ---- */
+	delivery_zona: {
+		user: "I'd like to order delivery",
+		bot: [
+			"You got it! We do our own delivery in the Centro area and nearby, and we're also on PedidosYa and Rappi. Which area is it?"
+		],
+		options: [
+			{ label: 'Centro', next: 'delivery_plato', set: { zona: 'Centro (own delivery)' } },
+			{ label: 'Pichincha', next: 'delivery_plato', set: { zona: 'Pichincha (own delivery)' } },
+			{ label: 'Another area', next: 'delivery_zona_libre', set: {} }
+		]
+	},
+	delivery_zona_libre: {
+		user: 'Another area',
+		bot: [
+			"Tell me your neighborhood and I'll confirm whether we reach it with our own delivery or if PedidosYa works better 👇"
+		],
+		input: { placeholder: 'e.g. Fisherton, Echesortu...', key: 'zona', next: 'delivery_zona_check' }
+	},
+	delivery_zona_check: {
+		bot: (s) => [
+			'Yes, we reach ' +
+				(s.zona || 'your area') +
+				'! 🛵 For that distance delivery is $1,200. What would you like to order?'
+		],
+		options: [
+			{ label: 'Ribeye + side', next: 'delivery_bebida', set: { plato: 'Ribeye' } },
+			{
+				label: 'Provoleta + empanadas',
+				next: 'delivery_bebida',
+				set: { plato: 'Provoleta + empanadas' }
+			},
+			{
+				label: 'Milanesa napolitana',
+				next: 'delivery_bebida',
+				set: { plato: 'Milanesa napolitana' }
+			},
+			{
+				label: 'Grill platter for 2',
+				next: 'delivery_bebida',
+				set: { plato: 'Grill platter for 2' }
+			}
+		]
+	},
+	delivery_plato: {
+		user: 'That area',
+		bot: ["What would you like to order? These are today's most popular:"],
+		options: [
+			{ label: 'Ribeye + side', next: 'delivery_bebida', set: { plato: 'Ribeye' } },
+			{
+				label: 'Provoleta + empanadas',
+				next: 'delivery_bebida',
+				set: { plato: 'Provoleta + empanadas' }
+			},
+			{
+				label: 'Milanesa napolitana',
+				next: 'delivery_bebida',
+				set: { plato: 'Milanesa napolitana' }
+			},
+			{
+				label: 'Grill platter for 2',
+				next: 'delivery_bebida',
+				set: { plato: 'Grill platter for 2' }
+			}
+		]
+	},
+	delivery_bebida: {
+		user: "That's what I want",
+		bot: ['Great choice 😋 Anything to drink?'],
+		options: [
+			{ label: 'Soda 1.5L', next: 'delivery_nombre', set: { bebida: 'Soda 1.5L' } },
+			{ label: 'A craft beer', next: 'delivery_nombre', set: { bebida: 'Craft beer' } },
+			{ label: 'Just the food, thanks', next: 'delivery_nombre', set: { bebida: '—' } }
+		]
+	},
+	delivery_nombre: {
+		bot: ['Under what name should I prepare the order?'],
+		input: {
+			placeholder: 'Your name',
+			key: 'nombre',
+			next: 'delivery_confirma',
+			clean: capitalizar
+		}
+	},
+	delivery_confirma: {
+		bot: (s) => ['Thanks ' + (s.nombre || '') + "! Let's confirm the order 👇"],
+		confirm: (s) => ({
+			type: 'Order confirmed',
+			rows: [
+				['Under the name', s.nombre || '—'],
+				['Order', s.plato || '—'],
+				['To drink', s.bebida || '—'],
+				['Delivery', s.zona || '—'],
+				['Estimated time', '35–45 min'],
+				['Payment', 'on delivery']
+			]
+		}),
+		after: (s) => [
+			'All set ' +
+				(s.nombre || '') +
+				"! Your order went to the kitchen. We'll let you know here when it's on its way to your address. 🛵"
+		],
+		end: true
+	},
+
+	/* ---- QUESTIONS -> lead into an action ---- */
+	consulta_horario: {
+		user: 'What time do you close?',
+		bot: [
+			"Today we're open 8:00 PM to 12:00 AM 🕗 (and midday from 12 to 3 PM). We're at San Martín 1234, Rosario.",
+			"Want me to book you a table so you don't have to wait?"
+		],
+		options: [
+			{ label: 'Yes, book me a table', next: 'reserva_personas' },
+			{ label: "I'd rather order delivery", next: 'delivery_zona' },
+			{ label: 'No, just asking', next: 'consulta_cierre' }
+		]
+	},
+	consulta_dieta: {
+		user: 'Do you have gluten-free / veggie options?',
+		bot: [
+			'Yes! 🌱 We have provoleta, salads, fries and gluten-free sides, plus grilled veggie options. Let us know when ordering and the kitchen prepares it separately.',
+			'Want to book or order delivery?'
+		],
+		options: [
+			{ label: 'Book a table', next: 'reserva_personas' },
+			{ label: 'Order delivery', next: 'delivery_zona' },
+			{ label: 'Just asking', next: 'consulta_cierre' }
+		]
+	},
+	consulta_cierre: {
+		user: 'That was it, thanks',
+		bot: ["You're welcome! Message us here anytime. Have a great day! ☀️"],
+		after: [],
+		end: true,
+		softend: true
+	}
+};
+
+/* ============================================================================
+   SELECTOR
+   ========================================================================== */
+const byLocale: Record<Locale, { tree: ChatTree; validators: Validators }> = {
+	es: { tree: esTree, validators: esValidators },
+	en: { tree: enTree, validators: enValidators }
+};
+
+/** Devuelve el árbol y los validadores del idioma pedido. */
+export function getChatbot(locale: Locale): { tree: ChatTree; validators: Validators } {
+	return byLocale[locale] ?? byLocale.es;
+}

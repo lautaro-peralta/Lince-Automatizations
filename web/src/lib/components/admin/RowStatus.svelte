@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { cx } from '$lib/utils/cx';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		value: string;
 		options: readonly string[];
 		/** Guarda el nuevo valor (PATCH). Debe lanzar si falla. */
 		save: (value: string) => Promise<void>;
+		/** Etiquetas traducidas por valor; si falta, se muestra el valor "humanizado". */
+		labels?: Record<string, string>;
 		class?: string;
 	}
 
-	let { value, options, save, class: klass = '' }: Props = $props();
+	let { value, options, save, labels, class: klass = '' }: Props = $props();
 
 	type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -46,12 +49,12 @@
 		ring[saveState],
 		klass
 	)}
-	aria-label="Cambiar estado"
+	aria-label={t('admin.statusAria')}
 >
 	{#each options as o (o)}
-		<option value={o}>{o.replace(/_/g, ' ')}</option>
+		<option value={o}>{labels?.[o] ?? o.replace(/_/g, ' ')}</option>
 	{/each}
 </select>
 {#if saveState === 'error'}
-	<span class="ml-1.5 font-mono text-[11px] text-danger">no se guardó</span>
+	<span class="ml-1.5 font-mono text-[11px] text-danger">{t('admin.notSaved')}</span>
 {/if}

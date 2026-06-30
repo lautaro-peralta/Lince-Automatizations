@@ -1,39 +1,39 @@
 <script lang="ts">
 	// Monitor de reseñas en vivo (demo, datos simulados). Las 4 "frames" rotan
 	// con animación CSS; en prefers-reduced-motion se muestra solo la primera.
+	import { t } from '$lib/i18n/index.svelte';
 </script>
 
 <div class="live-card">
 	<div class="live-card-header">
-		<span class="dot" aria-hidden="true"></span>Monitor en vivo · Estudio Marrón
+		<span class="dot" aria-hidden="true"></span>{t('monitor.header')}
 	</div>
 	<div class="live-stage">
 		<div class="live-frame">
-			<div class="live-frame-label">Reseña detectada · Google Maps</div>
-			<div class="live-stars" aria-label="1 de 5 estrellas">★☆☆☆☆</div>
+			<div class="live-frame-label">{t('monitor.f1Label')}</div>
+			<div class="live-stars" aria-label={t('monitor.f1Stars')}>★☆☆☆☆</div>
 			<div class="live-quote">
-				"Esperé 40 minutos pasado mi turno y nadie me avisó nada. Una falta de respeto."
+				{t('monitor.f1Quote')}
 			</div>
-			<div class="live-meta">hace 8 minutos · sin responder</div>
+			<div class="live-meta">{t('monitor.f1Meta')}</div>
 		</div>
 		<div class="live-frame">
-			<div class="live-frame-label">Analizando tono</div>
+			<div class="live-frame-label">{t('monitor.f2Label')}</div>
 			<div class="live-thinking" aria-hidden="true"><span></span><span></span><span></span></div>
 			<div class="live-quote">
-				Cliente molesto por demora. Riesgo alto: menciona falta de respeto y puede influir a otros.
+				{t('monitor.f2Quote')}
 			</div>
-			<div class="live-meta">prioridad: urgente</div>
+			<div class="live-meta">{t('monitor.f2Meta')}</div>
 		</div>
 		<div class="live-frame">
-			<div class="live-frame-label">Respuesta sugerida</div>
+			<div class="live-frame-label">{t('monitor.f3Label')}</div>
 			<div class="live-response">
-				"Lamentamos mucho la demora, Ana. No es la experiencia que queremos dar. Nos encantaría
-				compensarte en tu próxima visita — te escribimos por privado."
+				{t('monitor.f3Response')}
 			</div>
-			<div class="live-meta">tono: cercano · listo para enviar</div>
+			<div class="live-meta">{t('monitor.f3Meta')}</div>
 		</div>
 		<div class="live-frame">
-			<div class="live-frame-label">Resuelto</div>
+			<div class="live-frame-label">{t('monitor.f4Label')}</div>
 			<div class="live-check">
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
 					<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
@@ -45,12 +45,12 @@
 						stroke-linejoin="round"
 					/>
 				</svg>
-				Respondida en 12 minutos
+				{t('monitor.f4Check')}
 			</div>
 			<div class="live-quote small">
-				El dueño recibió un aviso al instante. La reseña ya no quedó colgada tres semanas.
+				{t('monitor.f4Quote')}
 			</div>
-			<div class="live-meta">tiempo promedio de respuesta: 14 min</div>
+			<div class="live-meta">{t('monitor.f4Meta')}</div>
 		</div>
 	</div>
 	<div class="live-dots" aria-hidden="true">

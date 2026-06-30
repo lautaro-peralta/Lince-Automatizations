@@ -16,7 +16,7 @@
 		warning: 'bg-rust/14 text-rust-deep border-rust/25',
 		danger: 'bg-danger/12 text-danger border-danger/25',
 		info: 'bg-moss/10 text-moss border-moss/20',
-		accent: 'bg-rust text-bg border-rust'
+		accent: 'bg-rust text-cream border-rust'
 	};
 </script>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { cx } from '$lib/utils/cx';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		value: string;
@@ -41,8 +42,8 @@
 <input
 	bind:value={current}
 	onblur={onBlur}
-	placeholder="Notas…"
-	aria-label="Notas internas"
+	placeholder={t('admin.notesPh')}
+	aria-label={t('admin.notesAria')}
 	class={cx(
 		'w-full min-w-[140px] rounded-[7px] border bg-bg px-2.5 py-1.5 text-[13px] text-ink outline-none transition-colors focus:border-rust',
 		ring[saveState]

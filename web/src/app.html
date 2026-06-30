@@ -2,9 +2,26 @@
 <html lang="es">
 	<head>
 		<!-- Marca que hay JS antes de pintar: las animaciones de scroll solo ocultan
-		     contenido si esta clase está presente (sin JS, todo se ve igual). -->
+		     contenido si esta clase está presente (sin JS, todo se ve igual).
+		     Además aplica tema (claro/oscuro) e idioma ANTES del primer pintado,
+		     leyendo la preferencia guardada, para evitar el flash al recargar. -->
 		<script>
-			document.documentElement.classList.add('js');
+			(function () {
+				var el = document.documentElement;
+				el.classList.add('js');
+				try {
+					var theme = localStorage.getItem('lince-theme');
+					if (!theme) {
+						theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+					}
+					el.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+
+					var locale = localStorage.getItem('lince-locale');
+					if (locale === 'en' || locale === 'es') el.setAttribute('lang', locale);
+				} catch (e) {
+					/* almacenamiento bloqueado: se usa el tema/idioma por defecto */
+				}
+			})();
 		</script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />

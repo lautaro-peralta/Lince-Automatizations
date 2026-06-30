@@ -7,6 +7,7 @@
  */
 import type { Session } from '@supabase/supabase-js';
 import { supabase, supabaseConfigured } from '$lib/supabase';
+import { t } from '$lib/i18n/index.svelte';
 
 export const auth = $state<{ session: Session | null; ready: boolean }>({
 	session: null,
@@ -40,15 +41,13 @@ export function token(): string | null {
 	return auth.session?.access_token ?? null;
 }
 
-/** Traduce el error de Supabase a un mensaje claro. */
+/** Traduce el error de Supabase a un mensaje claro (en el idioma actual). */
 export function loginErrorMessage(error: { message?: string } | null): string {
 	const m = (error?.message || '').toLowerCase();
-	if (m.includes('invalid login')) return 'Email o contraseña incorrectos.';
-	if (m.includes('email not confirmed'))
-		return 'Tu email todavía no está confirmado en Supabase (Authentication → Users → confirmar).';
-	if (m.includes('failed to fetch') || m.includes('network'))
-		return 'No pudimos conectar con Supabase. Revisá PUBLIC_SUPABASE_URL y PUBLIC_SUPABASE_ANON_KEY.';
+	if (m.includes('invalid login')) return t('errors.auth.invalidLogin');
+	if (m.includes('email not confirmed')) return t('errors.auth.emailNotConfirmed');
+	if (m.includes('failed to fetch') || m.includes('network')) return t('errors.auth.network');
 	return error?.message
-		? `No pudimos iniciar sesión: ${error.message}`
-		: 'No pudimos iniciar sesión.';
+		? t('errors.auth.genericWith', { message: error.message })
+		: t('errors.auth.generic');
 }

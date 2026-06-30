@@ -3,6 +3,9 @@
 	import { auth, initAuth, loginErrorMessage } from '$lib/admin/auth.svelte';
 	import { supabase, supabaseConfigured } from '$lib/supabase';
 	import Button from '$lib/components/Button.svelte';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	import LangToggle from '$lib/components/LangToggle.svelte';
+	import { t } from '$lib/i18n/index.svelte';
 	import IconLogout from '~icons/lucide/log-out';
 
 	let { children } = $props();
@@ -14,12 +17,12 @@
 	let loginError = $state('');
 	let submitting = $state(false);
 
-	const tabs = [
-		{ href: '/admin', label: 'Resumen' },
-		{ href: '/admin/leads', label: 'Leads' },
-		{ href: '/admin/presupuestos', label: 'Presupuestos' },
-		{ href: '/admin/resenas', label: 'Reseñas' }
-	];
+	const tabs = $derived([
+		{ href: '/admin', label: t('admin.tabs.summary') },
+		{ href: '/admin/leads', label: t('admin.tabs.leads') },
+		{ href: '/admin/presupuestos', label: t('admin.tabs.budgets') },
+		{ href: '/admin/resenas', label: t('admin.tabs.reviews') }
+	]);
 
 	async function onLogin(event: SubmitEvent) {
 		event.preventDefault();
@@ -45,13 +48,13 @@
 </script>
 
 <svelte:head>
-	<title>Lince · Panel</title>
+	<title>{t('admin.brand')}</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
 {#if !auth.ready}
 	<div class="grid min-h-dvh place-items-center bg-bg text-sage">
-		<p class="font-mono text-sm">Cargando panel…</p>
+		<p class="font-mono text-sm">{t('admin.loading')}</p>
 	</div>
 {:else if !auth.session}
 	<!-- LOGIN -->
@@ -60,19 +63,29 @@
 			class="w-full max-w-[360px] rounded-xl border border-line bg-surface p-7 shadow-card"
 			onsubmit={onLogin}
 		>
-			<h1 class="font-display text-[20px] font-semibold">Lince · Panel</h1>
-			<p class="mb-5 text-sm text-sage">Acceso para el equipo</p>
+			<div class="mb-5 flex items-start justify-between gap-3">
+				<div>
+					<h1 class="font-display text-[20px] font-semibold">{t('admin.brand')}</h1>
+					<p class="text-sm text-sage">{t('admin.login.subtitle')}</p>
+				</div>
+				<div class="flex items-center gap-2">
+					<LangToggle />
+					<ThemeToggle />
+				</div>
+			</div>
 
 			{#if !supabaseConfigured}
 				<p
 					class="mb-4 rounded-[8px] border border-danger/25 bg-danger/5 p-3 text-[13px] text-danger"
 				>
-					Faltan las variables de Supabase. Copiá <code>web/.env.example</code> a
-					<code>web/.env</code> y completalas.
+					{t('admin.login.missingEnvBefore')} <code>web/.env.example</code> →
+					<code>web/.env</code>
+					{t('admin.login.missingEnvAfter')}
 				</p>
 			{/if}
 
-			<label class="text-[13px] font-semibold text-moss" for="email">Email</label>
+			<label class="text-[13px] font-semibold text-moss" for="email">{t('admin.login.email')}</label
+			>
 			<input
 				id="email"
 				class="mt-1.5 mb-3.5 w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] outline-none focus:border-rust focus:shadow-glow"
@@ -82,7 +95,9 @@
 				autocomplete="email"
 			/>
 
-			<label class="text-[13px] font-semibold text-moss" for="password">Contraseña</label>
+			<label class="text-[13px] font-semibold text-moss" for="password"
+				>{t('admin.login.password')}</label
+			>
 			<input
 				id="password"
 				class="mt-1.5 mb-5 w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] outline-none focus:border-rust focus:shadow-glow"
@@ -93,7 +108,7 @@
 			/>
 
 			<Button type="submit" full disabled={submitting}>
-				{submitting ? 'Entrando…' : 'Entrar'}
+				{submitting ? t('admin.login.submitting') : t('admin.login.submit')}
 			</Button>
 
 			{#if loginError}
@@ -107,7 +122,7 @@
 		<header
 			class="sticky top-0 z-40 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-line bg-bg/90 px-[clamp(16px,4vw,32px)] py-3 backdrop-blur-md"
 		>
-			<div class="font-display text-[18px] font-semibold">Lince · Panel</div>
+			<div class="font-display text-[18px] font-semibold">{t('admin.brand')}</div>
 			<nav class="flex flex-wrap gap-1">
 				{#each tabs as tab (tab.href)}
 					<a
@@ -125,8 +140,11 @@
 			</nav>
 			<div class="ml-auto flex items-center gap-3 text-[13px] text-sage">
 				<span class="hidden sm:inline">{auth.session.user?.email}</span>
+				<LangToggle />
+				<ThemeToggle />
 				<Button size="sm" variant="ghost" onclick={logout}>
-					<IconLogout class="text-[15px]" /> Salir
+					<IconLogout class="text-[15px]" />
+					{t('admin.logout')}
 				</Button>
 			</div>
 		</header>

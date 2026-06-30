@@ -1,22 +1,29 @@
 /** Utilidades de presentación compartidas por el panel admin. */
 import type { ApiError } from '$lib/api';
+import { getLocale, t } from '$lib/i18n/index.svelte';
 
-/** Formatea una fecha ISO a algo legible en es-AR. */
+/** Locale BCP 47 para `Intl`, derivado del idioma de la app. */
+function intlLocale(): string {
+	return getLocale() === 'en' ? 'en-US' : 'es-AR';
+}
+
+/** Formatea una fecha ISO a algo legible en el idioma actual. */
 export function fmtDate(iso: string | null | undefined): string {
 	if (!iso) return '—';
 	const d = new Date(iso);
 	if (Number.isNaN(d.getTime())) return '—';
+	const loc = intlLocale();
 	return (
-		d.toLocaleDateString('es-AR') +
+		d.toLocaleDateString(loc) +
 		' ' +
-		d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+		d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' })
 	);
 }
 
-/** Formatea un número como pesos argentinos (sin decimales). */
+/** Formatea un número como pesos (sin decimales), agrupado según el idioma. */
 export function fmtMoney(n: number | string | null | undefined): string {
 	if (n == null || n === '') return '—';
-	return '$' + Number(n).toLocaleString('es-AR');
+	return '$' + Number(n).toLocaleString(intlLocale());
 }
 
 export interface CsvColumn {
@@ -64,8 +71,7 @@ export function loadErrorMessage(
 	err: Partial<ApiError> | null | undefined,
 	fallback: string
 ): string {
-	if (err?.status === 403)
-		return 'Iniciaste sesión, pero tu usuario no tiene rol admin. Promovelo (ver supabase/README.md).';
-	if (err?.status === 401) return 'Tu sesión expiró o es inválida. Volvé a entrar.';
+	if (err?.status === 403) return t('errors.load403');
+	if (err?.status === 401) return t('errors.load401');
 	return fallback;
 }
