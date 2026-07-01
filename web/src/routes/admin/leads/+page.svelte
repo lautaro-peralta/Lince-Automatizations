@@ -3,12 +3,18 @@
 	import { apiFetch } from '$lib/api';
 	import { token } from '$lib/admin/auth.svelte';
 	import { fmtDate, downloadCsv, loadErrorMessage, type CsvColumn } from '$lib/utils/format';
+	import { t } from '$lib/i18n/index.svelte';
 	import { LEAD_STATUSES, type Lead, type ApiData } from '$lib/admin/types';
 	import RowStatus from '$lib/components/admin/RowStatus.svelte';
 	import NotesInput from '$lib/components/admin/NotesInput.svelte';
 	import Skeleton from '$lib/components/admin/Skeleton.svelte';
 	import ErrorState from '$lib/components/admin/ErrorState.svelte';
 	import Button from '$lib/components/Button.svelte';
+
+	// Etiquetas traducidas de los estados (el valor guardado sigue siendo el enum).
+	const statusLabels = $derived(
+		Object.fromEntries(LEAD_STATUSES.map((s) => [s, t(`admin.status.lead.${s}`)]))
+	);
 
 	let q = $state('');
 	let filter = $state('');
@@ -31,7 +37,7 @@
 			leads = res.data ?? [];
 		} catch (err) {
 			leads = [];
-			error = loadErrorMessage(err as { status?: number }, 'No pudimos cargar los leads.');
+			error = loadErrorMessage(err as { status?: number }, t('admin.leads.error'));
 		} finally {
 			loading = false;
 		}
@@ -49,13 +55,13 @@
 	function exportCsv() {
 		if (leads.length === 0) return;
 		const columns: CsvColumn[] = [
-			{ key: 'created_at', label: 'Fecha' },
-			{ key: 'name', label: 'Nombre' },
-			{ key: 'business', label: 'Negocio' },
-			{ key: 'contact', label: 'Contacto' },
-			{ key: 'message', label: 'Mensaje' },
-			{ key: 'status', label: 'Estado' },
-			{ key: 'notes', label: 'Notas' }
+			{ key: 'created_at', label: t('admin.csv.date') },
+			{ key: 'name', label: t('admin.csv.name') },
+			{ key: 'business', label: t('admin.csv.business') },
+			{ key: 'contact', label: t('admin.csv.contact') },
+			{ key: 'message', label: t('admin.csv.message') },
+			{ key: 'status', label: t('admin.csv.status') },
+			{ key: 'notes', label: t('admin.csv.notes') }
 		];
 		downloadCsv(`leads-${new Date().toISOString().slice(0, 10)}.csv`, columns, leads);
 	}
@@ -63,14 +69,14 @@
 	onMount(load);
 </script>
 
-<h1 class="text-[26px]">Leads recibidos</h1>
-<p class="mb-5 text-[15px] text-sage">Contactos que llegaron desde el formulario de la landing.</p>
+<h1 class="text-[26px]">{t('admin.leads.title')}</h1>
+<p class="mb-5 text-[15px] text-sage">{t('admin.leads.subtitle')}</p>
 
 <div class="mb-4 flex flex-wrap items-center gap-2.5">
 	<input
 		class="min-w-[220px] flex-1 rounded-[8px] border border-line-strong bg-bg px-3.5 py-2 text-[14px] outline-none focus:border-rust focus:shadow-glow"
 		type="search"
-		placeholder="Buscar nombre, negocio, contacto…"
+		placeholder={t('admin.leads.searchPh')}
 		bind:value={q}
 		oninput={onSearch}
 	/>
@@ -79,13 +85,13 @@
 		bind:value={filter}
 		onchange={load}
 	>
-		<option value="">Todos los estados</option>
+		<option value="">{t('admin.leads.allStatuses')}</option>
 		{#each LEAD_STATUSES as s (s)}
-			<option value={s}>{s.replace(/_/g, ' ')}</option>
+			<option value={s}>{statusLabels[s]}</option>
 		{/each}
 	</select>
 	<Button size="sm" variant="subtle" onclick={exportCsv} disabled={leads.length === 0}>
-		Exportar CSV
+		{t('admin.leads.exportCsv')}
 	</Button>
 </div>
 
@@ -95,21 +101,21 @@
 	<ErrorState message={error} onRetry={load} />
 {:else if leads.length === 0}
 	<p class="rounded-[10px] border border-line bg-surface p-6 text-center text-[15px] text-sage">
-		No hay leads para este filtro.
+		{t('admin.leads.empty')}
 	</p>
 {:else}
-	<p class="mb-2 font-mono text-[12px] text-sage">{leads.length} lead(s).</p>
+	<p class="mb-2 font-mono text-[12px] text-sage">{t('admin.leads.count', { n: leads.length })}</p>
 	<div class="overflow-x-auto rounded-[10px] border border-line">
 		<table class="w-full border-collapse text-[14px]">
 			<thead>
 				<tr class="bg-surface text-left font-mono text-[11px] tracking-wide text-sage uppercase">
-					<th class="px-3 py-2.5 font-medium">Fecha</th>
-					<th class="px-3 py-2.5 font-medium">Nombre</th>
-					<th class="px-3 py-2.5 font-medium">Negocio</th>
-					<th class="px-3 py-2.5 font-medium">Contacto</th>
-					<th class="px-3 py-2.5 font-medium">Mensaje</th>
-					<th class="px-3 py-2.5 font-medium">Estado</th>
-					<th class="px-3 py-2.5 font-medium">Notas</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colDate')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colName')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colBusiness')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colContact')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colMessage')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colStatus')}</th>
+					<th class="px-3 py-2.5 font-medium">{t('admin.leads.colNotes')}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -124,6 +130,7 @@
 							<RowStatus
 								value={lead.status || 'nuevo'}
 								options={LEAD_STATUSES}
+								labels={statusLabels}
 								save={(v) => patchLead(lead.id, { status: v as Lead['status'] })}
 							/>
 						</td>

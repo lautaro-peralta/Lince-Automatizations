@@ -6,45 +6,31 @@
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	import LangToggle from '$lib/components/LangToggle.svelte';
+	import { t } from '$lib/i18n/index.svelte';
+	import { getTheme } from '$lib/theme.svelte';
 	import lince from '$lib/assets/images/lince.png?enhanced';
 
-	const title = 'Lince — Automatización para negocios';
-	const description =
-		'Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio responda solo, sin perder el control. Automatización para negocios de Rosario.';
+	// El hero usa el fondo `--color-bg`, que se invierte con el tema del sitio;
+	// los puntos siguen ese mismo tema (remontan vía {#key} al togglear) para
+	// no quedar con la paleta clara sobre un hero ya pasado a carbón oscuro.
+	const heroTheme = $derived(getTheme());
 
-	const pasos = [
-		{
-			n: '01',
-			t: 'Diagnóstico',
-			d: 'Una conversación corta para entender por dónde se está perdiendo tiempo o dinero hoy. No hace falta tener nada digitalizado todavía.'
-		},
-		{
-			n: '02',
-			t: 'Armado',
-			d: 'Construimos el sistema conectando las herramientas que ya usás — WhatsApp, planillas, redes — sin pedirte que cambies de plataforma.'
-		},
-		{
-			n: '03',
-			t: 'Prueba con datos reales',
-			d: 'El sistema corre en paralelo durante unos días para ajustar respuestas y reglas antes de que dependa de él el día a día.'
-		},
-		{
-			n: '04',
-			t: 'Acompañamiento',
-			d: 'Una vez en marcha, monitoreamos y ajustamos. El sistema mejora con el tiempo, no se queda fijo el día que se entrega.'
-		}
-	];
+	const pasos = $derived([
+		{ n: '01', t: t('process.steps.s1.t'), d: t('process.steps.s1.d') },
+		{ n: '02', t: t('process.steps.s2.t'), d: t('process.steps.s2.d') },
+		{ n: '03', t: t('process.steps.s3.t'), d: t('process.steps.s3.d') },
+		{ n: '04', t: t('process.steps.s4.t'), d: t('process.steps.s4.d') }
+	]);
 </script>
 
 <svelte:head>
-	<title>{title}</title>
-	<meta name="description" content={description} />
+	<title>{t('meta.title')}</title>
+	<meta name="description" content={t('meta.description')} />
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content={title} />
-	<meta
-		property="og:description"
-		content="Tu negocio pierde plata en lugares que no se ven. Nosotros los encontramos."
-	/>
+	<meta property="og:title" content={t('meta.title')} />
+	<meta property="og:description" content={t('meta.ogDescription')} />
 	<meta property="og:image" content="/og-lince.jpg" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
@@ -82,13 +68,15 @@
 		<nav class="flex items-center gap-1 sm:gap-2">
 			<a
 				class="hidden px-3 py-2 text-[15px] text-moss transition-colors hover:text-rust sm:inline"
-				href="#casos">Casos</a
+				href="#casos">{t('nav.cases')}</a
 			>
 			<a
 				class="hidden px-3 py-2 text-[15px] text-moss transition-colors hover:text-rust sm:inline"
-				href="#proceso">Cómo trabajamos</a
+				href="#proceso">{t('nav.howWeWork')}</a
 			>
-			<Button href="#contacto" size="sm" variant="ghost">Contacto</Button>
+			<Button href="#contacto" size="sm" variant="ghost">{t('nav.contact')}</Button>
+			<LangToggle />
+			<ThemeToggle />
 		</nav>
 	</div>
 </header>
@@ -96,41 +84,37 @@
 <main>
 	<!-- HERO -->
 	<section class="relative overflow-hidden pt-16 sm:pt-24">
-		<DotField theme="light" />
+		{#key heroTheme}
+			<DotField theme={heroTheme} />
+		{/key}
 		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
 				<p
 					class="hero-anim kicker mb-5 inline-flex items-center justify-center gap-2.5"
 					style="--d:50ms"
 				>
-					<span class="pulse-dot" aria-hidden="true"></span>Automatización para negocios de Rosario
+					<span class="pulse-dot" aria-hidden="true"></span>{t('hero.badge')}
 				</p>
 				<h1
 					class="hero-anim mx-auto text-balance text-[clamp(38px,6.2vw,68px)] leading-[1.04]"
 					style="--d:150ms"
 				>
-					Tu negocio pierde plata en lugares
-					<em class="font-display text-moss italic">que no se ven</em>. Nosotros los encontramos.
+					{t('hero.titleA')}
+					<em class="font-display text-moss italic">{t('hero.titleEm')}</em>{t('hero.titleB')}
 				</h1>
 				<p class="hero-anim mx-auto mt-6 max-w-[540px] text-[19px] text-sage" style="--d:380ms">
-					Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio
-					responda solo, sin perder el control de lo que pasa.
+					{t('hero.subtitle')}
 				</p>
 				<div class="hero-anim mt-9 flex flex-wrap justify-center gap-3.5" style="--d:550ms">
-					<Button href="#casos" variant="primary">Ver casos en funcionamiento</Button>
-					<Button href="#contacto" variant="ghost">Contar mi caso</Button>
+					<Button href="#casos" variant="primary">{t('hero.ctaPrimary')}</Button>
+					<Button href="#contacto" variant="ghost">{t('hero.ctaSecondary')}</Button>
 				</div>
 			</div>
 		</div>
 
 		<!-- Lince a todo el ancho, que se disuelve en los bordes y asoma sobre la veta. -->
 		<figure class="hero-lynx">
-			<enhanced:img
-				src={lince}
-				alt="Un lince observando un valle desde una roca, atento a todo el paisaje"
-				sizes="100vw"
-				fetchpriority="high"
-			/>
+			<enhanced:img src={lince} alt={t('hero.lynxAlt')} sizes="100vw" fetchpriority="high" />
 		</figure>
 	</section>
 
@@ -141,13 +125,12 @@
 		<div class="wrap">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
 				<h2 class="max-w-[16ch] text-[clamp(26px,4vw,38px)]">
-					Tres formas en que esto ya está funcionando
+					{t('cases.title')}
 				</h2>
-				<div class="kicker text-sage">003 casos · datos simulados</div>
+				<div class="kicker text-sage">{t('cases.meta')}</div>
 			</div>
 			<p class="max-w-[720px] text-[16.5px] text-sage">
-				Tres situaciones que cualquier negocio reconoce, con el sistema funcionando de verdad. Probá
-				el primero vos mismo — respondé como si fueras el cliente y mirá lo que pasa.
+				{t('cases.intro')}
 			</p>
 
 			<div class="mt-12 flex flex-col gap-7">
@@ -155,18 +138,16 @@
 				<article class="case reveal" use:reveal>
 					<div class="grid md:grid-cols-[1.1fr_1fr]">
 						<div class="case-info">
-							<span class="case-tag">Atención al cliente</span>
-							<h3 class="mb-3 text-[26px]">El WhatsApp que nunca duerme</h3>
+							<span class="case-tag">{t('cases.case1.tag')}</span>
+							<h3 class="mb-3 text-[26px]">{t('cases.case1.title')}</h3>
 							<p class="case-hook">
-								¿Cuántos clientes se fueron a otro lado mientras tu teléfono sonaba sin parar?
+								{t('cases.case1.hook')}
 							</p>
 							<p class="mb-6 text-[15px] text-sage">
-								Un restaurante recibe entre 20 y 40 mensajes por día con las mismas preguntas.
-								Mientras alguien cocina o atiende mesas, esos mensajes se acumulan — y algunos
-								clientes se van a otro lado antes de recibir respuesta.
+								{t('cases.case1.body')}
 							</p>
 							<p class="case-try">
-								<span>Probalo vos mismo</span>
+								<span>{t('cases.case1.try')}</span>
 								<svg width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true">
 									<path
 										d="M2 10 H22 M16 4 L22 10 L16 16"
@@ -186,15 +167,13 @@
 				<article class="case reveal" use:reveal>
 					<div class="grid md:grid-cols-[1.1fr_1fr]">
 						<div class="case-info">
-							<span class="case-tag">Reputación</span>
-							<h3 class="mb-3 text-[26px]">La reseña de una estrella que nadie vio</h3>
+							<span class="case-tag">{t('cases.case2.tag')}</span>
+							<h3 class="mb-3 text-[26px]">{t('cases.case2.title')}</h3>
 							<p class="case-hook">
-								¿Cuándo fue la última vez que miraste lo que dice Google de tu negocio?
+								{t('cases.case2.hook')}
 							</p>
 							<p class="mb-6 text-[15px] text-sage">
-								Una peluquería tiene buena reputación en Instagram pero nunca revisa Google Maps.
-								Una reseña negativa quedó sin respuesta durante tres semanas — visible para cada
-								persona que buscó el negocio antes de decidir si entrar.
+								{t('cases.case2.body')}
 							</p>
 							<p class="case-result">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -208,8 +187,8 @@
 									/>
 								</svg>
 								<span
-									>Ninguna reseña queda sin respuesta.
-									<strong>Te enterás en minutos, no en semanas.</strong></span
+									>{t('cases.case2.result')}
+									<strong>{t('cases.case2.resultStrong')}</strong></span
 								>
 							</p>
 						</div>
@@ -221,15 +200,13 @@
 				<article class="case reveal" use:reveal>
 					<div class="grid md:grid-cols-[1.1fr_1fr]">
 						<div class="case-info">
-							<span class="case-tag">Ventas</span>
-							<h3 class="mb-3 text-[26px]">El presupuesto que se enfría solo</h3>
+							<span class="case-tag">{t('cases.case3.tag')}</span>
+							<h3 class="mb-3 text-[26px]">{t('cases.case3.title')}</h3>
 							<p class="case-hook">
-								¿Cuánta plata se fue en presupuestos que mandaste y nadie volvió a tocar?
+								{t('cases.case3.hook')}
 							</p>
 							<p class="mb-6 text-[15px] text-sage">
-								Un taller de service envía cotizaciones por WhatsApp y nunca hace seguimiento.
-								Algunos clientes simplemente se olvidan de responder — y esa plata nunca vuelve a
-								aparecer en ningún lado.
+								{t('cases.case3.body')}
 							</p>
 							<p class="case-result">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -243,8 +220,8 @@
 									/>
 								</svg>
 								<span
-									>Cada presupuesto recibe seguimiento solo.
-									<strong>La plata deja de enfriarse.</strong></span
+									>{t('cases.case3.result')}
+									<strong>{t('cases.case3.resultStrong')}</strong></span
 								>
 							</p>
 						</div>
@@ -256,37 +233,40 @@
 			<!-- Stats -->
 			<div class="stats reveal mt-12" use:reveal>
 				<div class="stat">
-					<div class="stat-num">3</div>
+					<div class="stat-num">{t('cases.stats.s1num')}</div>
 					<div class="text-sm text-sage">
-						canales conectados por sistema en promedio (WhatsApp, planillas, reseñas)
+						{t('cases.stats.s1')}
 					</div>
 				</div>
 				<div class="stat">
-					<div class="stat-num">~2 sem.</div>
+					<div class="stat-num">{t('cases.stats.s2num')}</div>
 					<div class="text-sm text-sage">
-						desde el primer diagnóstico hasta el sistema funcionando
+						{t('cases.stats.s2')}
 					</div>
 				</div>
 				<div class="stat">
-					<div class="stat-num">0</div>
+					<div class="stat-num">{t('cases.stats.s3num')}</div>
 					<div class="text-sm text-sage">
-						cambios que el equipo del negocio tiene que aprender a operar
+						{t('cases.stats.s3')}
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- PROCESO (sección oscura: alternancia tierra clara/oscura) -->
+	<!-- PROCESO (sección oscura en AMBOS temas: usa `text-cream` fijo, no `text-bg`,
+	     que se invertiría a oscuro en el tema oscuro). -->
 	<section
 		id="proceso"
-		class="relative overflow-hidden hatch-light bg-night py-[clamp(56px,9vw,88px)] text-bg"
+		class="relative overflow-hidden hatch-light bg-night py-[clamp(56px,9vw,88px)] text-cream"
 	>
-		<DotField theme="dark" />
+		{#key heroTheme}
+			<DotField theme="dark" />
+		{/key}
 		<div class="wrap relative z-10">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
-				<h2 class="text-[clamp(26px,4vw,38px)] text-bg">Cómo trabajamos</h2>
-				<div class="kicker text-[rgba(247,245,240,0.55)]">proceso</div>
+				<h2 class="text-[clamp(26px,4vw,38px)] text-cream">{t('process.title')}</h2>
+				<div class="kicker text-[rgba(247,245,240,0.55)]">{t('process.kicker')}</div>
 			</div>
 			<ol class="flex flex-col">
 				{#each pasos as step, i (step.n)}
@@ -296,7 +276,7 @@
 					>
 						<div class="font-mono text-[15px] text-rust">{step.n}</div>
 						<div>
-							<h3 class="mb-1.5 text-[20px] text-bg">{step.t}</h3>
+							<h3 class="mb-1.5 text-[20px] text-cream">{step.t}</h3>
 							<p class="max-w-[680px] text-[15.5px] text-[rgba(247,245,240,0.7)]">{step.d}</p>
 						</div>
 					</li>
@@ -310,24 +290,29 @@
 		<div class="wrap">
 			<div class="reveal grid items-start gap-12 md:grid-cols-[1.3fr_1fr]" use:reveal>
 				<div>
-					<h2 class="mb-4 text-[clamp(28px,4.5vw,42px)]">¿Algo de esto te suena conocido?</h2>
+					<h2 class="mb-4 text-[clamp(28px,4.5vw,42px)]">{t('contact.title')}</h2>
 					<p class="max-w-[460px] text-sage">
-						Si hay una tarea que se repite todos los días en tu negocio — y que te das cuenta de que
-						podría hacerse sola — esa es la conversación que queremos tener.
+						{t('contact.subtitle')}
 					</p>
 					<ContactForm />
 				</div>
 				<div class="rounded-xl border border-line bg-surface p-7">
-					<div class="kicker mb-4 text-moss">Contacto</div>
+					<div class="kicker mb-4 text-moss">{t('contact.infoTitle')}</div>
 					<ul class="flex flex-col">
 						<li class="flex justify-between border-b border-line py-3 text-[15px]">
-							<span class="text-sage">Email</span><span>hola@lince.dev</span>
+							<span class="text-sage">{t('contact.emailLabel')}</span><span
+								>{t('contact.emailValue')}</span
+							>
 						</li>
 						<li class="flex justify-between border-b border-line py-3 text-[15px]">
-							<span class="text-sage">WhatsApp</span><span>Rosario, Santa Fe</span>
+							<span class="text-sage">{t('contact.whatsappLabel')}</span><span
+								>{t('contact.whatsappValue')}</span
+							>
 						</li>
 						<li class="flex justify-between py-3 text-[15px]">
-							<span class="text-sage">Respuesta</span><span>dentro de 24 hs</span>
+							<span class="text-sage">{t('contact.replyLabel')}</span><span
+								>{t('contact.replyValue')}</span
+							>
 						</li>
 					</ul>
 				</div>
@@ -339,7 +324,7 @@
 </main>
 
 <footer class="py-9 text-center text-[13.5px] text-sage">
-	Lince — sistemas de automatización para negocios locales. Casos ilustrativos con datos simulados.
+	{t('footer')}
 </footer>
 
 <style>

@@ -29,17 +29,23 @@
 
 	let canvas = $state<HTMLCanvasElement | null>(null);
 
-	// Paleta por tema: color lejano (base) → cercano (rust), con sus opacidades.
-	// Lejos los puntos son tenues; cerca del cursor crecen y viran al rust de marca.
-	const PALETTE: Record<
-		Theme,
-		{ from: [number, number, number]; to: [number, number, number]; fromA: number; toA: number }
-	> = {
-		// moss #3d5a45 → rust #c9622e sobre fondo claro (#f7f5f0)
-		light: { from: [61, 90, 69], to: [201, 98, 46], fromA: 0.14, toA: 0.85 },
-		// arena #f7f5f0 → rust #c9622e sobre fondo oscuro (bg-night #14211a)
-		dark: { from: [247, 245, 240], to: [201, 98, 46], fromA: 0.12, toA: 0.9 }
-	};
+	type Rgb = [number, number, number];
+
+	function hexToRgb(hex: string): Rgb | null {
+		const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+		if (!m) return null;
+		const n = parseInt(m[1], 16);
+		return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+	}
+
+	// Lee un token del design system en vivo (sigue al tema activo del sitio,
+	// vía `data-theme` en <html> — ver `$lib/theme.svelte`), con un valor de
+	// respaldo literal por si la variable no está disponible.
+	function cssVarRgb(name: string, fallback: Rgb): Rgb {
+		if (typeof getComputedStyle === 'undefined') return fallback;
+		const raw = getComputedStyle(document.documentElement).getPropertyValue(name);
+		return hexToRgb(raw) ?? fallback;
+	}
 
 	onMount(() => {
 		const cv = canvas;
@@ -47,7 +53,15 @@
 		const ctx = cv.getContext('2d');
 		if (!ctx) return;
 
-		const pal = PALETTE[theme];
+		// Paleta: color lejano (base) → cercano (rust), con sus opacidades. Lejos
+		// los puntos son tenues; cerca del cursor crecen y viran al rust de marca.
+		// El acento se lee de `--color-rust` en vivo para seguir siempre al tema
+		// activo del sitio (claro `#c9622e` / oscuro `#e07a45`), no a uno fijo.
+		const accent = cssVarRgb('--color-rust', [201, 98, 46]);
+		const pal =
+			theme === 'dark'
+				? { from: cssVarRgb('--color-cream', [247, 245, 240]), to: accent, fromA: 0.12, toA: 0.9 }
+				: { from: cssVarRgb('--color-moss', [61, 90, 69]), to: accent, fromA: 0.14, toA: 0.85 };
 		const prefersReduced =
 			typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 

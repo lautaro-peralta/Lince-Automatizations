@@ -1,19 +1,22 @@
 <script lang="ts">
 	// Ticket de seguimiento de presupuestos (demo, datos simulados).
+	import { t } from '$lib/i18n/index.svelte';
 </script>
 
 <div class="receipt">
 	<div class="receipt-inner">
-		<div class="receipt-title">Seguimiento de presupuestos</div>
-		<div class="receipt-sub">Taller Ríos · últimos 30 días</div>
+		<div class="receipt-title">{t('receipt.title')}</div>
+		<div class="receipt-sub">{t('receipt.sub')}</div>
 		<div class="receipt-divider"></div>
-		<div class="receipt-row"><span>Presupuestos enviados</span><span>22</span></div>
-		<div class="receipt-row"><span>Sin respuesta a las 48 hs</span><span>9</span></div>
+		<div class="receipt-row"><span>{t('receipt.sent')}</span><span>22</span></div>
+		<div class="receipt-row"><span>{t('receipt.noReply')}</span><span>9</span></div>
 		<div class="receipt-row">
-			<span>Recuperados con recordatorio</span><span><span class="receipt-badge">4</span></span>
+			<span>{t('receipt.recovered')}</span><span><span class="receipt-badge">4</span></span>
 		</div>
 		<div class="receipt-divider"></div>
-		<div class="receipt-row total"><span>Ingreso recuperado</span><span>≈ $310.000</span></div>
+		<div class="receipt-row total">
+			<span>{t('receipt.recoveredIncome')}</span><span>≈ $310.000</span>
+		</div>
 	</div>
 </div>
 

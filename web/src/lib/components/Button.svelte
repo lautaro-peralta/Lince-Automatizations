@@ -33,8 +33,13 @@
 		'hover:-translate-y-px active:translate-y-0 disabled:opacity-55 disabled:pointer-events-none';
 
 	const variants: Record<Variant, string> = {
-		primary: 'bg-ink text-bg border-ink hover:bg-night',
-		accent: 'bg-rust text-bg border-rust hover:bg-rust-deep',
+		// `bg-ink`/`text-bg` se invierten juntos entre temas (botón oscuro+texto
+		// claro en claro; claro+texto oscuro en oscuro), así que el contraste se
+		// mantiene. El hover usa opacidad (no `bg-night`) para no romperse al
+		// invertirse el tema.
+		primary: 'bg-ink text-bg border-ink hover:opacity-90',
+		// `text-cream` (fijo claro) sobre rust: texto siempre claro en ambos temas.
+		accent: 'bg-rust text-cream border-rust hover:bg-rust-deep',
 		ghost: 'bg-transparent text-ink border-line-strong hover:border-ink',
 		subtle: 'bg-surface text-ink border-line hover:bg-surface-2'
 	};
