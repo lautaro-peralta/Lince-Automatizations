@@ -6,8 +6,6 @@
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
-	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
-	import LangToggle from '$lib/components/LangToggle.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import { getTheme } from '$lib/theme.svelte';
 	import lince from '$lib/assets/images/lince.png?enhanced';
@@ -34,52 +32,6 @@
 	<meta property="og:image" content="/og-lince.jpg" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
-
-<!-- HEADER -->
-<header class="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur-md">
-	<div class="wrap flex items-center justify-between py-4">
-		<a class="flex items-center gap-2.5 font-display text-[21px] font-semibold" href="/">
-			<svg
-				class="h-[30px] w-[30px] shrink-0"
-				viewBox="0 0 40 40"
-				fill="none"
-				role="img"
-				aria-label="Lince"
-			>
-				<path
-					d="M20 4 L34 13 L34 27 L20 36 L6 27 L6 13 Z"
-					stroke="#1B2B23"
-					stroke-width="1.6"
-					fill="none"
-				/>
-				<path
-					d="M14 17 L20 23 L26 17"
-					stroke="#C9622E"
-					stroke-width="1.8"
-					fill="none"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-				<circle cx="14" cy="14" r="1.6" fill="#1B2B23" />
-				<circle cx="26" cy="14" r="1.6" fill="#1B2B23" />
-			</svg>
-			Lince
-		</a>
-		<nav class="flex items-center gap-1 sm:gap-2">
-			<a
-				class="hidden px-3 py-2 text-[15px] text-moss transition-colors hover:text-rust sm:inline"
-				href="#casos">{t('nav.cases')}</a
-			>
-			<a
-				class="hidden px-3 py-2 text-[15px] text-moss transition-colors hover:text-rust sm:inline"
-				href="#proceso">{t('nav.howWeWork')}</a
-			>
-			<Button href="#contacto" size="sm" variant="ghost">{t('nav.contact')}</Button>
-			<LangToggle />
-			<ThemeToggle />
-		</nav>
-	</div>
-</header>
 
 <main>
 	<!-- HERO -->
@@ -255,10 +207,11 @@
 	</section>
 
 	<!-- PROCESO (sección oscura en AMBOS temas: usa `text-cream` fijo, no `text-bg`,
-	     que se invertiría a oscuro en el tema oscuro). -->
+	     que se invertiría a oscuro en el tema oscuro). Sin patrón de líneas: sólo
+	     el fondo oscuro y los puntos del DotField. -->
 	<section
 		id="proceso"
-		class="relative overflow-hidden hatch-light bg-night py-[clamp(56px,9vw,88px)] text-cream"
+		class="relative overflow-hidden bg-night py-[clamp(56px,9vw,88px)] text-cream"
 	>
 		{#key heroTheme}
 			<DotField theme="dark" />
@@ -322,10 +275,6 @@
 
 	<div class="hatch h-[64px] border-t border-line" aria-hidden="true"></div>
 </main>
-
-<footer class="py-9 text-center text-[13.5px] text-sage">
-	{t('footer')}
-</footer>
 
 <style>
 	/* Entrada escalonada del hero (usa la variable --d como retardo). */
