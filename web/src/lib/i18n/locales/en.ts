@@ -20,7 +20,8 @@ export const en: Dictionary = {
 		badge: 'Automation for businesses in Rosario',
 		titleA: 'Your business is losing money in places',
 		titleEm: "you can't see",
-		titleB: '. We find them.',
+		titleB: '. We',
+		verbs: { v1: 'find them', v2: 'optimize them', v3: 'solve them' },
 		subtitle:
 			'We design systems that connect WhatsApp, spreadsheets, reviews and orders so your business responds on its own — without losing control of what happens.',
 		ctaPrimary: 'See cases in action',
@@ -301,7 +302,9 @@ export const en: Dictionary = {
 		closeMenu: 'Close menu',
 		onThisPage: 'On this page',
 		collapseIndex: 'Collapse index',
-		expandIndex: 'Expand index'
+		expandIndex: 'Expand index',
+		whatsapp: 'Chat on WhatsApp',
+		whatsappMsg: 'Hi, I would like to automate my business with Lince.'
 	},
 
 	admin: {

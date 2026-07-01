@@ -6,6 +6,7 @@
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
+	import ScrambleWord from '$lib/components/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import { getTheme } from '$lib/theme.svelte';
 	import lince from '$lib/assets/images/lince.png?enhanced';
@@ -17,6 +18,9 @@
 	// La banda "Cómo trabajamos" es la superficie OPUESTA al tema base (oscura en
 	// claro, clara en oscuro), así que sus puntos usan el tema contrario al del sitio.
 	const bandTheme: 'light' | 'dark' = $derived(heroTheme === 'dark' ? 'light' : 'dark');
+
+	// Verbos que ciclan al final del titular (última palabra, en su propio renglón).
+	const verbs = $derived([t('hero.verbs.v1'), t('hero.verbs.v2'), t('hero.verbs.v3')]);
 
 	const pasos = $derived([
 		{ n: '01', t: t('process.steps.s1.t'), d: t('process.steps.s1.d') },
@@ -56,6 +60,10 @@
 				>
 					{t('hero.titleA')}
 					<em class="font-display text-moss italic">{t('hero.titleEm')}</em>{t('hero.titleB')}
+					<!-- Última palabra en su propio renglón, centrada y con animación scramble. -->
+					{#key verbs.join('|')}
+						<span class="block"><ScrambleWord words={verbs} /></span>
+					{/key}
 				</h1>
 				<p class="hero-anim mx-auto mt-6 max-w-[540px] text-[19px] text-sage" style="--d:380ms">
 					{t('hero.subtitle')}

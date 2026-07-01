@@ -87,7 +87,9 @@
 								? 'bg-rust'
 								: 'bg-line-strong group-hover:bg-sage'}"
 						></span>
-						{#if !collapsed}<span class="text-[14px] whitespace-nowrap">{t(s.key)}</span>{/if}
+						{#if !collapsed}<span class="text-[15px] font-semibold whitespace-nowrap"
+							>{t(s.key)}</span
+						>{/if}
 					</a>
 				</li>
 			{/each}

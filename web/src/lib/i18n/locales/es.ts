@@ -22,7 +22,8 @@ export const es = {
 		badge: 'Automatización para negocios de Rosario',
 		titleA: 'Tu negocio pierde plata en lugares',
 		titleEm: 'que no se ven',
-		titleB: '. Nosotros los encontramos.',
+		titleB: '. Nosotros los',
+		verbs: { v1: 'encontramos', v2: 'optimizamos', v3: 'solucionamos' },
 		subtitle:
 			'Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio responda solo, sin perder el control de lo que pasa.',
 		ctaPrimary: 'Ver casos en funcionamiento',
@@ -304,7 +305,9 @@ export const es = {
 		closeMenu: 'Cerrar menú',
 		onThisPage: 'En esta página',
 		collapseIndex: 'Replegar índice',
-		expandIndex: 'Desplegar índice'
+		expandIndex: 'Desplegar índice',
+		whatsapp: 'Chatear por WhatsApp',
+		whatsappMsg: 'Hola, me gustaría automatizar mi negocio con Lince.'
 	},
 
 	admin: {

@@ -12,6 +12,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import SideIndex from '$lib/components/SideIndex.svelte';
+	import WhatsAppButton from '$lib/components/WhatsAppButton.svelte';
 
 	// Sincroniza los stores reactivos con lo que el script inline de app.html ya
 	// aplicó (tema e idioma). El render inicial es el prerenderizado (es/claro);
@@ -43,4 +44,5 @@
 
 {#if !isAdmin}
 	<Footer />
+	<WhatsAppButton />
 {/if}
