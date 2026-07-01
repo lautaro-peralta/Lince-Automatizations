@@ -10,7 +10,7 @@
 
 <button
 	type="button"
-	class="grid h-9 w-9 place-items-center rounded-[8px] border border-line-strong bg-bg text-ink transition-colors hover:border-ink"
+	class="grid h-9 w-9 place-items-center rounded-[8px] border border-line-strong bg-transparent text-ink transition-colors hover:border-ink"
 	onclick={toggleTheme}
 	aria-label={label}
 	title={label}
