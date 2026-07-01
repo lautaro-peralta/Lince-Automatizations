@@ -16,15 +16,9 @@
 		{ href: '/nosotros', key: 'nav.about' },
 		{ href: '/preguntas', key: 'nav.faq' }
 	];
-	// Secciones de la landing (sólo se listan en el menú mobile, en la home).
-	const sections = [
-		{ href: '/#casos', key: 'nav.cases' },
-		{ href: '/#proceso', key: 'nav.howWeWork' }
-	];
 
 	let open = $state(false);
 	const isActive = (href: string) => page.url.pathname === href;
-	const isLanding = $derived(page.url.pathname === '/');
 
 	// Cerrar el menú mobile al navegar.
 	afterNavigate(() => (open = false));
@@ -64,7 +58,7 @@
 			<!-- Botón de menú (mobile) -->
 			<button
 				type="button"
-				class="grid h-9 w-9 place-items-center rounded-[8px] border border-line-strong bg-bg text-ink transition-colors hover:border-ink md:hidden"
+				class="grid h-9 w-9 place-items-center rounded-[8px] border border-line-strong bg-transparent text-ink transition-colors hover:border-ink md:hidden"
 				aria-label={open ? t('ui.closeMenu') : t('ui.openMenu')}
 				aria-expanded={open}
 				onclick={() => (open = !open)}
@@ -74,7 +68,8 @@
 		</nav>
 	</div>
 
-	<!-- Panel de navegación (mobile) -->
+	<!-- Panel de navegación (mobile). Sólo páginas del sitio: las anclas de sección
+	     de la landing viven en la barra fina lateral (ver SideIndex). -->
 	{#if open}
 		<div class="border-t border-line/70 bg-bg/95 backdrop-blur-md md:hidden">
 			<nav class="wrap flex flex-col py-3" aria-label={t('nav.home')}>
@@ -95,19 +90,6 @@
 					class="px-2 py-2.5 text-[16px] text-moss transition-colors hover:text-rust"
 					>{t('nav.contact')}</a
 				>
-
-				{#if isLanding}
-					<div class="mt-2 border-t border-line/60 pt-2">
-						<div class="kicker px-2 pb-1">{t('ui.onThisPage')}</div>
-						{#each sections as s (s.href)}
-							<a
-								href={s.href}
-								class="px-2 py-2.5 text-[16px] text-moss transition-colors hover:text-rust"
-								>{t(s.key)}</a
-							>
-						{/each}
-					</div>
-				{/if}
 			</nav>
 		</div>
 	{/if}
