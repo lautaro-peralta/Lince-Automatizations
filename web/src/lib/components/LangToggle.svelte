@@ -8,7 +8,7 @@
 
 <button
 	type="button"
-	class="grid h-9 min-w-9 place-items-center rounded-[8px] border border-line-strong bg-bg px-2 font-mono text-[12px] font-semibold tracking-wide text-ink transition-colors hover:border-ink"
+	class="grid h-9 min-w-9 place-items-center rounded-[8px] border border-line-strong bg-transparent px-2 font-mono text-[12px] font-semibold tracking-wide text-ink transition-colors hover:border-ink"
 	onclick={toggleLocale}
 	aria-label={label}
 	title={label}

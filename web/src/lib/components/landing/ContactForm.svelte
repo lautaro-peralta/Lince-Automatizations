@@ -71,40 +71,37 @@
 	const labelClass = 'text-[13px] font-semibold text-moss';
 </script>
 
-<form
-	bind:this={formEl}
-	class="mt-7 flex max-w-[460px] flex-col gap-3.5"
-	novalidate
-	onsubmit={onSubmit}
->
-	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-name">{t('form.name')}</label>
-		<input
-			id="lead-name"
-			class={fieldClass}
-			data-invalid={wasValidated && !name.trim()}
-			bind:value={name}
-			type="text"
-			required
-			maxlength="80"
-			autocomplete="name"
-			placeholder={t('form.namePh')}
-		/>
-	</div>
+<form bind:this={formEl} class="mt-7 flex flex-col gap-3.5" novalidate onsubmit={onSubmit}>
+	<div class="grid gap-3.5 sm:grid-cols-2">
+		<div class="flex flex-col gap-1.5">
+			<label class={labelClass} for="lead-name">{t('form.name')}</label>
+			<input
+				id="lead-name"
+				class={fieldClass}
+				data-invalid={wasValidated && !name.trim()}
+				bind:value={name}
+				type="text"
+				required
+				maxlength="80"
+				autocomplete="name"
+				placeholder={t('form.namePh')}
+			/>
+		</div>
 
-	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-business">
-			{t('form.business')} <span class="font-normal text-sage">{t('form.businessOptional')}</span>
-		</label>
-		<input
-			id="lead-business"
-			class={fieldClass}
-			bind:value={business}
-			type="text"
-			maxlength="120"
-			autocomplete="organization"
-			placeholder={t('form.businessPh')}
-		/>
+		<div class="flex flex-col gap-1.5">
+			<label class={labelClass} for="lead-business">
+				{t('form.business')} <span class="font-normal text-sage">{t('form.businessOptional')}</span>
+			</label>
+			<input
+				id="lead-business"
+				class={fieldClass}
+				bind:value={business}
+				type="text"
+				maxlength="120"
+				autocomplete="organization"
+				placeholder={t('form.businessPh')}
+			/>
+		</div>
 	</div>
 
 	<div class="flex flex-col gap-1.5">

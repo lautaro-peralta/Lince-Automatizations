@@ -6,16 +6,22 @@ import type { Dictionary } from './es';
 
 export const en: Dictionary = {
 	nav: {
+		home: 'Home',
 		cases: 'Cases',
 		howWeWork: 'How we work',
+		services: 'Services',
+		pricing: 'Pricing',
+		about: 'About',
+		faq: 'FAQ',
 		contact: 'Contact'
 	},
 
 	hero: {
-		badge: 'Automation for businesses in Rosario',
+		badge: 'Custom automation systems',
 		titleA: 'Your business is losing money in places',
 		titleEm: "you can't see",
-		titleB: '. We find them.',
+		titleB: '. We',
+		verbs: { v1: 'find them', v2: 'solve them', v3: 'automate them' },
 		subtitle:
 			'We design systems that connect WhatsApp, spreadsheets, reviews and orders so your business responds on its own — without losing control of what happens.',
 		ctaPrimary: 'See cases in action',
@@ -88,13 +94,134 @@ export const en: Dictionary = {
 		title: 'Does any of this sound familiar?',
 		subtitle:
 			'If there is a task that repeats every single day in your business — and you can tell it could run itself — that is the conversation we want to have.',
-		infoTitle: 'Contact',
+		infoTitle: 'Other channels',
+		infoIntro: 'Reach out through whichever channel you prefer.',
 		emailLabel: 'Email',
-		emailValue: 'hola@lince.dev',
+		emailValue: 'lince.automatizaciones@gmail.com',
 		whatsappLabel: 'WhatsApp',
-		whatsappValue: 'Rosario, Santa Fe',
-		replyLabel: 'Reply',
-		replyValue: 'within 24 hrs'
+		whatsappValue: '+54 9 341 000 0000',
+		instagramLabel: 'Instagram',
+		instagramValue: '@linceautomatizaciones',
+		replyValue: 'We reply within 24 hrs.'
+	},
+
+	services: {
+		title: 'Services',
+		intro:
+			'Automation systems built to measure on top of the tools your business already uses. These are the fronts where you recover time and money fastest.',
+		items: {
+			whatsapp: {
+				t: 'Automated WhatsApp support',
+				d: 'An assistant that answers the usual questions, takes orders and hands off to a person when needed — without a single message slipping through.'
+			},
+			reviews: {
+				t: 'Review monitoring',
+				d: 'We alert you the moment a new Google review shows up, with a suggested reply ready to send. None sits for weeks.'
+			},
+			quotes: {
+				t: 'Quote follow-up',
+				d: 'Every quote sent gets automatic reminders until the customer replies. The money stops going cold on its own.'
+			},
+			integrations: {
+				t: 'Integrations and spreadsheets',
+				d: 'We connect WhatsApp, social, spreadsheets and your order system so data flows on its own, with nothing entered twice.'
+			}
+		},
+		ctaTitle: 'Not sure where to start?',
+		ctaText: 'In a short chat we spot the task that is worth automating first.',
+		cta: 'Tell us about my case'
+	},
+
+	pricing: {
+		title: 'Pricing',
+		intro:
+			'Plans built for local businesses. Start with what hurts most and add on when you need to, with no strings attached.',
+		popular: 'Most chosen',
+		plans: {
+			p1: {
+				name: 'Assessment',
+				price: 'Free',
+				period: '',
+				desc: 'A chat to understand where time or money is leaking and what is worth automating first.',
+				f1: 'Review of your operation',
+				f2: 'Prioritized proposal',
+				f3: 'No commitment',
+				cta: 'Book assessment'
+			},
+			p2: {
+				name: 'System',
+				price: 'Custom',
+				period: '',
+				desc: 'Building the system by connecting your current tools, tested on real data before it goes live.',
+				f1: 'One automated front (WhatsApp, reviews or quotes)',
+				f2: 'Launch and adjustments',
+				f3: 'Team training',
+				cta: 'Request a quote'
+			},
+			p3: {
+				name: 'Ongoing support',
+				price: 'Monthly',
+				period: '/mo',
+				desc: 'Monitoring and continuous improvement once live. The system evolves with your business.',
+				f1: 'Monitoring and support',
+				f2: 'Tweaks and new automations',
+				f3: 'Results reports',
+				cta: 'Talk to us'
+			}
+		},
+		note: 'Prices are defined by the scope of each case. The assessment is always free.'
+	},
+
+	about: {
+		title: 'About',
+		intro:
+			'Lince started in Rosario with a simple idea: technology should work for the business, not the other way around.',
+		bodyTitle: 'How we think',
+		body: "We don't believe in changing everything at once or forcing you to learn new platforms. We dig into how your business runs today, find the tasks that repeat and the ones that slip through, and build systems that run on their own on top of the tools you already use.",
+		values: {
+			v1: {
+				t: 'No friction',
+				d: 'No platform migration. We work on the WhatsApp, spreadsheets and social you already use.'
+			},
+			v2: {
+				t: 'On real data',
+				d: 'Everything is tested in parallel before you rely on it. No surprises on delivery day.'
+			},
+			v3: {
+				t: 'Close by',
+				d: "We're from Rosario. We respond fast and stick around after launch."
+			}
+		},
+		cta: "Let's work together"
+	},
+
+	faq: {
+		title: 'Frequently asked questions',
+		intro: 'What people ask us most before starting.',
+		items: {
+			q1: {
+				q: 'Do I need something digitized to start?',
+				a: 'No. We start with an assessment and work on what you already use, even if it is just WhatsApp and a spreadsheet.'
+			},
+			q2: {
+				q: 'Do I have to change platform or system?',
+				a: 'No. We adapt to your current tools. The idea is to add automation, not to make you re-learn everything.'
+			},
+			q3: {
+				q: 'How long until it is up and running?',
+				a: 'Most cases are live in about two weeks from the assessment, depending on scope.'
+			},
+			q4: {
+				q: 'What if something fails or the customer wants a person?',
+				a: 'The system hands off to a person when needed. You stay in control; the automation handles the repetitive part.'
+			},
+			q5: {
+				q: 'Do you only work in Rosario?',
+				a: 'We are in Rosario, but we work with businesses anywhere. Everything is coordinated remotely.'
+			}
+		},
+		ctaTitle: 'Have another question?',
+		cta: 'Write to us'
 	},
 
 	footer:
@@ -172,7 +299,14 @@ export const en: Dictionary = {
 		toDark: 'Switch to dark theme',
 		language: 'Language',
 		switchToEnglish: 'Switch to English',
-		switchToSpanish: 'Cambiar a español'
+		switchToSpanish: 'Cambiar a español',
+		openMenu: 'Open menu',
+		closeMenu: 'Close menu',
+		onThisPage: 'On this page',
+		collapseIndex: 'Collapse index',
+		expandIndex: 'Expand index',
+		whatsapp: 'Chat on WhatsApp',
+		whatsappMsg: 'Hi, I would like to automate my business with Lince.'
 	},
 
 	admin: {
