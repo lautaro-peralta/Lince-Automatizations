@@ -81,11 +81,12 @@
 		position: relative;
 		white-space: nowrap;
 	}
-	/* Cursor de bloque tipo terminal, siempre parpadeando. */
+	/* Cursor de bloque tipo terminal, siempre parpadeando. Blanco (no hereda el
+	   rust del verbo) para el look de consola. */
 	.live.cursor-on::after {
 		content: '▋';
 		margin-left: 0.04em;
-		color: currentColor;
+		color: #fff;
 		animation: blink 1s steps(2, start) infinite;
 	}
 	@keyframes blink {

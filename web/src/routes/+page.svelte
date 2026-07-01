@@ -8,7 +8,7 @@
 	import DotField from '$lib/components/landing/DotField.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
-	import lince from '$lib/assets/images/lince-transparente.png?enhanced';
+	import lince from '$lib/assets/images/lince-banner.png?enhanced';
 
 	const verbs = $derived([t('hero.verbs.v1'), t('hero.verbs.v2'), t('hero.verbs.v3')]);
 
@@ -36,11 +36,8 @@
 		<DotField theme="light" />
 		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
-				<p
-					class="hero-anim kicker mb-5 inline-flex items-center justify-center gap-2.5"
-					style="--d:50ms"
-				>
-					<span class="pulse-dot" aria-hidden="true"></span>{t('hero.badge')}
+				<p class="hero-anim kicker mb-5" style="--d:50ms">
+					{t('hero.badge')}
 				</p>
 				<h1
 					class="hero-anim mx-auto text-balance text-[clamp(38px,6.2vw,68px)] leading-[1.04]"
@@ -62,9 +59,8 @@
 			</div>
 		</div>
 
-		<!-- Lince a todo el ancho: la imagen tiene fondo blanco plano (no alpha real),
-		     así que se mezcla con `multiply` para que el blanco se funda con la crema
-		     de fondo y sobresalgan las montañas y el lince. -->
+		<!-- Banner del lince a todo el ancho. La imagen tiene fondo transparente,
+		     así que asoma limpia sobre el fondo del sitio en cualquier tema. -->
 		<figure class="hero-lynx relative z-10">
 			<enhanced:img src={lince} alt={t('hero.lynxAlt')} sizes="100vw" fetchpriority="high" />
 		</figure>
@@ -332,58 +328,22 @@
 		}
 	}
 
-	.pulse-dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: var(--color-rust);
-		animation: pulse 2.4s ease-in-out infinite;
-	}
-	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-			transform: scale(1);
-		}
-		50% {
-			opacity: 0.4;
-			transform: scale(0.8);
-		}
-	}
-
-	/* Lince full-bleed. La imagen tiene fondo blanco plano (no alpha real), así
-	   que se pinta la crema del sitio como fondo del contenedor y se aplica
-	   `mix-blend-mode: multiply` sobre esa capa: el blanco del cielo se funde
-	   con la crema y quedan sobresaliendo las montañas y el lince, sin editar
-	   el archivo. `isolation: isolate` limita el blend a este contenedor para
-	   que no afecte al DotField ni al hero. */
+	/* Lince banner a todo el ancho. La imagen tiene transparencia real (el cielo
+	   es alpha 0), así que se muestra tal cual sobre el fondo del sitio: sobresalen
+	   las montañas y el lince sin blend-mode ni recortes. */
 	.hero-lynx {
 		position: relative;
 		z-index: 1;
 		margin: 48px calc(50% - 50vw) -26px;
-		height: clamp(220px, 42vw, 600px);
+		width: 100vw;
 		overflow: hidden;
-		isolation: isolate;
-		background: var(--color-bg);
 	}
 	.hero-lynx :global(img) {
 		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		object-position: center bottom;
+		height: auto;
 		display: block;
 		opacity: 0;
-		mix-blend-mode: multiply;
 		animation: lynxIn 1.4s var(--ease-out-expo) 0.3s forwards;
-	}
-	:global([data-theme='dark']) .hero-lynx {
-		/* En oscuro cambiamos a `screen` sobre el carbón: el blanco satura al
-		   fondo (no aparece un cuadro blanco) y las montañas y el lince se
-		   leen recortadas contra el mismo. */
-		background: var(--color-bg);
-	}
-	:global([data-theme='dark']) .hero-lynx :global(img) {
-		mix-blend-mode: screen;
 	}
 	@keyframes lynxIn {
 		from {
@@ -397,7 +357,6 @@
 	}
 	@media (max-width: 860px) {
 		.hero-lynx {
-			height: clamp(180px, 44vw, 340px);
 			margin-top: 32px;
 		}
 	}
