@@ -97,8 +97,15 @@ export const en: Dictionary = {
 		replyValue: 'within 24 hrs'
 	},
 
-	footer:
-		'Lince — automation systems for local businesses. Illustrative cases with simulated data.',
+	footer: {
+		tagline:
+			'Tailor-made automation systems for local businesses. Illustrative cases with simulated data.',
+		exploreLabel: 'Explore',
+		contactLabel: 'Contact',
+		hours: 'We reply within 24 hours',
+		location: 'Rosario · Santa Fe · Argentina',
+		rights: 'All rights reserved.'
+	},
 
 	meta: {
 		title: 'Lince — Automation for businesses',
