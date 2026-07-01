@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	// Verbo que cambia en dos fases, estilo terminal:
+	// Verbo que cambia estilo terminal, en dos fases:
 	//   1) borra la palabra anterior de derecha a izquierda (como con teclado),
-	//   2) recién ahí escribe la nueva, definiendo cada carácter con un scramble.
-	// Va en su propio renglón centrado, así el resto del titular no se mueve.
+	//   2) escribe la nueva letra por letra (máquina de escribir, ritmo realista).
+	// Entre cambios queda estático y legible `hold` ms. El cursor de bloque (cmd)
+	// parpadea siempre. Va en su propio renglón centrado: el resto del titular no
+	// se mueve.
 	interface Props {
 		words: string[];
-		/** ms con la palabra completa antes de borrarla y escribir la siguiente. */
+		/** ms que la palabra queda quieta y legible antes de borrarla. */
 		hold?: number;
 		class?: string;
 	}
-	let { words, hold = 1800, class: klass = '' }: Props = $props();
+	let { words, hold = 5000, class: klass = '' }: Props = $props();
 
 	let live = $state<HTMLSpanElement | null>(null);
 
@@ -24,62 +26,36 @@
 		// Con reduce-motion (o una sola palabra) queda estático en words[0].
 		if (prefersReduced || words.length <= 1) return;
 
-		const chars = '!<>-_\\/[]{}—=+*^?#%&';
-		const esc = (c: string) => (c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c);
-
-		let raf = 0;
 		let timer: ReturnType<typeof setTimeout> | undefined;
 		let cancelled = false;
+		const sleep = (ms: number) => new Promise<void>((r) => (timer = setTimeout(r, ms)));
 
-		const DEL_PER = 2; // frames por carácter borrado
-		const TYPE_PER = 5; // frames por carácter nuevo (incluye el scramble de entrada)
+		// Ritmos (con leve variación para que el tipeo se sienta humano).
+		const typeDelay = () => 95 + Math.random() * 85; // ~95–180 ms por letra
+		const delDelay = () => 45 + Math.random() * 35; // ~45–80 ms por borrado
 
-		function play(word: string): Promise<void> {
-			return new Promise((resolve) => {
-				const prev = node!.textContent || '';
-				const delFrames = prev.length * DEL_PER;
-				const typeFrames = word.length * TYPE_PER;
-				let frame = 0;
-
-				const step = () => {
-					if (cancelled) return;
-					let out = '';
-					if (frame < delFrames) {
-						// Fase 1 — borrado desde la derecha (backspace).
-						const shown = prev.length - Math.floor(frame / DEL_PER) - 1;
-						out = prev.slice(0, Math.max(0, shown));
-					} else {
-						// Fase 2 — se van definiendo los caracteres: los ya escritos quedan
-						// fijos y el que entra parpadea con caracteres aleatorios.
-						const tf = frame - delFrames;
-						const idx = Math.min(word.length, Math.floor(tf / TYPE_PER));
-						out = word.slice(0, idx);
-						if (idx < word.length) {
-							out += `<span class="dud">${esc(chars[Math.floor(Math.random() * chars.length)])}</span>`;
-						}
-					}
-					node!.innerHTML = out;
-					if (frame >= delFrames + typeFrames) {
-						node!.textContent = word; // estado final limpio
-						resolve();
-						return;
-					}
-					frame++;
-					raf = requestAnimationFrame(step);
-				};
-				step();
-			});
+		async function erase(prev: string) {
+			for (let i = prev.length; i > 0 && !cancelled; i--) {
+				node!.textContent = prev.slice(0, i - 1);
+				await sleep(delDelay());
+			}
 		}
 
-		const wait = (ms: number) => new Promise<void>((r) => (timer = setTimeout(r, ms)));
+		async function type(word: string) {
+			for (let i = 1; i <= word.length && !cancelled; i++) {
+				node!.textContent = word.slice(0, i);
+				await sleep(typeDelay());
+			}
+		}
 
 		async function cycle() {
 			let i = 0;
 			while (!cancelled) {
-				await wait(hold);
+				await sleep(hold);
 				if (cancelled) break;
+				await erase(node!.textContent || '');
 				i = (i + 1) % words.length;
-				await play(words[i]);
+				await type(words[i]);
 			}
 		}
 
@@ -88,7 +64,6 @@
 
 		return () => {
 			cancelled = true;
-			cancelAnimationFrame(raf);
 			if (timer) clearTimeout(timer);
 		};
 	});
@@ -106,12 +81,7 @@
 		position: relative;
 		white-space: nowrap;
 	}
-	/* Los caracteres aleatorios se inyectan por innerHTML → :global para saltear
-	   el scope de Svelte. */
-	.live :global(.dud) {
-		color: var(--color-sage);
-		opacity: 0.85;
-	}
+	/* Cursor de bloque tipo terminal, siempre parpadeando. */
 	.live.cursor-on::after {
 		content: '▋';
 		margin-left: 0.04em;
