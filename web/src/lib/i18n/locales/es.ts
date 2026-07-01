@@ -8,8 +8,13 @@
  */
 export const es = {
 	nav: {
+		home: 'Inicio',
 		cases: 'Casos',
 		howWeWork: 'Cómo trabajamos',
+		services: 'Servicios',
+		pricing: 'Precios',
+		about: 'Nosotros',
+		faq: 'Preguntas',
 		contact: 'Contacto'
 	},
 
@@ -17,7 +22,12 @@ export const es = {
 		badge: 'Automatización para negocios de Rosario',
 		titleA: 'Tu negocio pierde plata en lugares',
 		titleEm: 'que no se ven',
-		titleB: '. Nosotros los encontramos.',
+		titleB: '. Nosotros los',
+		verbs: {
+			v1: 'encontramos',
+			v2: 'solucionamos',
+			v3: 'automatizamos'
+		},
 		subtitle:
 			'Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio responda solo, sin perder el control de lo que pasa.',
 		ctaPrimary: 'Ver casos en funcionamiento',
@@ -63,6 +73,125 @@ export const es = {
 		}
 	},
 
+	services: {
+		title: 'Servicios',
+		intro:
+			'Sistemas de automatización armados a medida sobre las herramientas que tu negocio ya usa. Estos son los frentes donde más rápido se recupera tiempo y plata.',
+		items: {
+			whatsapp: {
+				t: 'Atención automática por WhatsApp',
+				d: 'Un asistente que responde las preguntas de siempre, toma pedidos y deriva a una persona cuando hace falta — sin que se te escape ningún mensaje.'
+			},
+			reviews: {
+				t: 'Monitoreo de reseñas',
+				d: 'Te avisamos apenas aparece una reseña nueva en Google, con una respuesta sugerida lista para enviar. Ninguna queda colgada semanas.'
+			},
+			quotes: {
+				t: 'Seguimiento de presupuestos',
+				d: 'Cada cotización enviada recibe recordatorios automáticos hasta que el cliente responde. La plata deja de enfriarse sola.'
+			},
+			integrations: {
+				t: 'Integraciones y planillas',
+				d: 'Conectamos WhatsApp, redes, planillas y tu sistema de pedidos para que los datos fluyan solos, sin cargar nada dos veces.'
+			}
+		},
+		ctaTitle: '¿No estás seguro de por dónde empezar?',
+		ctaText: 'En una charla corta detectamos la tarea que más te conviene automatizar primero.',
+		cta: 'Contar mi caso'
+	},
+
+	pricing: {
+		title: 'Precios',
+		intro:
+			'Planes pensados para negocios locales. Empezás por lo que más duele y sumás cuando lo necesitás, sin ataduras.',
+		popular: 'Más elegido',
+		plans: {
+			p1: {
+				name: 'Diagnóstico',
+				price: 'Gratis',
+				period: '',
+				desc: 'Una charla para entender dónde se pierde tiempo o plata y qué conviene automatizar primero.',
+				f1: 'Relevamiento de tu operación',
+				f2: 'Propuesta priorizada',
+				f3: 'Sin compromiso',
+				cta: 'Reservar diagnóstico'
+			},
+			p2: {
+				name: 'Sistema',
+				price: 'A medida',
+				period: '',
+				desc: 'Armado del sistema conectando tus herramientas actuales, con prueba en datos reales antes de arrancar.',
+				f1: 'Un frente automatizado (WhatsApp, reseñas o presupuestos)',
+				f2: 'Puesta en marcha y ajustes',
+				f3: 'Capacitación al equipo',
+				cta: 'Pedir cotización'
+			},
+			p3: {
+				name: 'Acompañamiento',
+				price: 'Mensual',
+				period: '/mes',
+				desc: 'Monitoreo y mejora continua una vez en marcha. El sistema evoluciona con tu negocio.',
+				f1: 'Monitoreo y soporte',
+				f2: 'Ajustes y nuevas automatizaciones',
+				f3: 'Reportes de resultados',
+				cta: 'Hablar con nosotros'
+			}
+		},
+		note: 'Los valores se definen según el alcance de cada caso. El diagnóstico siempre es gratuito.'
+	},
+
+	about: {
+		title: 'Nosotros',
+		intro:
+			'Lince nació en Rosario con una idea simple: la tecnología tiene que trabajar para el negocio, no al revés.',
+		bodyTitle: 'Cómo pensamos',
+		body: 'No creemos en cambiar todo de golpe ni en obligarte a aprender plataformas nuevas. Nos metemos en cómo funciona tu negocio hoy, encontramos las tareas que se repiten y las que se escapan, y armamos sistemas que corren solos sobre las herramientas que ya usás.',
+		values: {
+			v1: {
+				t: 'Sin fricción',
+				d: 'Nada de migrar de plataforma. Trabajamos sobre WhatsApp, planillas y redes que ya usás.'
+			},
+			v2: {
+				t: 'Con datos reales',
+				d: 'Todo se prueba en paralelo antes de que dependas de ello. Cero sorpresas el día de la entrega.'
+			},
+			v3: {
+				t: 'Cerca',
+				d: 'Somos de Rosario. Respondemos rápido y acompañamos después de la puesta en marcha.'
+			}
+		},
+		cta: 'Trabajemos juntos'
+	},
+
+	faq: {
+		title: 'Preguntas frecuentes',
+		intro: 'Lo que más nos preguntan antes de empezar.',
+		items: {
+			q1: {
+				q: '¿Necesito tener algo digitalizado para empezar?',
+				a: 'No. Arrancamos con un diagnóstico y trabajamos sobre lo que ya usás, aunque sea sólo WhatsApp y una planilla.'
+			},
+			q2: {
+				q: '¿Tengo que cambiar de plataforma o de sistema?',
+				a: 'No. Nos adaptamos a tus herramientas actuales. La idea es sumar automatización, no obligarte a re-aprender todo.'
+			},
+			q3: {
+				q: '¿Cuánto tarda en estar funcionando?',
+				a: 'La mayoría de los casos están en marcha en alrededor de dos semanas desde el diagnóstico, según el alcance.'
+			},
+			q4: {
+				q: '¿Qué pasa si algo falla o el cliente quiere hablar con una persona?',
+				a: 'El sistema deriva a una persona cuando hace falta. Vos mantenés el control; la automatización se ocupa de lo repetitivo.'
+			},
+			q5: {
+				q: '¿Trabajan sólo en Rosario?',
+				a: 'Estamos en Rosario, pero trabajamos con negocios de cualquier lado. Todo se coordina de forma remota.'
+			}
+		},
+		ctaTitle: '¿Tenés otra pregunta?',
+		cta: 'Escribinos'
+	},
+
 	process: {
 		title: 'Cómo trabajamos',
 		kicker: 'proceso',
@@ -90,13 +219,16 @@ export const es = {
 		title: '¿Algo de esto te suena conocido?',
 		subtitle:
 			'Si hay una tarea que se repite todos los días en tu negocio — y que te das cuenta de que podría hacerse sola — esa es la conversación que queremos tener.',
-		infoTitle: 'Contacto',
+		infoTitle: 'Otras vías',
+		infoIntro: 'Escribinos también por el canal que te resulte más cómodo.',
 		emailLabel: 'Email',
-		emailValue: 'hola@lince.dev',
+		emailValue: 'lince.automatizaciones@gmail.com',
 		whatsappLabel: 'WhatsApp',
-		whatsappValue: 'Rosario, Santa Fe',
+		whatsappValue: '+54 9 341 000 0000',
+		instagramLabel: 'Instagram',
+		instagramValue: '@linceautomatizaciones',
 		replyLabel: 'Respuesta',
-		replyValue: 'dentro de 24 hs'
+		replyValue: 'Respondemos dentro de 24 hs.'
 	},
 
 	footer: {
@@ -181,7 +313,14 @@ export const es = {
 		toDark: 'Cambiar a tema oscuro',
 		language: 'Idioma',
 		switchToEnglish: 'Switch to English',
-		switchToSpanish: 'Cambiar a español'
+		switchToSpanish: 'Cambiar a español',
+		openMenu: 'Abrir menú',
+		closeMenu: 'Cerrar menú',
+		onThisPage: 'En esta página',
+		collapseIndex: 'Replegar índice',
+		expandIndex: 'Desplegar índice',
+		whatsapp: 'Chatear por WhatsApp',
+		whatsappMsg: 'Hola, me gustaría automatizar mi negocio con Lince.'
 	},
 
 	admin: {
