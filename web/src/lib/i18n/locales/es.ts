@@ -19,7 +19,7 @@ export const es = {
 	},
 
 	hero: {
-		badge: 'Automatización para negocios de Rosario',
+		badge: 'Sistemas de automatización a medida',
 		titleA: 'Tu negocio pierde plata en lugares',
 		titleEm: 'que no se ven',
 		titleB: '. Nosotros los',
@@ -96,13 +96,15 @@ export const es = {
 		title: '¿Algo de esto te suena conocido?',
 		subtitle:
 			'Si hay una tarea que se repite todos los días en tu negocio — y que te das cuenta de que podría hacerse sola — esa es la conversación que queremos tener.',
-		infoTitle: 'Contacto',
+		infoTitle: 'Otras vías',
+		infoIntro: 'Escribinos también por el canal que te resulte más cómodo.',
 		emailLabel: 'Email',
-		emailValue: 'hola@lince.dev',
+		emailValue: 'lince.automatizaciones@gmail.com',
 		whatsappLabel: 'WhatsApp',
-		whatsappValue: 'Rosario, Santa Fe',
-		replyLabel: 'Respuesta',
-		replyValue: 'dentro de 24 hs'
+		whatsappValue: '+54 9 341 000 0000',
+		instagramLabel: 'Instagram',
+		instagramValue: '@linceautomatizaciones',
+		replyValue: 'Respondemos dentro de 24 hs.'
 	},
 
 	services: {

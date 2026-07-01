@@ -8,6 +8,8 @@
 	import DotField from '$lib/components/landing/DotField.svelte';
 	import ScrambleWord from '$lib/components/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import IconMail from '~icons/lucide/mail';
+	import IconInstagram from '~icons/lucide/instagram';
 	import { getTheme } from '$lib/theme.svelte';
 	import lince from '$lib/assets/images/lince.png?enhanced';
 
@@ -48,11 +50,8 @@
 		{/key}
 		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
-				<p
-					class="hero-anim kicker mb-5 inline-flex items-center justify-center gap-2.5"
-					style="--d:50ms"
-				>
-					<span class="pulse-dot" aria-hidden="true"></span>{t('hero.badge')}
+				<p class="hero-anim kicker mb-5" style="--d:50ms">
+					{t('hero.badge')}
 				</p>
 				<h1
 					class="hero-anim mx-auto text-balance text-[clamp(38px,6.2vw,68px)] leading-[1.04]"
@@ -252,34 +251,80 @@
 	<!-- CONTACTO -->
 	<section id="contacto" class="py-[clamp(64px,10vw,104px)]">
 		<div class="wrap">
-			<div class="reveal grid items-start gap-12 md:grid-cols-[1.3fr_1fr]" use:reveal>
-				<div>
-					<h2 class="mb-4 text-[clamp(28px,4.5vw,42px)]">{t('contact.title')}</h2>
-					<p class="max-w-[460px] text-sage">
-						{t('contact.subtitle')}
-					</p>
+			<div class="mb-10 max-w-[720px]">
+				<h2 class="mb-4 text-[clamp(28px,4.5vw,42px)]">{t('contact.title')}</h2>
+				<p class="text-[18px] text-sage">{t('contact.subtitle')}</p>
+			</div>
+
+			<div class="reveal grid items-start gap-8 lg:grid-cols-[1.35fr_1fr]" use:reveal>
+				<!-- Form -->
+				<div class="rounded-2xl border border-line bg-surface p-7 sm:p-9">
 					<ContactForm />
 				</div>
-				<div class="rounded-xl border border-line bg-surface p-7">
-					<div class="kicker mb-4 text-moss">{t('contact.infoTitle')}</div>
-					<ul class="flex flex-col">
-						<li class="flex justify-between border-b border-line py-3 text-[15px]">
-							<span class="text-sage">{t('contact.emailLabel')}</span><span
-								>{t('contact.emailValue')}</span
-							>
-						</li>
-						<li class="flex justify-between border-b border-line py-3 text-[15px]">
-							<span class="text-sage">{t('contact.whatsappLabel')}</span><span
-								>{t('contact.whatsappValue')}</span
-							>
-						</li>
-						<li class="flex justify-between py-3 text-[15px]">
-							<span class="text-sage">{t('contact.replyLabel')}</span><span
-								>{t('contact.replyValue')}</span
-							>
-						</li>
-					</ul>
-				</div>
+
+				<!-- Card de canales alternativos -->
+				<aside class="flex flex-col gap-4">
+					<div class="rounded-2xl border border-line bg-surface p-7">
+						<div class="mb-1 kicker text-moss">{t('contact.infoTitle')}</div>
+						<p class="mb-5 text-[14.5px] text-sage">{t('contact.infoIntro')}</p>
+						<ul class="flex flex-col gap-1.5">
+							<li>
+								<a
+									class="channel-row"
+									href={`mailto:${t('contact.emailValue')}`}
+									aria-label={`${t('contact.emailLabel')}: ${t('contact.emailValue')}`}
+								>
+									<span class="channel-icon"><IconMail class="text-[18px]" /></span>
+									<span class="channel-body">
+										<span class="channel-label">{t('contact.emailLabel')}</span>
+										<span class="channel-value">{t('contact.emailValue')}</span>
+									</span>
+								</a>
+							</li>
+							<li>
+								<a
+									class="channel-row"
+									href={`https://wa.me/${t('contact.whatsappValue').replace(/[^0-9]/g, '')}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label={`${t('contact.whatsappLabel')}: ${t('contact.whatsappValue')}`}
+								>
+									<span class="channel-icon">
+										<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+											<path
+												d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+											/>
+										</svg>
+									</span>
+									<span class="channel-body">
+										<span class="channel-label">{t('contact.whatsappLabel')}</span>
+										<span class="channel-value">{t('contact.whatsappValue')}</span>
+									</span>
+								</a>
+							</li>
+							<li>
+								<a
+									class="channel-row"
+									href={`https://instagram.com/${t('contact.instagramValue').replace(/^@/, '')}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label={`${t('contact.instagramLabel')}: ${t('contact.instagramValue')}`}
+								>
+									<span class="channel-icon"><IconInstagram class="text-[18px]" /></span>
+									<span class="channel-body">
+										<span class="channel-label">{t('contact.instagramLabel')}</span>
+										<span class="channel-value">{t('contact.instagramValue')}</span>
+									</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<p class="reply-note kicker">
+						<span class="reply-dot" aria-hidden="true"></span>
+						{t('contact.replyValue')}
+					</p>
+				</aside>
 			</div>
 		</div>
 	</section>
@@ -302,25 +347,6 @@
 		to {
 			opacity: 1;
 			transform: none;
-		}
-	}
-
-	.pulse-dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: var(--color-rust);
-		animation: pulse 2.4s ease-in-out infinite;
-	}
-	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-			transform: scale(1);
-		}
-		50% {
-			opacity: 0.4;
-			transform: scale(0.8);
 		}
 	}
 
@@ -491,5 +517,76 @@
 		color: var(--color-moss);
 		line-height: 1;
 		margin-bottom: 8px;
+	}
+
+	/* Filas de canal (Email / WhatsApp / Instagram) en la card de contacto.
+	   Todo el bloque es clickeable; el icono vira a rust al pasar el mouse. */
+	.channel-row {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 10px;
+		border-radius: 10px;
+		color: var(--color-ink);
+		text-decoration: none;
+		transition: background-color 0.15s ease, color 0.15s ease;
+	}
+	.channel-row:hover {
+		background: var(--color-bg);
+	}
+	.channel-icon {
+		display: grid;
+		place-items: center;
+		width: 34px;
+		height: 34px;
+		flex-shrink: 0;
+		border-radius: 8px;
+		background: var(--color-bg);
+		border: 1px solid var(--color-line);
+		color: var(--color-moss);
+		transition: color 0.15s ease, border-color 0.15s ease;
+	}
+	.channel-row:hover .channel-icon {
+		color: var(--color-rust);
+		border-color: var(--color-rust);
+	}
+	.channel-body {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+	.channel-label {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-sage);
+	}
+	.channel-value {
+		font-size: 15px;
+		font-weight: 500;
+		color: var(--color-ink);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	/* Pie con tiempo de respuesta. */
+	.reply-note {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		align-self: flex-start;
+		padding: 8px 14px;
+		border: 1px solid var(--color-line);
+		border-radius: 999px;
+		background: var(--color-bg);
+		color: var(--color-sage);
+	}
+	.reply-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--color-moss);
 	}
 </style>

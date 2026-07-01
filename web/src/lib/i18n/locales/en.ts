@@ -17,7 +17,7 @@ export const en: Dictionary = {
 	},
 
 	hero: {
-		badge: 'Automation for businesses in Rosario',
+		badge: 'Custom automation systems',
 		titleA: 'Your business is losing money in places',
 		titleEm: "you can't see",
 		titleB: '. We',
@@ -94,13 +94,15 @@ export const en: Dictionary = {
 		title: 'Does any of this sound familiar?',
 		subtitle:
 			'If there is a task that repeats every single day in your business — and you can tell it could run itself — that is the conversation we want to have.',
-		infoTitle: 'Contact',
+		infoTitle: 'Other channels',
+		infoIntro: 'Reach out through whichever channel you prefer.',
 		emailLabel: 'Email',
-		emailValue: 'hola@lince.dev',
+		emailValue: 'lince.automatizaciones@gmail.com',
 		whatsappLabel: 'WhatsApp',
-		whatsappValue: 'Rosario, Santa Fe',
-		replyLabel: 'Reply',
-		replyValue: 'within 24 hrs'
+		whatsappValue: '+54 9 341 000 0000',
+		instagramLabel: 'Instagram',
+		instagramValue: '@linceautomatizaciones',
+		replyValue: 'We reply within 24 hrs.'
 	},
 
 	services: {
