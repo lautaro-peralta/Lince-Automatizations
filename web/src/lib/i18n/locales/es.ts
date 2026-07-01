@@ -23,7 +23,7 @@ export const es = {
 		titleA: 'Tu negocio pierde plata en lugares',
 		titleEm: 'que no se ven',
 		titleB: '. Nosotros los',
-		verbs: { v1: 'encontramos', v2: 'optimizamos', v3: 'solucionamos' },
+		verbs: { v1: 'encontramos', v2: 'solucionamos', v3: 'automatizamos' },
 		subtitle:
 			'Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio responda solo, sin perder el control de lo que pasa.',
 		ctaPrimary: 'Ver casos en funcionamiento',

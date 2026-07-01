@@ -21,7 +21,7 @@ export const en: Dictionary = {
 		titleA: 'Your business is losing money in places',
 		titleEm: "you can't see",
 		titleB: '. We',
-		verbs: { v1: 'find them', v2: 'optimize them', v3: 'solve them' },
+		verbs: { v1: 'find them', v2: 'solve them', v3: 'automate them' },
 		subtitle:
 			'We design systems that connect WhatsApp, spreadsheets, reviews and orders so your business responds on its own — without losing control of what happens.',
 		ctaPrimary: 'See cases in action',

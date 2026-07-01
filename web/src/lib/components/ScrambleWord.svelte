@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	// Verbo que cambia con efecto "scramble" (caracteres aleatorios) + cursor de
-	// terminal, ciclando entre las palabras dadas. Basado en el efecto adjunto.
-	// El ancho lo reservan los "ghost" (la palabra más ancha), así el texto queda
-	// centrado y estable: el resto del titular no se mueve.
+	// Verbo que cambia en dos fases, estilo terminal:
+	//   1) borra la palabra anterior de derecha a izquierda (como con teclado),
+	//   2) recién ahí escribe la nueva, definiendo cada carácter con un scramble.
+	// Va en su propio renglón centrado, así el resto del titular no se mueve.
 	interface Props {
 		words: string[];
-		/** ms con la palabra completa antes de pasar a la siguiente. */
+		/** ms con la palabra completa antes de borrarla y escribir la siguiente. */
 		hold?: number;
 		class?: string;
 	}
@@ -25,50 +25,50 @@
 		if (prefersReduced || words.length <= 1) return;
 
 		const chars = '!<>-_\\/[]{}—=+*^?#%&';
-		let frameReq = 0;
+		const esc = (c: string) => (c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c);
+
+		let raf = 0;
 		let timer: ReturnType<typeof setTimeout> | undefined;
 		let cancelled = false;
-		let queue: { from: string; to: string; start: number; end: number; char: string }[] = [];
-		let frame = 0;
-		let resolveFn: (() => void) | null = null;
 
-		function setText(newText: string): Promise<void> {
-			const oldText = node!.textContent || '';
-			const length = Math.max(oldText.length, newText.length);
-			const promise = new Promise<void>((res) => (resolveFn = res));
-			queue = [];
-			for (let i = 0; i < length; i++) {
-				queue.push({ from: oldText[i] || '', to: newText[i] || '', start: i * 8, end: i * 8 + 8, char: '' });
-			}
-			cancelAnimationFrame(frameReq);
-			frame = 0;
-			update();
-			return promise;
-		}
+		const DEL_PER = 2; // frames por carácter borrado
+		const TYPE_PER = 5; // frames por carácter nuevo (incluye el scramble de entrada)
 
-		function update() {
-			let out = '';
-			let complete = 0;
-			for (const item of queue) {
-				if (frame >= item.end) {
-					complete++;
-					out += item.to;
-				} else if (frame >= item.start) {
-					if (!item.char || Math.random() < 0.28) {
-						item.char = chars[Math.floor(Math.random() * chars.length)];
+		function play(word: string): Promise<void> {
+			return new Promise((resolve) => {
+				const prev = node!.textContent || '';
+				const delFrames = prev.length * DEL_PER;
+				const typeFrames = word.length * TYPE_PER;
+				let frame = 0;
+
+				const step = () => {
+					if (cancelled) return;
+					let out = '';
+					if (frame < delFrames) {
+						// Fase 1 — borrado desde la derecha (backspace).
+						const shown = prev.length - Math.floor(frame / DEL_PER) - 1;
+						out = prev.slice(0, Math.max(0, shown));
+					} else {
+						// Fase 2 — se van definiendo los caracteres: los ya escritos quedan
+						// fijos y el que entra parpadea con caracteres aleatorios.
+						const tf = frame - delFrames;
+						const idx = Math.min(word.length, Math.floor(tf / TYPE_PER));
+						out = word.slice(0, idx);
+						if (idx < word.length) {
+							out += `<span class="dud">${esc(chars[Math.floor(Math.random() * chars.length)])}</span>`;
+						}
 					}
-					out += `<span class="dud">${item.char}</span>`;
-				} else {
-					out += item.from;
-				}
-			}
-			node!.innerHTML = out;
-			if (complete === queue.length) {
-				resolveFn?.();
-			} else {
-				frame++;
-				frameReq = requestAnimationFrame(update);
-			}
+					node!.innerHTML = out;
+					if (frame >= delFrames + typeFrames) {
+						node!.textContent = word; // estado final limpio
+						resolve();
+						return;
+					}
+					frame++;
+					raf = requestAnimationFrame(step);
+				};
+				step();
+			});
 		}
 
 		const wait = (ms: number) => new Promise<void>((r) => (timer = setTimeout(r, ms)));
@@ -79,7 +79,7 @@
 				await wait(hold);
 				if (cancelled) break;
 				i = (i + 1) % words.length;
-				await setText(words[i]);
+				await play(words[i]);
 			}
 		}
 
@@ -88,33 +88,23 @@
 
 		return () => {
 			cancelled = true;
-			cancelAnimationFrame(frameReq);
+			cancelAnimationFrame(raf);
 			if (timer) clearTimeout(timer);
 		};
 	});
 </script>
 
 <span class={`scramble ${klass}`}>
-	{#each words as w (w)}<span class="ghost" aria-hidden="true">{w}</span>{/each}
 	<span class="live" bind:this={live}>{words[0] ?? ''}</span>
 </span>
 
 <style>
 	.scramble {
-		display: inline-grid;
-	}
-	/* Los ghost y el texto vivo se apilan en la misma celda: la celda mide lo que
-	   la palabra más ancha, así el centro no se mueve al cambiar de palabra. */
-	.scramble > * {
-		grid-area: 1 / 1;
-		text-align: center;
-		white-space: nowrap;
-	}
-	.ghost {
-		visibility: hidden;
+		display: inline-block;
 	}
 	.live {
 		position: relative;
+		white-space: nowrap;
 	}
 	/* Los caracteres aleatorios se inyectan por innerHTML → :global para saltear
 	   el scope de Svelte. */
