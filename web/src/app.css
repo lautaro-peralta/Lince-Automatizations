@@ -34,6 +34,15 @@
 	--color-line-strong: rgba(27, 43, 35, 0.22);
 	--color-line-light: rgba(247, 245, 240, 0.14); /* líneas sobre oscuro */
 
+	/* ---- Banda de contraste (alternancia dramática) ----
+	   Superficie OPUESTA al tema base: en claro es oscura, en oscuro es clara.
+	   La usa la sección "Cómo trabajamos". Se invierte bajo [data-theme='dark']
+	   (ver más abajo), así el sitio siempre alterna una banda de contraste. */
+	--color-band: #14211a; /* claro → banda oscura */
+	--color-on-band: #f7f5f0; /* texto principal sobre la banda */
+	--color-on-band-muted: rgba(247, 245, 240, 0.7); /* texto secundario */
+	--color-band-line: rgba(247, 245, 240, 0.14); /* líneas sobre la banda */
+
 	/* ---- Estados (panel admin) ---- */
 	--color-success: #3d5a45;
 	--color-warning: #c9622e;
@@ -99,6 +108,12 @@
 	--color-line: rgba(247, 245, 240, 0.1);
 	--color-line-strong: rgba(247, 245, 240, 0.2);
 	--color-line-light: rgba(247, 245, 240, 0.14);
+
+	/* ---- Banda de contraste (INVERTIDA: en oscuro la banda es CLARA) ---- */
+	--color-band: #efeae0; /* oscuro → banda clara (crema tierra) */
+	--color-on-band: #1b2b23; /* texto oscuro sobre la banda clara */
+	--color-on-band-muted: rgba(27, 43, 35, 0.66);
+	--color-band-line: rgba(27, 43, 35, 0.14);
 
 	/* ---- Estados ---- */
 	--color-success: #8fb39a;

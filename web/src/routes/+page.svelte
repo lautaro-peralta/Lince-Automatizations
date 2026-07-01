@@ -14,6 +14,9 @@
 	// los puntos siguen ese mismo tema (remontan vía {#key} al togglear) para
 	// no quedar con la paleta clara sobre un hero ya pasado a carbón oscuro.
 	const heroTheme = $derived(getTheme());
+	// La banda "Cómo trabajamos" es la superficie OPUESTA al tema base (oscura en
+	// claro, clara en oscuro), así que sus puntos usan el tema contrario al del sitio.
+	const bandTheme: 'light' | 'dark' = $derived(heroTheme === 'dark' ? 'light' : 'dark');
 
 	const pasos = $derived([
 		{ n: '01', t: t('process.steps.s1.t'), d: t('process.steps.s1.d') },
@@ -206,31 +209,31 @@
 		</div>
 	</section>
 
-	<!-- PROCESO (sección oscura en AMBOS temas: usa `text-cream` fijo, no `text-bg`,
-	     que se invertiría a oscuro en el tema oscuro). Sin patrón de líneas: sólo
-	     el fondo oscuro y los puntos del DotField. -->
+	<!-- PROCESO (banda de contraste: se INVIERTE con el tema — oscura en claro,
+	     clara en oscuro — vía los tokens `band`/`on-band`). Sin patrón de líneas:
+	     sólo el fondo de la banda y los puntos del DotField (tema opuesto al sitio). -->
 	<section
 		id="proceso"
-		class="relative overflow-hidden bg-night py-[clamp(56px,9vw,88px)] text-cream"
+		class="relative overflow-hidden bg-band py-[clamp(56px,9vw,88px)] text-on-band"
 	>
 		{#key heroTheme}
-			<DotField theme="dark" />
+			<DotField theme={bandTheme} />
 		{/key}
 		<div class="wrap relative z-10">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
-				<h2 class="text-[clamp(26px,4vw,38px)] text-cream">{t('process.title')}</h2>
-				<div class="kicker text-[rgba(247,245,240,0.55)]">{t('process.kicker')}</div>
+				<h2 class="text-[clamp(26px,4vw,38px)] text-on-band">{t('process.title')}</h2>
+				<div class="kicker text-on-band-muted">{t('process.kicker')}</div>
 			</div>
 			<ol class="flex flex-col">
 				{#each pasos as step, i (step.n)}
 					<li
-						class="reveal grid grid-cols-[56px_1fr] gap-5 border-t border-line-light py-7 first:border-t-0 first:pt-0"
+						class="reveal grid grid-cols-[56px_1fr] gap-5 border-t border-band-line py-7 first:border-t-0 first:pt-0"
 						use:reveal={{ delay: i * 80 }}
 					>
 						<div class="font-mono text-[15px] text-rust">{step.n}</div>
 						<div>
-							<h3 class="mb-1.5 text-[20px] text-cream">{step.t}</h3>
-							<p class="max-w-[680px] text-[15.5px] text-[rgba(247,245,240,0.7)]">{step.d}</p>
+							<h3 class="mb-1.5 text-[20px] text-on-band">{step.t}</h3>
+							<p class="max-w-[680px] text-[15.5px] text-on-band-muted">{step.d}</p>
 						</div>
 					</li>
 				{/each}
