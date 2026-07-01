@@ -5,10 +5,11 @@
 	import LiveMonitor from '$lib/components/landing/LiveMonitor.svelte';
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
+	import SectionRail from '$lib/components/landing/SectionRail.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import LangToggle from '$lib/components/LangToggle.svelte';
 	import { t } from '$lib/i18n/index.svelte';
-	import lince from '$lib/assets/images/lince.png?enhanced';
+	import lince from '$lib/assets/images/lince-editada.png?enhanced';
 
 	const pasos = $derived([
 		{ n: '01', t: t('process.steps.s1.t'), d: t('process.steps.s1.d') },
@@ -74,7 +75,9 @@
 	</div>
 </header>
 
-<main>
+<SectionRail />
+
+<main class="rail-safe">
 	<!-- HERO -->
 	<section class="relative overflow-hidden pt-16 sm:pt-24">
 		<div class="wrap">
@@ -307,8 +310,66 @@
 	<div class="hatch h-[64px] border-t border-line" aria-hidden="true"></div>
 </main>
 
-<footer class="py-9 text-center text-[13.5px] text-sage">
-	{t('footer')}
+<footer class="site-footer border-t border-line bg-surface">
+	<div class="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+		<div>
+			<a class="flex items-center gap-2.5 font-display text-[21px] font-semibold" href="/">
+				<svg
+					class="h-[30px] w-[30px] shrink-0"
+					viewBox="0 0 40 40"
+					fill="none"
+					role="img"
+					aria-label="Lince"
+				>
+					<path
+						d="M20 4 L34 13 L34 27 L20 36 L6 27 L6 13 Z"
+						stroke="currentColor"
+						stroke-width="1.6"
+						fill="none"
+					/>
+					<path
+						d="M14 17 L20 23 L26 17"
+						stroke="#C9622E"
+						stroke-width="1.8"
+						fill="none"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<circle cx="14" cy="14" r="1.6" fill="currentColor" />
+					<circle cx="26" cy="14" r="1.6" fill="currentColor" />
+				</svg>
+				Lince
+			</a>
+			<p class="mt-4 max-w-[36ch] text-[14.5px] text-sage">
+				{t('footer.tagline')}
+			</p>
+		</div>
+
+		<div>
+			<div class="kicker mb-3 text-moss">{t('footer.exploreLabel')}</div>
+			<ul class="flex flex-col gap-2 text-[14.5px]">
+				<li><a class="footer-link" href="#casos">{t('nav.cases')}</a></li>
+				<li><a class="footer-link" href="#proceso">{t('nav.howWeWork')}</a></li>
+				<li><a class="footer-link" href="#contacto">{t('nav.contact')}</a></li>
+			</ul>
+		</div>
+
+		<div>
+			<div class="kicker mb-3 text-moss">{t('footer.contactLabel')}</div>
+			<ul class="flex flex-col gap-2 text-[14.5px]">
+				<li>
+					<a class="footer-link" href="mailto:hola@lince.dev">hola@lince.dev</a>
+				</li>
+				<li class="text-sage">{t('contact.whatsappValue')}</li>
+				<li class="text-sage">{t('footer.hours')}</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="wrap flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 text-[12.5px] text-sage">
+		<span>© {new Date().getFullYear()} Lince Automatizaciones · {t('footer.rights')}</span>
+		<span class="font-mono">{t('footer.location')}</span>
+	</div>
 </footer>
 
 <style>
@@ -515,5 +576,24 @@
 		color: var(--color-moss);
 		line-height: 1;
 		margin-bottom: 8px;
+	}
+
+	/* Reserva espacio a la derecha para que el índice lateral no tape el contenido. */
+	.rail-safe {
+		padding-right: 36px;
+	}
+	@media (min-width: 640px) {
+		.rail-safe {
+			padding-right: 48px;
+		}
+	}
+
+	.footer-link {
+		color: var(--color-ink);
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+	.footer-link:hover {
+		color: var(--color-rust);
 	}
 </style>

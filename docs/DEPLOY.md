@@ -50,8 +50,7 @@ anterior). Todo en planes gratuitos.
 
 ## 3. Cloudflare Pages (frontend)
 
-Plan gratuito con uso comercial permitido. Comparación y alternativas en
-[`HOSTING-FRONTEND.md`](HOSTING-FRONTEND.md).
+Plan gratuito con uso comercial permitido.
 
 1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → este repo.
 2. Configurar:

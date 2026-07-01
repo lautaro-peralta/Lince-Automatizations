@@ -99,8 +99,15 @@ export const es = {
 		replyValue: 'dentro de 24 hs'
 	},
 
-	footer:
-		'Lince — sistemas de automatización para negocios locales. Casos ilustrativos con datos simulados.',
+	footer: {
+		tagline:
+			'Sistemas de automatización a medida para negocios locales. Casos ilustrativos con datos simulados.',
+		exploreLabel: 'Explorar',
+		contactLabel: 'Contacto',
+		hours: 'Respondemos en menos de 24 hs',
+		location: 'Rosario · Santa Fe · Argentina',
+		rights: 'Todos los derechos reservados.'
+	},
 
 	meta: {
 		title: 'Lince — Automatización para negocios',
