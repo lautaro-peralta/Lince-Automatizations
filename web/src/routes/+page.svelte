@@ -10,6 +10,7 @@
 	import DotField from '$lib/components/landing/DotField.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import { getTheme } from '$lib/theme.svelte';
 
 	const verbs = $derived([t('hero.verbs.v1'), t('hero.verbs.v2'), t('hero.verbs.v3')]);
 
@@ -34,7 +35,8 @@
 <main class="rail-safe">
 	<!-- HERO -->
 	<section class="relative overflow-hidden pt-16 pb-16 sm:pt-24 sm:pb-24">
-		<DotField theme="light" />
+		<!-- El fondo del hero sigue al tema del sitio: superficie clara u oscura. -->
+		<DotField theme={getTheme() === 'dark' ? 'dark' : 'light'} />
 		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
 				<p class="hero-anim kicker mb-5" style="--d:50ms">
@@ -61,17 +63,7 @@
 		</div>
 	</section>
 
-	<!-- Barra rayada con el lince pixel art (GIF del usuario) sentado encima,
-	     del lado derecho. Con prefers-reduced-motion se muestra el poster PNG
-	     estático en lugar del GIF animado (un GIF no se puede pausar con CSS). -->
-	<div class="hatch relative h-[88px] border-y border-line" aria-hidden="true">
-		<div class="wrap relative h-full">
-			<div class="lynx-seat">
-				<img class="anim" src="/lince-pixel-art.gif" alt="" width="128" height="128" />
-				<img class="still" src="/lince-pixel-art.png" alt="" width="128" height="128" />
-			</div>
-		</div>
-	</div>
+	<div class="hatch h-[88px] border-y border-line" aria-hidden="true"></div>
 
 	<!-- CASOS -->
 	<section id="casos" class="border-b border-line py-[clamp(56px,9vw,88px)]">
@@ -215,28 +207,26 @@
 		</div>
 	</section>
 
-	<!-- PROCESO (sección oscura en AMBOS temas: usa `text-cream` fijo, no `text-bg`,
-	     que se invertiría a oscuro en el tema oscuro). -->
-	<section
-		id="proceso"
-		class="relative overflow-hidden bg-night py-[clamp(56px,9vw,88px)] text-cream"
-	>
-		<DotField theme="dark" />
+	<!-- PROCESO: siempre en CONTRASTE con el tema activo — oscura en tema claro,
+	     clara en tema oscuro. Los colores viven en custom properties de sección
+	     (--sec-*) que [data-theme='dark'] invierte; ver <style> abajo. -->
+	<section id="proceso" class="proceso-flip relative overflow-hidden py-[clamp(56px,9vw,88px)]">
+		<DotField theme={getTheme() === 'dark' ? 'light' : 'dark'} />
 		<div class="wrap relative z-10">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
-				<h2 class="text-[clamp(26px,4vw,38px)] text-cream">{t('process.title')}</h2>
-				<div class="kicker text-[rgba(247,245,240,0.55)]">{t('process.kicker')}</div>
+				<h2 class="text-[clamp(26px,4vw,38px)]">{t('process.title')}</h2>
+				<div class="kicker sec-kicker">{t('process.kicker')}</div>
 			</div>
 			<ol class="flex flex-col">
 				{#each pasos as step, i (step.n)}
 					<li
-						class="reveal grid grid-cols-[56px_1fr] gap-5 border-t border-line-light py-7 first:border-t-0 first:pt-0"
+						class="sec-row reveal grid grid-cols-[56px_1fr] gap-5 border-t py-7 first:border-t-0 first:pt-0"
 						use:reveal={{ delay: i * 80 }}
 					>
-						<div class="font-mono text-[15px] text-rust">{step.n}</div>
+						<div class="sec-accent font-mono text-[15px]">{step.n}</div>
 						<div>
-							<h3 class="mb-1.5 text-[20px] text-cream">{step.t}</h3>
-							<p class="max-w-[680px] text-[15.5px] text-[rgba(247,245,240,0.7)]">{step.d}</p>
+							<h3 class="mb-1.5 text-[20px]">{step.t}</h3>
+							<p class="sec-soft max-w-[680px] text-[15.5px]">{step.d}</p>
 						</div>
 					</li>
 				{/each}
@@ -353,7 +343,17 @@
 		</div>
 	</section>
 
-	<div class="hatch h-[64px] border-t border-line" aria-hidden="true"></div>
+	<!-- Barra rayada de cierre con el lince pixel art (GIF del usuario) sentado
+	     encima, del lado derecho. Con prefers-reduced-motion se muestra el
+	     poster PNG estático (un GIF no se puede pausar con CSS). -->
+	<div class="hatch relative h-[64px] border-t border-line" aria-hidden="true">
+		<div class="wrap relative h-full">
+			<div class="lynx-seat">
+				<img class="anim" src="/lince-pixel-art.gif" alt="" width="128" height="128" />
+				<img class="still" src="/lince-pixel-art.png" alt="" width="128" height="128" />
+			</div>
+		</div>
+	</div>
 </main>
 
 <style>
@@ -372,6 +372,48 @@
 			opacity: 1;
 			transform: none;
 		}
+	}
+
+	/* Sección "Cómo trabajamos": siempre en contraste con el tema activo.
+	   En tema claro es la sección oscura de la página; en tema oscuro se
+	   invierte a crema con texto tinta (colores FIJOS, no tokens del tema,
+	   porque esta superficie va a contramano del resto). */
+	.proceso-flip {
+		--sec-bg: var(--color-night);
+		--sec-fg: #f7f5f0;
+		--sec-soft: rgba(247, 245, 240, 0.7);
+		--sec-kicker: rgba(247, 245, 240, 0.55);
+		--sec-line: rgba(247, 245, 240, 0.14);
+		--sec-accent: var(--color-rust);
+		background: var(--sec-bg);
+		color: var(--sec-fg);
+	}
+	:global([data-theme='dark']) .proceso-flip {
+		--sec-bg: #f2efe7;
+		--sec-fg: #1b2b23;
+		--sec-soft: rgba(27, 43, 35, 0.75);
+		--sec-kicker: rgba(27, 43, 35, 0.6);
+		--sec-line: rgba(27, 43, 35, 0.16);
+		/* rust-deep fijo: AA sobre crema (el rust del tema oscuro es muy claro). */
+		--sec-accent: #ad4f22;
+	}
+	/* app.css fija color: var(--color-ink) en los headings; en esta sección
+	   deben seguir al color de contraste propio. */
+	.proceso-flip h2,
+	.proceso-flip h3 {
+		color: var(--sec-fg);
+	}
+	.proceso-flip .sec-kicker {
+		color: var(--sec-kicker);
+	}
+	.proceso-flip .sec-row {
+		border-color: var(--sec-line);
+	}
+	.proceso-flip .sec-accent {
+		color: var(--sec-accent);
+	}
+	.proceso-flip .sec-soft {
+		color: var(--sec-soft);
 	}
 
 	/* Lince pixel art sentado sobre el borde superior de la barra rayada.

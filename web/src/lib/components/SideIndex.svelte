@@ -190,7 +190,10 @@
 		position: relative;
 		flex: 1;
 		width: 2px;
-		background: color-mix(in srgb, var(--color-line-strong) 70%, transparent);
+		/* Sage semi-transparente: contrasta a la vez sobre el fondo del sitio y
+		   sobre la sección noche, en ambos temas (line-strong desaparecía en
+		   los fondos oscuros y el tramo pendiente parecía "cortado"). */
+		background: color-mix(in srgb, var(--color-sage) 50%, transparent);
 		border-radius: 2px;
 		margin: 4px 0;
 	}
@@ -232,7 +235,7 @@
 		height: 8px;
 		border-radius: 999px;
 		background: var(--color-bg);
-		border: 2px solid var(--color-line-strong);
+		border: 2px solid color-mix(in srgb, var(--color-sage) 60%, transparent);
 		transition:
 			background-color 0.2s ease,
 			border-color 0.2s ease,

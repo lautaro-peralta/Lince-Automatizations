@@ -47,6 +47,10 @@
 		return hexToRgb(raw) ?? fallback;
 	}
 
+	// Repintado bajo demanda (lo asigna onMount); el $effect de abajo lo dispara
+	// cuando cambia la prop `theme`, p. ej. al conmutar el tema del sitio en vivo.
+	let repaint = () => {};
+
 	onMount(() => {
 		const cv = canvas;
 		if (!cv) return;
@@ -55,13 +59,25 @@
 
 		// Paleta: color lejano (base) → cercano (rust), con sus opacidades. Lejos
 		// los puntos son tenues; cerca del cursor crecen y viran al rust de marca.
-		// El acento se lee de `--color-rust` en vivo para seguir siempre al tema
-		// activo del sitio (claro `#c9622e` / oscuro `#e07a45`), no a uno fijo.
-		const accent = cssVarRgb('--color-rust', [201, 98, 46]);
-		const pal =
+		// La base es FIJA por superficie (`theme` = sobre qué fondo se monta:
+		// 'dark' → puntos crema; 'light' → puntos musgo) porque la superficie
+		// puede ir a contramano del tema del sitio (p. ej. la sección "proceso").
+		// El acento sí se lee de `--color-rust` en vivo.
+		const makePal = () =>
 			theme === 'dark'
-				? { from: cssVarRgb('--color-cream', [247, 245, 240]), to: accent, fromA: 0.12, toA: 0.9 }
-				: { from: cssVarRgb('--color-moss', [61, 90, 69]), to: accent, fromA: 0.14, toA: 0.85 };
+				? {
+						from: [247, 245, 240] as Rgb,
+						to: cssVarRgb('--color-rust', [201, 98, 46]),
+						fromA: 0.12,
+						toA: 0.9
+					}
+				: {
+						from: [61, 90, 69] as Rgb,
+						to: cssVarRgb('--color-rust', [201, 98, 46]),
+						fromA: 0.14,
+						toA: 0.85
+					};
+		let pal = makePal();
 		const prefersReduced =
 			typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -175,6 +191,10 @@
 
 		resize();
 		paint(smooth.x, smooth.y); // frame base inicial (también el render estático)
+		repaint = () => {
+			pal = makePal();
+			paint(smooth.x, smooth.y);
+		};
 
 		if (prefersReduced) {
 			// Estático: sin seguimiento del cursor ni bucle; sólo recentra en resize.
@@ -196,6 +216,13 @@
 			window.removeEventListener('blur', onLeave);
 			io?.disconnect();
 		};
+	});
+
+	// Cambió la superficie declarada (o el tema del sitio que la deriva):
+	// recomputa la paleta y repinta el frame estático.
+	$effect(() => {
+		void theme;
+		repaint();
 	});
 </script>
 
