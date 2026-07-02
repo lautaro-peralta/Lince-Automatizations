@@ -26,7 +26,7 @@
 			<div class="kicker mb-3 text-moss">{t('footer.contactLabel')}</div>
 			<ul class="flex flex-col gap-2 text-[14.5px]">
 				<li>
-					<a class="footer-link" href="mailto:hola@lince.dev">hola@lince.dev</a>
+					<a class="footer-link" href="mailto:linceautomatizaciones@gmail.com">linceautomatizaciones@gmail.com</a>
 				</li>
 				<li class="text-sage">{t('contact.whatsappValue')}</li>
 				<li class="text-sage">{t('footer.hours')}</li>

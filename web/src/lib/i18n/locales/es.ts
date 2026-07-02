@@ -19,7 +19,7 @@ export const es = {
 	},
 
 	hero: {
-		badge: 'Automatización para negocios de Rosario',
+		badge: 'Sistemas de automatización a medida',
 		titleA: 'Tu negocio pierde plata en lugares',
 		titleEm: 'que no se ven',
 		titleB: '. Nosotros los',
