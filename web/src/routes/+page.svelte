@@ -67,8 +67,8 @@
 	<div class="hatch relative h-[88px] border-y border-line" aria-hidden="true">
 		<div class="wrap relative h-full">
 			<div class="lynx-seat">
-				<img class="anim" src="/lince-pixel-art.gif" alt="" width="64" height="64" />
-				<img class="still" src="/lince-pixel-art.png" alt="" width="64" height="64" />
+				<img class="anim" src="/lince-pixel-art.gif" alt="" width="128" height="128" />
+				<img class="still" src="/lince-pixel-art.png" alt="" width="128" height="128" />
 			</div>
 		</div>
 	</div>
@@ -375,15 +375,16 @@
 	}
 
 	/* Lince pixel art sentado sobre el borde superior de la barra rayada.
-	   El GIF (64×64) tiene ~30% de canvas vacío bajo las patas: el translateY
-	   lo compensa para que pise el borde en vez de flotar. 128px = 2× entero
-	   del tamaño nativo (nítido con pixelated). */
+	   El GIF (encodeado a 128, arte nativo de 64) tiene ~28% de canvas vacío
+	   bajo las patas: el translateY lo compensa para que pise el borde en vez
+	   de flotar. 192px en desktop = 3× entero de la grilla de arte (nítido
+	   con pixelated). */
 	.lynx-seat {
 		position: absolute;
 		right: clamp(4px, 3vw, 40px);
 		bottom: 100%;
-		width: clamp(96px, 12vw, 128px);
-		transform: translateY(calc(30% + 2px));
+		width: clamp(128px, 16vw, 192px);
+		transform: translateY(calc(29% + 2px));
 	}
 	.lynx-seat img {
 		display: block;
