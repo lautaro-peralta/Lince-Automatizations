@@ -460,6 +460,14 @@
 		transform: translateY(-3px);
 		box-shadow: var(--shadow-card);
 	}
+	/* Con el tilt activo (clase que añade use:tilt), el transform lo maneja la
+	   acción vía estilo inline y NO debe transicionar: si no, la tarjeta y su
+	   brillo persiguen al cursor con retardo y se siente trabado. Sólo la
+	   sombra sigue con transición. Al salir vuelve la de arriba y se reasienta
+	   suave. `:global` porque la clase la añade JS, no una directiva Svelte. */
+	.case:global(.tilt-active) {
+		transition-property: box-shadow;
+	}
 	.case-info {
 		padding: 36px;
 		display: flex;

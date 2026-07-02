@@ -226,6 +226,9 @@
 	html.js .reveal.is-visible {
 		opacity: 1;
 		transform: none;
+		/* La aparición ocurre una sola vez; soltamos la capa de composición
+		   para no acumular `will-change` en todos los bloques revelados. */
+		will-change: auto;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.reveal {
@@ -240,6 +243,16 @@
 	   e interactivo (pointer-events: none). */
 	.glow-card {
 		position: relative;
+	}
+	/* Mientras el tilt sigue al cursor, el transform NO debe transicionar: si
+	   heredara la `transition: transform` de la tarjeta, ésta (y su brillo)
+	   perseguiría al puntero con ~0.3s de retardo y se sentiría trabada. Sólo
+	   dejamos transicionar la sombra. Al soltar el hover se quita la clase,
+	   vuelve la transición y la tarjeta se reasienta suave. `will-change` sólo
+	   mientras hay hover, para no dejar capas de composición colgadas. */
+	.glow-card.tilt-active {
+		transition-property: box-shadow;
+		will-change: transform;
 	}
 	.glow-card::after {
 		content: '';
