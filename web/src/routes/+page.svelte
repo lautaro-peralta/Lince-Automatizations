@@ -8,7 +8,7 @@
 	import DotField from '$lib/components/landing/DotField.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
-	import lince from '$lib/assets/images/lince-banner.png?enhanced';
+	import lince from '$lib/assets/images/lince-fondo-transparente.png?enhanced';
 
 	const verbs = $derived([t('hero.verbs.v1'), t('hero.verbs.v2'), t('hero.verbs.v3')]);
 
