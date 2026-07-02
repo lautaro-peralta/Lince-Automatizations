@@ -531,11 +531,13 @@
 		margin-bottom: 8px;
 	}
 
-	/* Reserva espacio a la izquierda para que el índice lateral no tape el contenido. */
+	/* En móvil/tablet la mini-rail flota como overlay (el .wrap ya protege el
+	   texto con su padding), así el fondo, la barra rayada y las secciones
+	   abarcan todo el ancho. Sólo el riel sólido de desktop reserva espacio. */
 	.rail-safe {
-		padding-left: 36px;
+		padding-left: 0;
 	}
-	@media (min-width: 640px) {
+	@media (min-width: 1280px) {
 		.rail-safe {
 			padding-left: 48px;
 		}
