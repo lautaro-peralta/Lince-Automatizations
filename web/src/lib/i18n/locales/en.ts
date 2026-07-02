@@ -17,7 +17,7 @@ export const en: Dictionary = {
 	},
 
 	hero: {
-		badge: 'Automation for businesses in Rosario',
+		badge: 'Customized automation systems',
 		titleA: 'Your business is losing money in places',
 		titleEm: "you can't see",
 		titleB: '. We',
