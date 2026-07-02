@@ -45,7 +45,7 @@
 				>
 					{t('hero.titleA')}
 					<em class="font-display text-moss italic">{t('hero.titleEm')}</em>{t('hero.titleB')}
-					<span class="hero-verb block text-rust">
+					<span class="hero-verb block text-cream">
 						<ScrambleWord words={verbs} />
 					</span>
 				</h1>
