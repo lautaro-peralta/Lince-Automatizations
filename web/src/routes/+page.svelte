@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { reveal } from '$lib/actions/reveal';
+	import { tilt } from '$lib/actions/tilt';
 	import Button from '$lib/components/Button.svelte';
 	import Chatbot from '$lib/components/landing/Chatbot.svelte';
+	import CountUp from '$lib/components/landing/CountUp.svelte';
 	import LiveMonitor from '$lib/components/landing/LiveMonitor.svelte';
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
-	import lince from '$lib/assets/images/lince-fondo-transparente.png?enhanced';
+	import { getTheme } from '$lib/theme.svelte';
 
 	const verbs = $derived([t('hero.verbs.v1'), t('hero.verbs.v2'), t('hero.verbs.v3')]);
 
@@ -32,8 +34,9 @@
 
 <main class="rail-safe">
 	<!-- HERO -->
-	<section class="relative overflow-hidden pt-16 sm:pt-24">
-		<DotField theme="light" />
+	<section class="relative overflow-hidden pt-16 pb-16 sm:pt-24 sm:pb-24">
+		<!-- El fondo del hero sigue al tema del sitio: superficie clara u oscura. -->
+		<DotField theme={getTheme() === 'dark' ? 'dark' : 'light'} />
 		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
 				<p class="hero-anim kicker mb-5" style="--d:50ms">
@@ -58,12 +61,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- Banner del lince a todo el ancho. La imagen tiene fondo transparente,
-		     así que asoma limpia sobre el fondo del sitio en cualquier tema. -->
-		<figure class="hero-lynx relative z-10">
-			<enhanced:img src={lince} alt={t('hero.lynxAlt')} sizes="100vw" fetchpriority="high" />
-		</figure>
 	</section>
 
 	<div class="hatch h-[88px] border-y border-line" aria-hidden="true"></div>
@@ -81,119 +78,127 @@
 				{t('cases.intro')}
 			</p>
 
+			<!-- El reveal (transición de transform propia) vive en un wrapper aparte
+			     para no pisarse con el transform inline del tilt en la tarjeta. -->
 			<div class="mt-12 flex flex-col gap-7">
 				<!-- Caso 1 -->
-				<article class="case reveal" use:reveal>
-					<div class="grid md:grid-cols-[1.1fr_1fr]">
-						<div class="case-info">
-							<span class="case-tag">{t('cases.case1.tag')}</span>
-							<h3 class="mb-3 text-[26px]">{t('cases.case1.title')}</h3>
-							<p class="case-hook">
-								{t('cases.case1.hook')}
-							</p>
-							<p class="mb-6 text-[15px] text-sage">
-								{t('cases.case1.body')}
-							</p>
-							<p class="case-try">
-								<span>{t('cases.case1.try')}</span>
-								<svg width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true">
-									<path
-										d="M2 10 H22 M16 4 L22 10 L16 16"
-										stroke="#C9622E"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</p>
+				<div class="reveal" use:reveal>
+					<article class="case glow-card" use:tilt>
+						<div class="grid md:grid-cols-[1.1fr_1fr]">
+							<div class="case-info">
+								<span class="case-tag">{t('cases.case1.tag')}</span>
+								<h3 class="mb-3 text-[26px]">{t('cases.case1.title')}</h3>
+								<p class="case-hook">
+									{t('cases.case1.hook')}
+								</p>
+								<p class="mb-6 text-[15px] text-sage">
+									{t('cases.case1.body')}
+								</p>
+								<p class="case-try">
+									<span>{t('cases.case1.try')}</span>
+									<svg width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true">
+										<path
+											d="M2 10 H22 M16 4 L22 10 L16 16"
+											stroke="#C9622E"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</p>
+							</div>
+							<div class="case-demo"><Chatbot /></div>
 						</div>
-						<div class="case-demo"><Chatbot /></div>
-					</div>
-				</article>
+					</article>
+				</div>
 
 				<!-- Caso 2 -->
-				<article class="case reveal" use:reveal>
-					<div class="grid md:grid-cols-[1.1fr_1fr]">
-						<div class="case-info">
-							<span class="case-tag">{t('cases.case2.tag')}</span>
-							<h3 class="mb-3 text-[26px]">{t('cases.case2.title')}</h3>
-							<p class="case-hook">
-								{t('cases.case2.hook')}
-							</p>
-							<p class="mb-6 text-[15px] text-sage">
-								{t('cases.case2.body')}
-							</p>
-							<p class="case-result">
-								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-									<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
-									<path
-										d="M6 10.5 L9 13.5 L14 7"
-										stroke="#3D5A45"
-										stroke-width="1.8"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span
-									>{t('cases.case2.result')}
-									<strong>{t('cases.case2.resultStrong')}</strong></span
-								>
-							</p>
+				<div class="reveal" use:reveal>
+					<article class="case glow-card" use:tilt>
+						<div class="grid md:grid-cols-[1.1fr_1fr]">
+							<div class="case-info">
+								<span class="case-tag">{t('cases.case2.tag')}</span>
+								<h3 class="mb-3 text-[26px]">{t('cases.case2.title')}</h3>
+								<p class="case-hook">
+									{t('cases.case2.hook')}
+								</p>
+								<p class="mb-6 text-[15px] text-sage">
+									{t('cases.case2.body')}
+								</p>
+								<p class="case-result">
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+										<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
+										<path
+											d="M6 10.5 L9 13.5 L14 7"
+											stroke="#3D5A45"
+											stroke-width="1.8"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+									<span
+										>{t('cases.case2.result')}
+										<strong>{t('cases.case2.resultStrong')}</strong></span
+									>
+								</p>
+							</div>
+							<div class="case-demo"><LiveMonitor /></div>
 						</div>
-						<div class="case-demo"><LiveMonitor /></div>
-					</div>
-				</article>
+					</article>
+				</div>
 
 				<!-- Caso 3 -->
-				<article class="case reveal" use:reveal>
-					<div class="grid md:grid-cols-[1.1fr_1fr]">
-						<div class="case-info">
-							<span class="case-tag">{t('cases.case3.tag')}</span>
-							<h3 class="mb-3 text-[26px]">{t('cases.case3.title')}</h3>
-							<p class="case-hook">
-								{t('cases.case3.hook')}
-							</p>
-							<p class="mb-6 text-[15px] text-sage">
-								{t('cases.case3.body')}
-							</p>
-							<p class="case-result">
-								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-									<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
-									<path
-										d="M6 10.5 L9 13.5 L14 7"
-										stroke="#3D5A45"
-										stroke-width="1.8"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span
-									>{t('cases.case3.result')}
-									<strong>{t('cases.case3.resultStrong')}</strong></span
-								>
-							</p>
+				<div class="reveal" use:reveal>
+					<article class="case glow-card" use:tilt>
+						<div class="grid md:grid-cols-[1.1fr_1fr]">
+							<div class="case-info">
+								<span class="case-tag">{t('cases.case3.tag')}</span>
+								<h3 class="mb-3 text-[26px]">{t('cases.case3.title')}</h3>
+								<p class="case-hook">
+									{t('cases.case3.hook')}
+								</p>
+								<p class="mb-6 text-[15px] text-sage">
+									{t('cases.case3.body')}
+								</p>
+								<p class="case-result">
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+										<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
+										<path
+											d="M6 10.5 L9 13.5 L14 7"
+											stroke="#3D5A45"
+											stroke-width="1.8"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+									<span
+										>{t('cases.case3.result')}
+										<strong>{t('cases.case3.resultStrong')}</strong></span
+									>
+								</p>
+							</div>
+							<div class="case-demo"><Receipt /></div>
 						</div>
-						<div class="case-demo"><Receipt /></div>
-					</div>
-				</article>
+					</article>
+				</div>
 			</div>
 
-			<!-- Stats -->
+			<!-- Stats (los números cuentan de 0 al valor al entrar en viewport) -->
 			<div class="stats reveal mt-12" use:reveal>
 				<div class="stat">
-					<div class="stat-num">{t('cases.stats.s1num')}</div>
+					<div class="stat-num"><CountUp value={t('cases.stats.s1num')} /></div>
 					<div class="text-sm text-sage">
 						{t('cases.stats.s1')}
 					</div>
 				</div>
 				<div class="stat">
-					<div class="stat-num">{t('cases.stats.s2num')}</div>
+					<div class="stat-num"><CountUp value={t('cases.stats.s2num')} /></div>
 					<div class="text-sm text-sage">
 						{t('cases.stats.s2')}
 					</div>
 				</div>
 				<div class="stat">
-					<div class="stat-num">{t('cases.stats.s3num')}</div>
+					<div class="stat-num"><CountUp value={t('cases.stats.s3num')} /></div>
 					<div class="text-sm text-sage">
 						{t('cases.stats.s3')}
 					</div>
@@ -202,25 +207,26 @@
 		</div>
 	</section>
 
-	<!-- PROCESO (sección oscura en AMBOS temas: usa `text-cream` fijo, no `text-bg`,
-	     que se invertiría a oscuro en el tema oscuro). -->
-	<section id="proceso" class="relative overflow-hidden bg-night py-[clamp(56px,9vw,88px)] text-cream">
-		<DotField theme="dark" />
+	<!-- PROCESO: siempre en CONTRASTE con el tema activo — oscura en tema claro,
+	     clara en tema oscuro. Los colores viven en custom properties de sección
+	     (--sec-*) que [data-theme='dark'] invierte; ver <style> abajo. -->
+	<section id="proceso" class="proceso-flip relative overflow-hidden py-[clamp(56px,9vw,88px)]">
+		<DotField theme={getTheme() === 'dark' ? 'light' : 'dark'} />
 		<div class="wrap relative z-10">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
-				<h2 class="text-[clamp(26px,4vw,38px)] text-cream">{t('process.title')}</h2>
-				<div class="kicker text-[rgba(247,245,240,0.55)]">{t('process.kicker')}</div>
+				<h2 class="text-[clamp(26px,4vw,38px)]">{t('process.title')}</h2>
+				<div class="kicker sec-kicker">{t('process.kicker')}</div>
 			</div>
 			<ol class="flex flex-col">
 				{#each pasos as step, i (step.n)}
 					<li
-						class="reveal grid grid-cols-[56px_1fr] gap-5 border-t border-line-light py-7 first:border-t-0 first:pt-0"
+						class="sec-row reveal grid grid-cols-[56px_1fr] gap-5 border-t py-7 first:border-t-0 first:pt-0"
 						use:reveal={{ delay: i * 80 }}
 					>
-						<div class="font-mono text-[15px] text-rust">{step.n}</div>
+						<div class="sec-accent font-mono text-[15px]">{step.n}</div>
 						<div>
-							<h3 class="mb-1.5 text-[20px] text-cream">{step.t}</h3>
-							<p class="max-w-[680px] text-[15.5px] text-[rgba(247,245,240,0.7)]">{step.d}</p>
+							<h3 class="mb-1.5 text-[20px]">{step.t}</h3>
+							<p class="sec-soft max-w-[680px] text-[15.5px]">{step.d}</p>
 						</div>
 					</li>
 				{/each}
@@ -253,7 +259,19 @@
 									aria-label={`${t('contact.emailLabel')}: ${t('contact.emailValue')}`}
 								>
 									<span class="channel-icon" aria-hidden="true">
-										<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+										<svg
+											viewBox="0 0 24 24"
+											width="18"
+											height="18"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><rect x="3" y="5" width="18" height="14" rx="2" /><path
+												d="m3 7 9 6 9-6"
+											/></svg
+										>
 									</span>
 									<span class="channel-body">
 										<span class="channel-label">{t('contact.emailLabel')}</span>
@@ -270,7 +288,11 @@
 									aria-label={`${t('contact.whatsappLabel')}: ${t('contact.whatsappValue')}`}
 								>
 									<span class="channel-icon" aria-hidden="true">
-										<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+										<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"
+											><path
+												d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+											/></svg
+										>
 									</span>
 									<span class="channel-body">
 										<span class="channel-label">{t('contact.whatsappLabel')}</span>
@@ -287,7 +309,21 @@
 									aria-label={`${t('contact.instagramLabel')}: ${t('contact.instagramValue')}`}
 								>
 									<span class="channel-icon" aria-hidden="true">
-										<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+										<svg
+											viewBox="0 0 24 24"
+											width="18"
+											height="18"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><rect x="3" y="3" width="18" height="18" rx="5" /><circle
+												cx="12"
+												cy="12"
+												r="3.5"
+											/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg
+										>
 									</span>
 									<span class="channel-body">
 										<span class="channel-label">{t('contact.instagramLabel')}</span>
@@ -307,7 +343,17 @@
 		</div>
 	</section>
 
-	<div class="hatch h-[64px] border-t border-line" aria-hidden="true"></div>
+	<!-- Barra rayada de cierre con el lince pixel art (GIF del usuario) sentado
+	     encima, del lado derecho. Con prefers-reduced-motion se muestra el
+	     poster PNG estático (un GIF no se puede pausar con CSS). -->
+	<div class="hatch relative h-[64px] border-t border-line" aria-hidden="true">
+		<div class="wrap relative h-full">
+			<div class="lynx-seat">
+				<img class="anim" src="/lince-pixel-art.gif" alt="" width="128" height="128" />
+				<img class="still" src="/lince-pixel-art.png" alt="" width="128" height="128" />
+			</div>
+		</div>
+	</div>
 </main>
 
 <style>
@@ -328,36 +374,75 @@
 		}
 	}
 
-	/* Lince banner a todo el ancho. La imagen tiene transparencia real (el cielo
-	   es alpha 0), así que se muestra tal cual sobre el fondo del sitio: sobresalen
-	   las montañas y el lince sin blend-mode ni recortes. */
-	.hero-lynx {
-		position: relative;
-		z-index: 1;
-		margin: 48px calc(50% - 50vw) -26px;
-		width: 100vw;
-		overflow: hidden;
+	/* Sección "Cómo trabajamos": siempre en contraste con el tema activo.
+	   En tema claro es la sección oscura de la página; en tema oscuro se
+	   invierte a crema con texto tinta (colores FIJOS, no tokens del tema,
+	   porque esta superficie va a contramano del resto). */
+	.proceso-flip {
+		--sec-bg: var(--color-night);
+		--sec-fg: #f7f5f0;
+		--sec-soft: rgba(247, 245, 240, 0.7);
+		--sec-kicker: rgba(247, 245, 240, 0.55);
+		--sec-line: rgba(247, 245, 240, 0.14);
+		--sec-accent: var(--color-rust);
+		background: var(--sec-bg);
+		color: var(--sec-fg);
 	}
-	.hero-lynx :global(img) {
+	:global([data-theme='dark']) .proceso-flip {
+		--sec-bg: #f2efe7;
+		--sec-fg: #1b2b23;
+		--sec-soft: rgba(27, 43, 35, 0.75);
+		--sec-kicker: rgba(27, 43, 35, 0.6);
+		--sec-line: rgba(27, 43, 35, 0.16);
+		/* rust-deep fijo: AA sobre crema (el rust del tema oscuro es muy claro). */
+		--sec-accent: #ad4f22;
+	}
+	/* app.css fija color: var(--color-ink) en los headings; en esta sección
+	   deben seguir al color de contraste propio. */
+	.proceso-flip h2,
+	.proceso-flip h3 {
+		color: var(--sec-fg);
+	}
+	.proceso-flip .sec-kicker {
+		color: var(--sec-kicker);
+	}
+	.proceso-flip .sec-row {
+		border-color: var(--sec-line);
+	}
+	.proceso-flip .sec-accent {
+		color: var(--sec-accent);
+	}
+	.proceso-flip .sec-soft {
+		color: var(--sec-soft);
+	}
+
+	/* Lince pixel art sentado sobre el borde superior de la barra rayada.
+	   El GIF (encodeado a 128, arte nativo de 64) tiene ~28% de canvas vacío
+	   bajo las patas: el translateY lo compensa para que pise el borde en vez
+	   de flotar. 192px en desktop = 3× entero de la grilla de arte (nítido
+	   con pixelated). */
+	.lynx-seat {
+		position: absolute;
+		right: clamp(4px, 3vw, 40px);
+		bottom: 100%;
+		width: clamp(128px, 16vw, 192px);
+		transform: translateY(calc(29% + 2px));
+	}
+	.lynx-seat img {
+		display: block;
 		width: 100%;
 		height: auto;
-		display: block;
-		opacity: 0;
-		animation: lynxIn 1.4s var(--ease-out-expo) 0.3s forwards;
+		image-rendering: pixelated;
 	}
-	@keyframes lynxIn {
-		from {
-			opacity: 0;
-			transform: scale(1.04);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1);
-		}
+	.lynx-seat .still {
+		display: none;
 	}
-	@media (max-width: 860px) {
-		.hero-lynx {
-			margin-top: 32px;
+	@media (prefers-reduced-motion: reduce) {
+		.lynx-seat .anim {
+			display: none;
+		}
+		.lynx-seat .still {
+			display: block;
 		}
 	}
 
@@ -488,11 +573,13 @@
 		margin-bottom: 8px;
 	}
 
-	/* Reserva espacio a la izquierda para que el índice lateral no tape el contenido. */
+	/* En móvil/tablet la mini-rail flota como overlay (el .wrap ya protege el
+	   texto con su padding), así el fondo, la barra rayada y las secciones
+	   abarcan todo el ancho. Sólo el riel sólido de desktop reserva espacio. */
 	.rail-safe {
-		padding-left: 36px;
+		padding-left: 0;
 	}
-	@media (min-width: 640px) {
+	@media (min-width: 1280px) {
 		.rail-safe {
 			padding-left: 48px;
 		}
@@ -514,7 +601,9 @@
 		border-radius: 10px;
 		color: var(--color-ink);
 		text-decoration: none;
-		transition: background-color 0.15s ease, color 0.15s ease;
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
 	}
 	.channel-row:hover {
 		background: var(--color-bg);
@@ -529,7 +618,9 @@
 		background: var(--color-bg);
 		border: 1px solid var(--color-line);
 		color: var(--color-moss);
-		transition: color 0.15s ease, border-color 0.15s ease;
+		transition:
+			color 0.15s ease,
+			border-color 0.15s ease;
 	}
 	.channel-row:hover .channel-icon {
 		color: var(--color-rust);

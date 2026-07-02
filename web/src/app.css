@@ -234,4 +234,39 @@
 			transition: none;
 		}
 	}
+
+	/* Brillo que sigue al cursor sobre tarjetas (lo posiciona use:tilt vía
+	   --mx/--my). Es un tinte, no una capa opaca: el contenido sigue legible
+	   e interactivo (pointer-events: none). */
+	.glow-card {
+		position: relative;
+	}
+	.glow-card::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: radial-gradient(
+			240px circle at var(--mx, 50%) var(--my, 50%),
+			color-mix(in srgb, var(--color-rust) 12%, transparent),
+			transparent 70%
+		);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		pointer-events: none;
+	}
+	.glow-card.tilt-active::after {
+		opacity: 1;
+	}
+}
+
+/* View Transitions entre páginas: fundido corto (el guard real —soporte y
+   prefers-reduced-motion— vive en el onNavigate del layout). El header tiene
+   su propio grupo y no cross-fadea: queda estable. */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 180ms;
+}
+::view-transition-group(site-header) {
+	animation: none;
 }

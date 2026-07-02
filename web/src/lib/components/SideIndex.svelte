@@ -16,15 +16,12 @@
 
 	let active = $state('casos');
 	let collapsed = $state(true);
-	// Puntos con estado "completado" (ya se pasó por la sección).
-	let done = $state<boolean[]>(sections.map(() => false));
-	// El tooltip sólo aparece cuando la cabecera de la sección está cerca del
-	// viewport (bajando o subiendo); si estamos ya dentro de la sección se
-	// desvanece para no tapar contenido.
-	let nearId = $state<string | null>(null);
 	// Estado que sólo afecta al modo mobile.
 	let progress = $state(0); // 0..1 del scroll de la página
 	let dotPositions = $state<number[]>(sections.map(() => 0)); // top% por sección
+	// "Completado" se deriva del fill: un checkpoint está marcado exactamente
+	// cuando la línea de progreso lo cubrió (una sola fuente de verdad).
+	const done = $derived(dotPositions.map((p) => progress >= p));
 
 	onMount(() => {
 		const els = sections
@@ -47,44 +44,20 @@
 				: null;
 		for (const el of els) io?.observe(el);
 
-		// Cálculo del layout para el modo mobile (posición vertical relativa de
-		// cada sección + progreso del scroll). Se recalcula en resize y en cada
-		// scroll (throttled con rAF).
+		// Cálculo del layout para el modo mobile: cada punto se ubica donde el
+		// fill lo alcanza EXACTAMENTE cuando el inicio de su sección llega al
+		// tope del viewport (misma matemática que `progress`: offsetTop/docH).
+		// Se recalcula en resize y en cada scroll (throttled con rAF).
 		let raf = 0;
 		const recalcPositions = () => {
-			const docH = document.documentElement.scrollHeight - window.innerHeight;
-			dotPositions = els.map((el) => {
-				const t = el.offsetTop - window.innerHeight * 0.15;
-				return Math.max(0, Math.min(1, t / Math.max(1, docH)));
-			});
+			const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+			dotPositions = els.map((el) => Math.max(0, Math.min(1, el.offsetTop / docH)));
 		};
 		const onScroll = () => {
 			cancelAnimationFrame(raf);
 			raf = requestAnimationFrame(() => {
-				const vh = window.innerHeight;
-				const docH = document.documentElement.scrollHeight - vh;
+				const docH = document.documentElement.scrollHeight - window.innerHeight;
 				progress = docH > 0 ? Math.max(0, Math.min(1, window.scrollY / docH)) : 0;
-
-				// Recalcular estado de cada sección
-				const doneNext: boolean[] = new Array(sections.length).fill(false);
-				let bestNearIdx = -1;
-				let bestDist = Infinity;
-				for (let i = 0; i < els.length; i++) {
-					const rect = els[i].getBoundingClientRect();
-					const top = rect.top;
-					const bottom = rect.bottom;
-					// "Completado": el grueso de la sección ya quedó arriba del viewport.
-					doneNext[i] = bottom < vh * 0.35;
-					// "Cerca del borde": el top de la sección está dentro de la banda
-					// alrededor del ~18% superior del viewport (aparece bajando o subiendo).
-					const dist = Math.abs(top - vh * 0.18);
-					if (top > -vh * 0.2 && top < vh * 0.55 && dist < bestDist) {
-						bestDist = dist;
-						bestNearIdx = i;
-					}
-				}
-				done = doneNext;
-				nearId = bestNearIdx >= 0 ? sections[bestNearIdx].id : null;
 			});
 		};
 
@@ -181,24 +154,25 @@
 >
 	<div class="mini-track">
 		<div class="mini-fill" style={`height:${(progress * 100).toFixed(2)}%`}></div>
+		<!-- Los puntos viven DENTRO del track: su top% y el height% del fill
+		     comparten la misma referencia y calzan por construcción. -->
+		<ul class="mini-dots">
+			{#each sections as s, i (s.id)}
+				<li class="mini-dot-wrap" style={`top:${(dotPositions[i] * 100).toFixed(2)}%`}>
+					<a
+						class="mini-dot"
+						class:is-active={active === s.id}
+						class:is-done={done[i] && active !== s.id}
+						href={`#${s.id}`}
+						aria-current={active === s.id ? 'true' : undefined}
+						aria-label={t(s.key)}
+					>
+						<span class="mini-tip">{t(s.key)}</span>
+					</a>
+				</li>
+			{/each}
+		</ul>
 	</div>
-	<ul class="mini-dots" aria-hidden="false">
-		{#each sections as s, i (s.id)}
-			<li class="mini-dot-wrap" style={`top:${(dotPositions[i] * 100).toFixed(2)}%`}>
-				<a
-					class="mini-dot"
-					class:is-active={active === s.id}
-					class:is-done={done[i] && active !== s.id}
-					class:is-near={nearId === s.id}
-					href={`#${s.id}`}
-					aria-current={active === s.id ? 'true' : undefined}
-					aria-label={t(s.key)}
-				>
-					<span class="mini-tip">{t(s.key)}</span>
-				</a>
-			</li>
-		{/each}
-	</ul>
 </nav>
 
 <style>
@@ -216,7 +190,10 @@
 		position: relative;
 		flex: 1;
 		width: 2px;
-		background: color-mix(in srgb, var(--color-line-strong) 70%, transparent);
+		/* Sage semi-transparente: contrasta a la vez sobre el fondo del sitio y
+		   sobre la sección noche, en ambos temas (line-strong desaparecía en
+		   los fondos oscuros y el tramo pendiente parecía "cortado"). */
+		background: color-mix(in srgb, var(--color-sage) 50%, transparent);
 		border-radius: 2px;
 		margin: 4px 0;
 	}
@@ -231,10 +208,7 @@
 	}
 	.mini-dots {
 		position: absolute;
-		top: 16px;
-		bottom: 24px;
-		left: 0;
-		right: 0;
+		inset: 0;
 		list-style: none;
 		padding: 0;
 		margin: 0;
@@ -261,15 +235,16 @@
 		height: 8px;
 		border-radius: 999px;
 		background: var(--color-bg);
-		border: 2px solid var(--color-line-strong);
+		border: 2px solid color-mix(in srgb, var(--color-sage) 60%, transparent);
 		transition:
 			background-color 0.2s ease,
 			border-color 0.2s ease,
 			transform 0.2s ease;
 	}
+	/* Completado = el mismo rust de la línea de progreso que lo cubrió. */
 	.mini-dot.is-done::before {
-		background: var(--color-moss);
-		border-color: var(--color-moss);
+		background: var(--color-rust);
+		border-color: var(--color-rust);
 	}
 	.mini-dot.is-active::before {
 		background: var(--color-rust);
@@ -277,8 +252,8 @@
 		transform: scale(1.2);
 		box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-rust) 20%, transparent);
 	}
-	/* Tooltip: sólo aparece cuando la sección está cerca del borde (bajando o
-	   subiendo). Fondo opaco de la crema para que no tape lo que hay debajo. */
+	/* Tooltip: sólo al interactuar con el punto (hover con mouse; en táctil el
+	   tap enfoca el enlace y la etiqueta aparece con el toque). */
 	.mini-tip {
 		position: absolute;
 		left: 26px;
@@ -301,7 +276,6 @@
 			opacity 0.3s ease,
 			transform 0.3s ease;
 	}
-	.mini-dot.is-near .mini-tip,
 	.mini-dot:hover .mini-tip,
 	.mini-dot:focus .mini-tip {
 		opacity: 1;
