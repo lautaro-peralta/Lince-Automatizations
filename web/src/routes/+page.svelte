@@ -8,7 +8,6 @@
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
-	import PixelLynx from '$lib/components/landing/PixelLynx.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 
@@ -62,10 +61,15 @@
 		</div>
 	</section>
 
-	<!-- Barra rayada con el lince pixel art sentado encima, del lado derecho. -->
+	<!-- Barra rayada con el lince pixel art (GIF del usuario) sentado encima,
+	     del lado derecho. Con prefers-reduced-motion se muestra el poster PNG
+	     estático en lugar del GIF animado (un GIF no se puede pausar con CSS). -->
 	<div class="hatch relative h-[88px] border-y border-line" aria-hidden="true">
 		<div class="wrap relative h-full">
-			<div class="lynx-seat"><PixelLynx /></div>
+			<div class="lynx-seat">
+				<img class="anim" src="/lince-pixel-art.gif" alt="" width="64" height="64" />
+				<img class="still" src="/lince-pixel-art.png" alt="" width="64" height="64" />
+			</div>
 		</div>
 	</div>
 
@@ -370,15 +374,33 @@
 		}
 	}
 
-	/* Lince pixel art sentado sobre el borde superior de la barra rayada
-	   (bottom: 100% del alto de la barra; 2px de solape para que "pise" el
-	   borde en vez de flotar). */
+	/* Lince pixel art sentado sobre el borde superior de la barra rayada.
+	   El GIF (64×64) tiene ~30% de canvas vacío bajo las patas: el translateY
+	   lo compensa para que pise el borde en vez de flotar. 128px = 2× entero
+	   del tamaño nativo (nítido con pixelated). */
 	.lynx-seat {
 		position: absolute;
 		right: clamp(4px, 3vw, 40px);
 		bottom: 100%;
-		width: clamp(64px, 7vw, 92px);
-		transform: translateY(2px);
+		width: clamp(96px, 12vw, 128px);
+		transform: translateY(calc(30% + 2px));
+	}
+	.lynx-seat img {
+		display: block;
+		width: 100%;
+		height: auto;
+		image-rendering: pixelated;
+	}
+	.lynx-seat .still {
+		display: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.lynx-seat .anim {
+			display: none;
+		}
+		.lynx-seat .still {
+			display: block;
+		}
 	}
 
 	/* Tarjetas de caso. */
