@@ -377,7 +377,7 @@
 		position: absolute;
 		right: clamp(4px, 3vw, 40px);
 		bottom: 100%;
-		width: clamp(72px, 8vw, 104px);
+		width: clamp(64px, 7vw, 92px);
 		transform: translateY(2px);
 	}
 

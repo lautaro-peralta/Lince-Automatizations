@@ -17,50 +17,55 @@ export const PALETTE: Record<string, string> = {
 	p: '#f7e2a4' // amarillo pálido (bajo del ojo)
 };
 
-// Leyenda: . = transparente. Grilla 32×35.
+// Leyenda: . = transparente. Grilla 30×39 (más alto que ancho, como el
+// personaje de referencia).
 export const FRAMES = {
 	sit: [
-		'.....k....................k.....',
-		'.....kk..................kk.....',
-		'......k..................k......',
-		'......ktk..............ktk......',
-		'.....kttk..............kttk.....',
-		'....ktdttk............kttdtk....',
-		'....ktdtttk..........ktttdtk....',
-		'...kltdttttk........kttttdtlk...',
-		'...klttttttkkkkkkkkkkttttttlk...',
-		'...kttttttttttttddttttttttttk...',
-		'..ktttttttttttttddttttttttttk...',
-		'..ktttttkkkkkttddttkkkkktttttk..',
-		'..ktttttkyykkttddttkkyyktttttk..',
-		'..ktttttkpppkllddllkpppktttttk..',
-		'..kttttttllllldkkdlllllttttttk..',
-		'..ktttttslllllllllllllstttttk...',
-		'...ktttttllllkkkkkkllllttttk....',
-		'...kkttttllllllllllllllttttkk...',
-		'.....kttttllllllllllllttttk.....',
-		'....kttttttllllllllllttttttk....',
-		'...kttttttttllllllllttttttttk...',
-		'...kttttddttlllllltttkktttttk...',
-		'..kttttttttttllllllttttttttttk..',
-		'..ktttddddttttllllttttttddtttk..',
-		'.kttdttttdttttllllttttttttttttk.',
-		'.ktdtttttdttttllllttttkkttttttk.',
-		'.ktdtttttdttttllllttttttttttttk.',
-		'.kttdtttddttkttttkttttttttttttk.',
-		'.ktttddddtttkttttktttttddtttttk.',
-		'.kttttttttttkttttkttttttttttttk.',
-		'.kttttttttttkttttkttttttttttttk.',
-		'kkkkkkkkkttttkttttkttttttttttkk.',
-		'kddtttttkttttkttttkttttttttttk..',
-		'kddtttttkttktkttktkttkttkttttk..',
-		'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk...'
+		'....k....................k....',
+		'....kk..................kk....',
+		'.....k..................k.....',
+		'.....ktk..............ktk.....',
+		'....kttk..............kttk....',
+		'....ktdtk............ktdtk....',
+		'...kltdttk..........kttdtlk...',
+		'...kltdtttk........ktttdtlk...',
+		'...kltttttkkkkkkkkkktttttlk...',
+		'..ktttttttttttddtttttttttttk..',
+		'..ktttttttttttddtttttttttttk..',
+		'..kttttkkkkkttddttkkkkkttttk..',
+		'..kttttkyyykttddttkyyykttttk..',
+		'..kttttkpppkllddllkpppkttttk..',
+		'..ktttttllllldkkdllllltttttk..',
+		'..kttttslllllllllllllsttttk...',
+		'...kttttllllkkkkkkllllttttk...',
+		'...kktttlllllllllllllltttkk...',
+		'....kttttllllllllllllttttk....',
+		'.....kttttllllllllllttttk.....',
+		'.....kttttllllllllllttttk.....',
+		'....kttttttllllllllttttttk....',
+		'....kttddttllllllllttttttk....',
+		'...kttttttttllllllttttkkttk...',
+		'...kttttttttllllllttttttttk...',
+		'..ktddddttttllllllttttttttk...',
+		'..ktdtttdtttllllllttttddttk...',
+		'..ktdtttdtttllllllttttttttk...',
+		'..ktdtttdtklllklllktttttttk...',
+		'..ktdtttdtklllklllktttddttk...',
+		'..ktdddddtklllklllktttttttk...',
+		'..ktttttttklllklllktttttttk...',
+		'..ktttttttklllklllktttttttk...',
+		'..ktttttttklllklllkttkktttk...',
+		'kkkkkkkkttklllklllktttttttk...',
+		'kddttttkttklllklllktttttttk...',
+		'kddttttkttklllklllktttttttk...',
+		'kddttttkttklklklklkttkttktk...',
+		'kkkkkkkkkkkkkkkkkkkkkkkkkkk...'
 	]
 } satisfies Record<string, string[]>;
 
 export type LynxFrame = keyof typeof FRAMES;
 
-export const GRID_W = 32;
+export const GRID_W = FRAMES.sit[0].length;
 export const GRID_H = FRAMES.sit.length;
 
 // Sangrado sub-píxel para que los runs adyacentes no dejen costuras al
