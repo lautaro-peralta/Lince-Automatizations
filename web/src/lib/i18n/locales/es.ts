@@ -31,9 +31,7 @@ export const es = {
 		subtitle:
 			'Diseñamos sistemas que conectan WhatsApp, planillas, reseñas y pedidos para que tu negocio responda solo, sin perder el control de lo que pasa.',
 		ctaPrimary: 'Ver casos en funcionamiento',
-		ctaSecondary: 'Contar mi caso',
-		lynxAlt:
-			'Un lince dibujado a línea que patrulla un horizonte minimalista: corre, salta las rocas y se da la vuelta'
+		ctaSecondary: 'Contar mi caso'
 	},
 
 	cases: {

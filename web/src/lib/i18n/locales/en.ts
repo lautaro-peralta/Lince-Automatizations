@@ -29,9 +29,7 @@ export const en: Dictionary = {
 		subtitle:
 			'We design systems that connect WhatsApp, spreadsheets, reviews and orders so your business responds on its own — without losing control of what happens.',
 		ctaPrimary: 'See cases in action',
-		ctaSecondary: 'Tell us about my case',
-		lynxAlt:
-			'A line-drawn lynx patrolling a minimalist horizon: it runs, leaps the rocks and turns around'
+		ctaSecondary: 'Tell us about my case'
 	},
 
 	cases: {

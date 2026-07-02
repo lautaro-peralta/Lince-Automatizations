@@ -8,7 +8,7 @@
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
-	import LynxRunner from '$lib/components/landing/LynxRunner.svelte';
+	import PixelLynx from '$lib/components/landing/PixelLynx.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 
@@ -34,7 +34,7 @@
 
 <main class="rail-safe">
 	<!-- HERO -->
-	<section class="relative overflow-hidden pt-16 sm:pt-24">
+	<section class="relative overflow-hidden pt-16 pb-16 sm:pt-24 sm:pb-24">
 		<DotField theme="light" />
 		<div class="wrap relative z-10">
 			<div class="mx-auto max-w-[760px] text-center">
@@ -60,13 +60,14 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- Lince de líneas a todo el ancho: patrulla un horizonte minimalista,
-		     salta los huecos y la roca, y se da la vuelta en los bordes. -->
-		<LynxRunner />
 	</section>
 
-	<div class="hatch h-[88px] border-y border-line" aria-hidden="true"></div>
+	<!-- Barra rayada con el lince pixel art sentado encima, del lado derecho. -->
+	<div class="hatch relative h-[88px] border-y border-line" aria-hidden="true">
+		<div class="wrap relative h-full">
+			<div class="lynx-seat"><PixelLynx /></div>
+		</div>
+	</div>
 
 	<!-- CASOS -->
 	<section id="casos" class="border-b border-line py-[clamp(56px,9vw,88px)]">
@@ -367,6 +368,17 @@
 			opacity: 1;
 			transform: none;
 		}
+	}
+
+	/* Lince pixel art sentado sobre el borde superior de la barra rayada
+	   (bottom: 100% del alto de la barra; 2px de solape para que "pise" el
+	   borde en vez de flotar). */
+	.lynx-seat {
+		position: absolute;
+		right: clamp(4px, 3vw, 40px);
+		bottom: 100%;
+		width: clamp(72px, 8vw, 104px);
+		transform: translateY(2px);
 	}
 
 	/* Tarjetas de caso. */
