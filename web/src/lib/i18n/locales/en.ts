@@ -30,7 +30,8 @@ export const en: Dictionary = {
 			'We design systems that connect WhatsApp, spreadsheets, reviews and orders so your business responds on its own — without losing control of what happens.',
 		ctaPrimary: 'See cases in action',
 		ctaSecondary: 'Tell us about my case',
-		lynxAlt: 'A lynx watching a valley from a rock, alert to the whole landscape'
+		lynxAlt:
+			'A line-drawn lynx patrolling a minimalist horizon: it runs, leaps the rocks and turns around'
 	},
 
 	cases: {

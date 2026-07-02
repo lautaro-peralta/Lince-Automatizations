@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { reveal } from '$lib/actions/reveal';
+	import { tilt } from '$lib/actions/tilt';
 	import Button from '$lib/components/Button.svelte';
 	import Chatbot from '$lib/components/landing/Chatbot.svelte';
+	import CountUp from '$lib/components/landing/CountUp.svelte';
 	import LiveMonitor from '$lib/components/landing/LiveMonitor.svelte';
 	import Receipt from '$lib/components/landing/Receipt.svelte';
 	import ContactForm from '$lib/components/landing/ContactForm.svelte';
 	import DotField from '$lib/components/landing/DotField.svelte';
+	import LynxRunner from '$lib/components/landing/LynxRunner.svelte';
 	import ScrambleWord from '$lib/components/landing/ScrambleWord.svelte';
 	import { t } from '$lib/i18n/index.svelte';
-	import lince from '$lib/assets/images/lince-fondo-transparente.png?enhanced';
 
 	const verbs = $derived([t('hero.verbs.v1'), t('hero.verbs.v2'), t('hero.verbs.v3')]);
 
@@ -59,11 +61,9 @@
 			</div>
 		</div>
 
-		<!-- Banner del lince a todo el ancho. La imagen tiene fondo transparente,
-		     así que asoma limpia sobre el fondo del sitio en cualquier tema. -->
-		<figure class="hero-lynx relative z-10">
-			<enhanced:img src={lince} alt={t('hero.lynxAlt')} sizes="100vw" fetchpriority="high" />
-		</figure>
+		<!-- Lince de líneas a todo el ancho: patrulla un horizonte minimalista,
+		     salta los huecos y la roca, y se da la vuelta en los bordes. -->
+		<LynxRunner />
 	</section>
 
 	<div class="hatch h-[88px] border-y border-line" aria-hidden="true"></div>
@@ -81,119 +81,127 @@
 				{t('cases.intro')}
 			</p>
 
+			<!-- El reveal (transición de transform propia) vive en un wrapper aparte
+			     para no pisarse con el transform inline del tilt en la tarjeta. -->
 			<div class="mt-12 flex flex-col gap-7">
 				<!-- Caso 1 -->
-				<article class="case reveal" use:reveal>
-					<div class="grid md:grid-cols-[1.1fr_1fr]">
-						<div class="case-info">
-							<span class="case-tag">{t('cases.case1.tag')}</span>
-							<h3 class="mb-3 text-[26px]">{t('cases.case1.title')}</h3>
-							<p class="case-hook">
-								{t('cases.case1.hook')}
-							</p>
-							<p class="mb-6 text-[15px] text-sage">
-								{t('cases.case1.body')}
-							</p>
-							<p class="case-try">
-								<span>{t('cases.case1.try')}</span>
-								<svg width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true">
-									<path
-										d="M2 10 H22 M16 4 L22 10 L16 16"
-										stroke="#C9622E"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</p>
+				<div class="reveal" use:reveal>
+					<article class="case glow-card" use:tilt>
+						<div class="grid md:grid-cols-[1.1fr_1fr]">
+							<div class="case-info">
+								<span class="case-tag">{t('cases.case1.tag')}</span>
+								<h3 class="mb-3 text-[26px]">{t('cases.case1.title')}</h3>
+								<p class="case-hook">
+									{t('cases.case1.hook')}
+								</p>
+								<p class="mb-6 text-[15px] text-sage">
+									{t('cases.case1.body')}
+								</p>
+								<p class="case-try">
+									<span>{t('cases.case1.try')}</span>
+									<svg width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true">
+										<path
+											d="M2 10 H22 M16 4 L22 10 L16 16"
+											stroke="#C9622E"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</p>
+							</div>
+							<div class="case-demo"><Chatbot /></div>
 						</div>
-						<div class="case-demo"><Chatbot /></div>
-					</div>
-				</article>
+					</article>
+				</div>
 
 				<!-- Caso 2 -->
-				<article class="case reveal" use:reveal>
-					<div class="grid md:grid-cols-[1.1fr_1fr]">
-						<div class="case-info">
-							<span class="case-tag">{t('cases.case2.tag')}</span>
-							<h3 class="mb-3 text-[26px]">{t('cases.case2.title')}</h3>
-							<p class="case-hook">
-								{t('cases.case2.hook')}
-							</p>
-							<p class="mb-6 text-[15px] text-sage">
-								{t('cases.case2.body')}
-							</p>
-							<p class="case-result">
-								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-									<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
-									<path
-										d="M6 10.5 L9 13.5 L14 7"
-										stroke="#3D5A45"
-										stroke-width="1.8"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span
-									>{t('cases.case2.result')}
-									<strong>{t('cases.case2.resultStrong')}</strong></span
-								>
-							</p>
+				<div class="reveal" use:reveal>
+					<article class="case glow-card" use:tilt>
+						<div class="grid md:grid-cols-[1.1fr_1fr]">
+							<div class="case-info">
+								<span class="case-tag">{t('cases.case2.tag')}</span>
+								<h3 class="mb-3 text-[26px]">{t('cases.case2.title')}</h3>
+								<p class="case-hook">
+									{t('cases.case2.hook')}
+								</p>
+								<p class="mb-6 text-[15px] text-sage">
+									{t('cases.case2.body')}
+								</p>
+								<p class="case-result">
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+										<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
+										<path
+											d="M6 10.5 L9 13.5 L14 7"
+											stroke="#3D5A45"
+											stroke-width="1.8"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+									<span
+										>{t('cases.case2.result')}
+										<strong>{t('cases.case2.resultStrong')}</strong></span
+									>
+								</p>
+							</div>
+							<div class="case-demo"><LiveMonitor /></div>
 						</div>
-						<div class="case-demo"><LiveMonitor /></div>
-					</div>
-				</article>
+					</article>
+				</div>
 
 				<!-- Caso 3 -->
-				<article class="case reveal" use:reveal>
-					<div class="grid md:grid-cols-[1.1fr_1fr]">
-						<div class="case-info">
-							<span class="case-tag">{t('cases.case3.tag')}</span>
-							<h3 class="mb-3 text-[26px]">{t('cases.case3.title')}</h3>
-							<p class="case-hook">
-								{t('cases.case3.hook')}
-							</p>
-							<p class="mb-6 text-[15px] text-sage">
-								{t('cases.case3.body')}
-							</p>
-							<p class="case-result">
-								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-									<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
-									<path
-										d="M6 10.5 L9 13.5 L14 7"
-										stroke="#3D5A45"
-										stroke-width="1.8"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-								<span
-									>{t('cases.case3.result')}
-									<strong>{t('cases.case3.resultStrong')}</strong></span
-								>
-							</p>
+				<div class="reveal" use:reveal>
+					<article class="case glow-card" use:tilt>
+						<div class="grid md:grid-cols-[1.1fr_1fr]">
+							<div class="case-info">
+								<span class="case-tag">{t('cases.case3.tag')}</span>
+								<h3 class="mb-3 text-[26px]">{t('cases.case3.title')}</h3>
+								<p class="case-hook">
+									{t('cases.case3.hook')}
+								</p>
+								<p class="mb-6 text-[15px] text-sage">
+									{t('cases.case3.body')}
+								</p>
+								<p class="case-result">
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+										<circle cx="10" cy="10" r="9" stroke="#3D5A45" stroke-width="1.5" />
+										<path
+											d="M6 10.5 L9 13.5 L14 7"
+											stroke="#3D5A45"
+											stroke-width="1.8"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+									<span
+										>{t('cases.case3.result')}
+										<strong>{t('cases.case3.resultStrong')}</strong></span
+									>
+								</p>
+							</div>
+							<div class="case-demo"><Receipt /></div>
 						</div>
-						<div class="case-demo"><Receipt /></div>
-					</div>
-				</article>
+					</article>
+				</div>
 			</div>
 
-			<!-- Stats -->
+			<!-- Stats (los números cuentan de 0 al valor al entrar en viewport) -->
 			<div class="stats reveal mt-12" use:reveal>
 				<div class="stat">
-					<div class="stat-num">{t('cases.stats.s1num')}</div>
+					<div class="stat-num"><CountUp value={t('cases.stats.s1num')} /></div>
 					<div class="text-sm text-sage">
 						{t('cases.stats.s1')}
 					</div>
 				</div>
 				<div class="stat">
-					<div class="stat-num">{t('cases.stats.s2num')}</div>
+					<div class="stat-num"><CountUp value={t('cases.stats.s2num')} /></div>
 					<div class="text-sm text-sage">
 						{t('cases.stats.s2')}
 					</div>
 				</div>
 				<div class="stat">
-					<div class="stat-num">{t('cases.stats.s3num')}</div>
+					<div class="stat-num"><CountUp value={t('cases.stats.s3num')} /></div>
 					<div class="text-sm text-sage">
 						{t('cases.stats.s3')}
 					</div>
@@ -204,7 +212,10 @@
 
 	<!-- PROCESO (sección oscura en AMBOS temas: usa `text-cream` fijo, no `text-bg`,
 	     que se invertiría a oscuro en el tema oscuro). -->
-	<section id="proceso" class="relative overflow-hidden bg-night py-[clamp(56px,9vw,88px)] text-cream">
+	<section
+		id="proceso"
+		class="relative overflow-hidden bg-night py-[clamp(56px,9vw,88px)] text-cream"
+	>
 		<DotField theme="dark" />
 		<div class="wrap relative z-10">
 			<div class="mb-12 flex flex-wrap items-end justify-between gap-6">
@@ -253,7 +264,19 @@
 									aria-label={`${t('contact.emailLabel')}: ${t('contact.emailValue')}`}
 								>
 									<span class="channel-icon" aria-hidden="true">
-										<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+										<svg
+											viewBox="0 0 24 24"
+											width="18"
+											height="18"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><rect x="3" y="5" width="18" height="14" rx="2" /><path
+												d="m3 7 9 6 9-6"
+											/></svg
+										>
 									</span>
 									<span class="channel-body">
 										<span class="channel-label">{t('contact.emailLabel')}</span>
@@ -270,7 +293,11 @@
 									aria-label={`${t('contact.whatsappLabel')}: ${t('contact.whatsappValue')}`}
 								>
 									<span class="channel-icon" aria-hidden="true">
-										<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+										<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"
+											><path
+												d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+											/></svg
+										>
 									</span>
 									<span class="channel-body">
 										<span class="channel-label">{t('contact.whatsappLabel')}</span>
@@ -287,7 +314,21 @@
 									aria-label={`${t('contact.instagramLabel')}: ${t('contact.instagramValue')}`}
 								>
 									<span class="channel-icon" aria-hidden="true">
-										<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+										<svg
+											viewBox="0 0 24 24"
+											width="18"
+											height="18"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><rect x="3" y="3" width="18" height="18" rx="5" /><circle
+												cx="12"
+												cy="12"
+												r="3.5"
+											/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg
+										>
 									</span>
 									<span class="channel-body">
 										<span class="channel-label">{t('contact.instagramLabel')}</span>
@@ -325,39 +366,6 @@
 		to {
 			opacity: 1;
 			transform: none;
-		}
-	}
-
-	/* Lince banner a todo el ancho. La imagen tiene transparencia real (el cielo
-	   es alpha 0), así que se muestra tal cual sobre el fondo del sitio: sobresalen
-	   las montañas y el lince sin blend-mode ni recortes. */
-	.hero-lynx {
-		position: relative;
-		z-index: 1;
-		margin: 48px calc(50% - 50vw) -26px;
-		width: 100vw;
-		overflow: hidden;
-	}
-	.hero-lynx :global(img) {
-		width: 100%;
-		height: auto;
-		display: block;
-		opacity: 0;
-		animation: lynxIn 1.4s var(--ease-out-expo) 0.3s forwards;
-	}
-	@keyframes lynxIn {
-		from {
-			opacity: 0;
-			transform: scale(1.04);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1);
-		}
-	}
-	@media (max-width: 860px) {
-		.hero-lynx {
-			margin-top: 32px;
 		}
 	}
 
@@ -514,7 +522,9 @@
 		border-radius: 10px;
 		color: var(--color-ink);
 		text-decoration: none;
-		transition: background-color 0.15s ease, color 0.15s ease;
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
 	}
 	.channel-row:hover {
 		background: var(--color-bg);
@@ -529,7 +539,9 @@
 		background: var(--color-bg);
 		border: 1px solid var(--color-line);
 		color: var(--color-moss);
-		transition: color 0.15s ease, border-color 0.15s ease;
+		transition:
+			color 0.15s ease,
+			border-color 0.15s ease;
 	}
 	.channel-row:hover .channel-icon {
 		color: var(--color-rust);

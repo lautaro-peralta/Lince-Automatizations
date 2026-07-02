@@ -30,8 +30,12 @@
 	}}
 />
 
-<!-- Navbar translúcido (bg-bg/60 + blur) sobre el fondo de puntos del hero. -->
-<header class="sticky top-0 z-50 border-b border-line/70 bg-bg/60 backdrop-blur-md">
+<!-- Navbar translúcido (bg-bg/60 + blur) sobre el fondo de puntos del hero.
+     view-transition-name: queda quieto durante el fundido entre páginas. -->
+<header
+	class="sticky top-0 z-50 border-b border-line/70 bg-bg/60 backdrop-blur-md"
+	style="view-transition-name: site-header"
+>
 	<div class="wrap flex items-center justify-between py-4">
 		<a href="/" class="no-underline" aria-label={t('nav.home')}><Logo /></a>
 

@@ -119,8 +119,7 @@
 			smooth.x += (target.x - smooth.x) * 0.15;
 			smooth.y += (target.y - smooth.y) * 0.15;
 			paint(smooth.x, smooth.y);
-			const settled =
-				Math.abs(target.x - smooth.x) < 0.5 && Math.abs(target.y - smooth.y) < 0.5;
+			const settled = Math.abs(target.x - smooth.x) < 0.5 && Math.abs(target.y - smooth.y) < 0.5;
 			// Al estabilizarse (o si la sección dejó de verse) snap al destino y frenamos
 			// el bucle: sólo se reanuda con el próximo movimiento del cursor o un resize.
 			if (settled || !visible) {
