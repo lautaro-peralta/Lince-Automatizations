@@ -1,7 +1,7 @@
 # Guía de deploy — Lince
 
-Orden recomendado: **Supabase → Render → Vercel** (cada uno necesita datos del
-anterior). Todo en planes gratuitos.
+Orden recomendado: **Supabase → Render → Cloudflare Pages** (cada uno necesita
+datos del anterior). Todo en planes gratuitos.
 
 ---
 
@@ -28,7 +28,7 @@ anterior). Todo en planes gratuitos.
    ```
    SUPABASE_URL=...               (Project URL)
    SUPABASE_SERVICE_ROLE_KEY=...  (service_role, SECRETA)
-   FRONTEND_ORIGIN=https://tu-app.vercel.app
+   FRONTEND_ORIGIN=https://tu-app.pages.dev
    NODE_ENV=production
    # Opcionales: avisos de leads nuevos (si faltan, solo se loguean)
    NOTIFY_WEBHOOK_URL=...          (Make/Zapier/Discord/Slack/WhatsApp-bridge)
@@ -55,9 +55,12 @@ Plan gratuito con uso comercial permitido.
 1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → este repo.
 2. Configurar:
    - **Production branch:** `main`
-   - **Root directory:** `web`
+   - **Root directory:** `web` ← **imprescindible**: el repo es un monorepo; sin
+     esto npm no encuentra `web/package.json` y el build falla con `ENOENT`.
+   - **Framework preset:** SvelteKit
    - **Build command:** `npm run build`
-   - **Framework preset:** SvelteKit (la salida la maneja el adapter)
+   - **Build output directory:** `.svelte-kit/cloudflare`
+   - La versión de Node la fija `web/.node-version` (22).
 3. **Environment variables** (Production):
    ```
    PUBLIC_API_URL=https://tu-api.onrender.com
@@ -65,12 +68,13 @@ Plan gratuito con uso comercial permitido.
    PUBLIC_SUPABASE_ANON_KEY=...   (anon public)
    ```
 4. Deploy → la landing queda en `/` y el panel en `/admin`. Las cabeceras de
-   seguridad y el `noindex` del panel se definen en `web/vercel.json` (Vercel) y
-   en `web/static/_headers` (Cloudflare/Netlify).
+   seguridad y el `noindex` del panel se definen en `web/_headers` (assets
+   estáticos y páginas prerenderizadas) y `web/src/hooks.server.ts` (respuestas
+   dinámicas del Worker).
 
-> El frontend ahora es **SvelteKit** (ver `web/README.md`). Está configurado con
-> `@sveltejs/adapter-vercel`; para desplegar en Cloudflare/Netlify hay que
-> cambiar al adapter correspondiente.
+> El frontend es **SvelteKit** con `@sveltejs/adapter-cloudflare` (ver
+> `web/README.md`). Para volver a Vercel/Netlify habría que cambiar al adapter
+> correspondiente.
 
 ---
 

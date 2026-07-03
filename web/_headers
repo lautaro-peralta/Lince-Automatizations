@@ -1,4 +1,6 @@
-# Cabeceras aplicadas por Cloudflare Pages (y Netlify). Vite copia public/ a dist/.
+# Cabeceras que Cloudflare Pages aplica a los assets estáticos y páginas
+# prerenderizadas (el adapter copia este archivo a la salida del build).
+# Las respuestas dinámicas del Worker las cubre src/hooks.server.ts.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

@@ -12,7 +12,7 @@ todo desplegable en planes gratuitos y con foco en que **funcione fiablemente**.
 
 | Capa            | Tecnología                 | Hosting (free)        |
 |-----------------|----------------------------|-----------------------|
-| Frontend        | SvelteKit + Tailwind v4 (TS)     | **Vercel**      |
+| Frontend        | SvelteKit + Tailwind v4 (TS)     | **Cloudflare Pages** |
 | Backend / API   | Node.js + Express          | **Render**            |
 | Base de datos   | Postgres                   | **Supabase**          |
 | Auth (panel)    | Supabase Auth              | Supabase              |
@@ -24,8 +24,8 @@ Las decisiones (y sus alternativas descartadas) están al final.
 
 ```
                  ┌──────────────────────────────────────────────┐
-                 │                  VERCEL                        │
-                 │  Frontend (Vite, estático)                     │
+                 │             CLOUDFLARE PAGES                   │
+                 │  Frontend (SvelteKit)                          │
                  │   /         -> Landing (HTML original)         │
                  │   /admin/   -> Panel interno                   │
                  └───────┬───────────────────────┬───────────────┘

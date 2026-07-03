@@ -25,8 +25,8 @@ costo *marginal* de sumar un cliente más es casi cero (ver "Costos variables").
 - **Cloudflare Pages / Netlify — gratis, y permiten uso comercial.** 500 builds/mes
   (Cloudflare). **Recomendado: US$ 0.**
 - **Vercel:** su plan **Hobby prohíbe uso comercial**; para un negocio hay que ir a
-  **Pro: US$ 20/dev/mes** (incluye US$ 20 de crédito). Hoy estás en Vercel, así que
-  esto es lo único que conviene migrar para ahorrar.
+  **Pro: US$ 20/dev/mes** (incluye US$ 20 de crédito). Por eso el frontend ya se
+  migró de Vercel a Cloudflare Pages.
 
 ### Backend / API (Express)
 - **Render Free — US$ 0:** 512 MB RAM, 750 horas/mes. **Se duerme tras 15 min** sin
