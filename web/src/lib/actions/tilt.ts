@@ -8,18 +8,16 @@ interface TiltOptions {
 }
 
 /**
- * Inclinación 3D sutil + brillo que sigue al cursor (vía --mx/--my, que
- * consume `.glow-card::after` en app.css). Sólo actúa con puntero fino y sin
+ * Inclinación 3D sutil que sigue al cursor. Sólo actúa con puntero fino y sin
  * prefers-reduced-motion; en táctil o con movimiento reducido es un no-op y
  * queda el hover CSS de siempre.
  *
  * El rect de la tarjeta se cachea al entrar y se refresca ante scroll, resize
- * o cambios de tamaño del contenido (los demos animados cambian de alto): si
- * no, el mapeo puntero→porcentaje se desincroniza y el brillo se despega del
- * cursor. La escritura del transform se agrupa en un rAF y, mientras el tilt
- * está activo, la clase `.tilt-active` desactiva la `transition: transform` de
- * la tarjeta (ver app.css) para que siga al puntero al instante en vez de
- * perseguirlo con retardo.
+ * o cambios de tamaño del contenido (los demos animados cambian de alto), así
+ * el ángulo no se desincroniza del puntero. La escritura del transform se
+ * agrupa en un rAF y, mientras el tilt está activo, la clase `.tilt-active`
+ * desactiva la `transition: transform` de la tarjeta (ver app.css) para que
+ * siga al puntero al instante en vez de perseguirlo con retardo.
  *
  * Uso: <article class="glow-card" use:tilt>…</article>
  */
@@ -51,8 +49,6 @@ export const tilt: Action<HTMLElement, TiltOptions | undefined> = (node, options
 		const rx = -(py - 0.5) * max;
 		const ry = (px - 0.5) * max;
 		node.style.transform = `perspective(900px) translateY(${-lift}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
-		node.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
-		node.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
 	};
 
 	const schedule = () => {
