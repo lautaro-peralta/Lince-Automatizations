@@ -1,0 +1,9 @@
+{
+	// Configuración de Cloudflare Pages para el frontend (SvelteKit + adapter-cloudflare).
+	// El nombre debe coincidir con el proyecto creado en el dashboard de Cloudflare.
+	"name": "lince-automate",
+	// Carpeta de salida que genera `@sveltejs/adapter-cloudflare` con `npm run build`.
+	"pages_build_output_dir": ".svelte-kit/cloudflare",
+	"compatibility_date": "2026-07-03",
+	"compatibility_flags": ["nodejs_compat"]
+}

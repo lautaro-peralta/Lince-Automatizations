@@ -1,14 +1,14 @@
 # Lince — Automatización para negocios
 
 Página de presentación de Lince + un CRM liviano para captar y gestionar
-clientes. Pensado para desplegarse en planes **gratuitos**: Vercel (frontend),
-Render (backend) y Supabase (base de datos + auth + cron).
+clientes. Pensado para desplegarse en planes **gratuitos**: Cloudflare Pages
+(frontend), Render (backend) y Supabase (base de datos + auth + cron).
 
 ## Estructura del repo
 
 ```
 .
-├── web/                 # Frontend (SvelteKit + Tailwind v4) → Vercel
+├── web/                 # Frontend (SvelteKit + Tailwind v4) → Cloudflare Pages
 │   ├── src/routes/+page.svelte  # landing pública (prerenderizada)
 │   └── src/routes/admin/        # panel interno (SPA con auth)
 ├── api/                 # Backend (Node + Express) → Render
@@ -24,7 +24,7 @@ Render (backend) y Supabase (base de datos + auth + cron).
 | [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) | Visión general, diagrama, decisiones, fiabilidad y seguridad |
 | [`docs/MODELO-DATOS.md`](docs/MODELO-DATOS.md) | Tablas, relaciones, estados y RLS |
 | [`docs/API.md`](docs/API.md) | Contrato de endpoints |
-| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Paso a paso Supabase + Render + Vercel |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Paso a paso Supabase + Render + Cloudflare Pages |
 | [`docs/COSTOS.md`](docs/COSTOS.md) | Evaluación de costos (planes gratis vs producción) |
 
 ## Arrancar en local (resumen)

@@ -1,12 +1,13 @@
 # Lince — Frontend
 
 Frontend de Lince: **landing pública** + **panel admin/CRM**, construido con
-**SvelteKit (Svelte 5) + TypeScript + Tailwind v4**. Se deploya en Vercel
-(free-tier) y habla con el backend (Express en Render) y con Supabase (auth).
+**SvelteKit (Svelte 5) + TypeScript + Tailwind v4**. Se deploya en Cloudflare
+Pages (free-tier, permite uso comercial) y habla con el backend (Express en
+Render) y con Supabase (auth).
 
 ## Stack
 
-- **SvelteKit 2 / Svelte 5 (runes)** sobre Vite — adapter `@sveltejs/adapter-vercel`.
+- **SvelteKit 2 / Svelte 5 (runes)** sobre Vite — adapter `@sveltejs/adapter-cloudflare`.
 - **Tailwind CSS v4** con tokens de marca en `@theme` (ver `src/app.css`).
 - **Fuentes self-host** con Fontsource (Fraunces, Source Sans 3, JetBrains Mono).
 - **Imágenes** optimizadas con `@sveltejs/enhanced-img` (AVIF/WebP responsive).
@@ -61,13 +62,16 @@ Solo las `PUBLIC_*` se exponen al navegador (ver `.env.example`):
 | `PUBLIC_SUPABASE_URL`      | Proyecto de Supabase (login del panel) |
 | `PUBLIC_SUPABASE_ANON_KEY` | Anon key (pública, protegida por RLS)  |
 
-## Deploy (Vercel)
+## Deploy (Cloudflare Pages)
 
-- **Root Directory:** `web`
-- **Build Command:** `npm run build` · **Framework:** SvelteKit (autodetectado)
-- Cargá las variables `PUBLIC_*` en el proyecto de Vercel.
-- Cabeceras de seguridad y `noindex` del panel: `vercel.json`
-  (y `static/_headers` para Cloudflare/Netlify).
+- **Root directory:** `web` (sin esto el build falla: npm no encuentra el
+  `package.json` porque el repo es un monorepo)
+- **Framework preset:** SvelteKit · **Build command:** `npm run build` ·
+  **Build output:** `.svelte-kit/cloudflare`
+- La versión de Node del build la fija `.node-version` (Vite 8 necesita ≥ 20.19).
+- Cargá las variables `PUBLIC_*` en el proyecto de Pages (build y runtime).
+- Cabeceras de seguridad y `noindex` del panel: `_headers` (assets estáticos y
+  páginas prerenderizadas) + `src/hooks.server.ts` (respuestas del Worker).
 
 ## Notas
 
