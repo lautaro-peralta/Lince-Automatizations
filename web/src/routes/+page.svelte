@@ -455,6 +455,15 @@
 		transition:
 			transform 0.3s var(--ease-out-expo),
 			box-shadow 0.3s ease;
+		/* Cada tarjeta contiene un demo pesado (chatbot, monitor en vivo con
+		   animaciones CSS infinitas, ticket). content-visibility: auto hace que
+		   el navegador se salte layout/paint —y congele esas animaciones— mientras
+		   la tarjeta está fuera del viewport; así sólo la que estás mirando gasta
+		   trabajo y el scroll deja de trabarse. contain-intrinsic-size reserva un
+		   alto aproximado (con `auto` recuerda el real tras el primer render) para
+		   que la barra de scroll no pegue saltos. */
+		content-visibility: auto;
+		contain-intrinsic-size: auto 480px;
 	}
 	.case:hover {
 		transform: translateY(-3px);
