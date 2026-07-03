@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { reveal } from '$lib/actions/reveal';
-	import { tilt } from '$lib/actions/tilt';
+	import { glow } from '$lib/actions/glow';
 	import Button from '$lib/components/Button.svelte';
 	import Chatbot from '$lib/components/landing/Chatbot.svelte';
 	import CountUp from '$lib/components/landing/CountUp.svelte';
@@ -78,12 +78,12 @@
 				{t('cases.intro')}
 			</p>
 
-			<!-- El reveal (transición de transform propia) vive en un wrapper aparte
-			     para no pisarse con el transform inline del tilt en la tarjeta. -->
+			<!-- El reveal (con su propia transición de transform) vive en un wrapper
+			     aparte de la tarjeta, que lleva el brillo (use:glow). -->
 			<div class="mt-12 flex flex-col gap-7">
 				<!-- Caso 1 -->
 				<div class="reveal" use:reveal>
-					<article class="case glow-card" use:tilt>
+					<article class="case glow-card" use:glow>
 						<div class="grid md:grid-cols-[1.1fr_1fr]">
 							<div class="case-info">
 								<span class="case-tag">{t('cases.case1.tag')}</span>
@@ -114,7 +114,7 @@
 
 				<!-- Caso 2 -->
 				<div class="reveal" use:reveal>
-					<article class="case glow-card" use:tilt>
+					<article class="case glow-card" use:glow>
 						<div class="grid md:grid-cols-[1.1fr_1fr]">
 							<div class="case-info">
 								<span class="case-tag">{t('cases.case2.tag')}</span>
@@ -149,7 +149,7 @@
 
 				<!-- Caso 3 -->
 				<div class="reveal" use:reveal>
-					<article class="case glow-card" use:tilt>
+					<article class="case glow-card" use:glow>
 						<div class="grid md:grid-cols-[1.1fr_1fr]">
 							<div class="case-info">
 								<span class="case-tag">{t('cases.case3.tag')}</span>
@@ -468,14 +468,6 @@
 	.case:hover {
 		transform: translateY(-3px);
 		box-shadow: var(--shadow-card);
-	}
-	/* Con el tilt activo (clase que añade use:tilt), el transform lo maneja la
-	   acción vía estilo inline y NO debe transicionar: si no, la tarjeta y su
-	   brillo persiguen al cursor con retardo y se siente trabado. Sólo la
-	   sombra sigue con transición. Al salir vuelve la de arriba y se reasienta
-	   suave. `:global` porque la clase la añade JS, no una directiva Svelte. */
-	.case:global(.tilt-active) {
-		transition-property: box-shadow;
 	}
 	.case-info {
 		padding: 36px;

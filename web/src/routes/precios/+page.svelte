@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n/index.svelte';
 	import { reveal } from '$lib/actions/reveal';
-	import { tilt } from '$lib/actions/tilt';
+	import { glow } from '$lib/actions/glow';
 	import Button from '$lib/components/Button.svelte';
 
 	const plans = [
@@ -27,14 +27,13 @@
 	<section class="wrap pb-[clamp(32px,6vw,64px)]">
 		<div class="grid gap-5 md:grid-cols-3">
 			{#each plans as p (p.key)}
-				<!-- reveal en el wrapper y tilt en la tarjeta: cada transform tiene
-				     su propio elemento y no se pisan. -->
+				<!-- reveal en el wrapper y el brillo (use:glow) en la tarjeta. -->
 				<div class="reveal" use:reveal>
 					<article
-						class="glow-card flex h-full flex-col rounded-xl border bg-surface p-7 transition-transform duration-300 {p.featured
+						class="glow-card flex h-full flex-col rounded-xl border bg-surface p-7 {p.featured
 							? 'border-rust shadow-glow'
 							: 'border-line'}"
-						use:tilt
+						use:glow
 					>
 						{#if p.featured}
 							<span class="kicker mb-3 text-rust">{t('pricing.popular')}</span>

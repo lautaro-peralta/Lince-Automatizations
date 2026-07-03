@@ -238,16 +238,39 @@
 		}
 	}
 
-	/* `.glow-card` es sólo el gancho de la inclinación 3D (use:tilt); ya no
-	   pinta ningún brillo que siga al cursor.
-	   Mientras el tilt sigue al puntero, el transform NO debe transicionar: si
-	   heredara la `transition: transform` de la tarjeta, ésta perseguiría al
-	   cursor con ~0.3s de retardo y se sentiría trabada. Sólo dejamos
-	   transicionar la sombra. Al soltar el hover se quita la clase, vuelve la
-	   transición y la tarjeta se reasienta suave. `will-change` sólo mientras
-	   hay hover, para no dejar capas de composición colgadas. */
-	.glow-card.tilt-active {
-		transition-property: box-shadow;
+	/* Spotlight que sigue al cursor sobre las tarjetas. En vez de reposicionar
+	   un gradiente (repaint por frame), es un blob radial de tamaño fijo que la
+	   acción use:glow mueve con translate vía --gx/--gy: sólo trabajo de
+	   compositor, sin repaint ni transform sobre la tarjeta (por eso no
+	   re-rasteriza sus demos animados, que era lo que trababa con el tilt).
+	   `overflow: hidden` lo recorta al borde redondeado de la tarjeta. */
+	.glow-card {
+		position: relative;
+		overflow: hidden;
+	}
+	.glow-card::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 480px;
+		height: 480px;
+		margin: -240px 0 0 -240px;
+		border-radius: 50%;
+		background: radial-gradient(
+			closest-side circle,
+			color-mix(in srgb, var(--color-rust) 14%, transparent),
+			transparent
+		);
+		opacity: 0;
+		transform: translate(var(--gx, 0px), var(--gy, 0px));
+		transition: opacity 0.3s ease;
+		pointer-events: none;
+	}
+	.glow-card.glow-active::after {
+		opacity: 1;
+		/* Promovemos a capa propia sólo mientras hay hover, para que el translate
+		   por frame sea puramente de compositor y no deje capas colgadas. */
 		will-change: transform;
 	}
 }

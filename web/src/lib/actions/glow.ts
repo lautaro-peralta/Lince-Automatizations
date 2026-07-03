@@ -1,35 +1,26 @@
 import type { Action } from 'svelte/action';
 
-interface TiltOptions {
-	/** Rotación máxima en grados. */
-	max?: number;
-	/** Elevación en px mientras el cursor está encima (reemplaza al hover CSS). */
-	lift?: number;
-}
-
 /**
- * Inclinación 3D sutil que sigue al cursor. Sólo actúa con puntero fino y sin
- * prefers-reduced-motion; en táctil o con movimiento reducido es un no-op y
- * queda el hover CSS de siempre.
+ * "Spotlight": un brillo que sigue al cursor sobre la tarjeta. A diferencia
+ * del viejo tilt, NO inclina ni transforma la tarjeta (eso re-rasterizaba en
+ * cada frame su contenido —los demos animados— y era la causa del laggeo).
+ * Aquí sólo se mueve un blob radial fijo del `::after` con translate (trabajo
+ * de compositor, sin repaint por frame) vía --gx/--gy, y se enciende con la
+ * clase `.glow-active`. Sólo con puntero fino y sin prefers-reduced-motion;
+ * en táctil o con movimiento reducido es un no-op y queda el hover CSS.
  *
- * El rect de la tarjeta se cachea al entrar y se refresca ante scroll, resize
- * o cambios de tamaño del contenido (los demos animados cambian de alto), así
- * el ángulo no se desincroniza del puntero. La escritura del transform se
- * agrupa en un rAF y, mientras el tilt está activo, la clase `.tilt-active`
- * desactiva la `transition: transform` de la tarjeta (ver app.css) para que
- * siga al puntero al instante en vez de perseguirlo con retardo.
+ * El rect se cachea al entrar y se refresca ante scroll, resize o cambios de
+ * tamaño del contenido (los demos cambian de alto), así el brillo no se
+ * despega del cursor cuando la página se mueve.
  *
- * Uso: <article class="glow-card" use:tilt>…</article>
+ * Consume `.glow-card::after` en app.css. Uso: <article class="glow-card" use:glow>
  */
-export const tilt: Action<HTMLElement, TiltOptions | undefined> = (node, options) => {
+export const glow: Action<HTMLElement> = (node) => {
 	const enabled =
 		typeof matchMedia !== 'undefined' &&
 		matchMedia('(pointer: fine)').matches &&
 		!matchMedia('(prefers-reduced-motion: reduce)').matches;
 	if (!enabled) return;
-
-	const max = options?.max ?? 2.5;
-	const lift = options?.lift ?? 3;
 
 	let rect: DOMRect | null = null;
 	let raf = 0;
@@ -44,11 +35,8 @@ export const tilt: Action<HTMLElement, TiltOptions | undefined> = (node, options
 	const paint = () => {
 		raf = 0;
 		if (!rect) return;
-		const px = (lastX - rect.left) / rect.width;
-		const py = (lastY - rect.top) / rect.height;
-		const rx = -(py - 0.5) * max;
-		const ry = (px - 0.5) * max;
-		node.style.transform = `perspective(900px) translateY(${-lift}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+		node.style.setProperty('--gx', `${(lastX - rect.left).toFixed(1)}px`);
+		node.style.setProperty('--gy', `${(lastY - rect.top).toFixed(1)}px`);
 	};
 
 	const schedule = () => {
@@ -60,7 +48,7 @@ export const tilt: Action<HTMLElement, TiltOptions | undefined> = (node, options
 		lastX = e.clientX;
 		lastY = e.clientY;
 		measure();
-		node.classList.add('tilt-active');
+		node.classList.add('glow-active');
 		schedule();
 	};
 	const onMove = (e: PointerEvent) => {
@@ -73,8 +61,7 @@ export const tilt: Action<HTMLElement, TiltOptions | undefined> = (node, options
 		if (raf) cancelAnimationFrame(raf);
 		raf = 0;
 		rect = null;
-		node.style.transform = '';
-		node.classList.remove('tilt-active');
+		node.classList.remove('glow-active');
 	};
 
 	// Scroll/resize dejan obsoleto el rect cacheado (la tarjeta se mueve o
