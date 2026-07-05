@@ -3189,9 +3189,17 @@
 									<label for="f-proveedor">Proveedor</label>
 									<input id="f-proveedor" type="text" placeholder="Ej: Meta Platforms" />
 								</div>
-								<div class="field">
-									<label for="f-receipt">Comprobante (link o N.º de factura)</label>
-									<input id="f-receipt" type="text" placeholder="Ej: drive.google.com/… o Factura A-0001-00003391" />
+								<div class="field wide">
+									<label>Comprobante</label>
+									<div class="file-row">
+										<label class="file-btn" for="f-receipt-file">
+											<svg class="icon"><use href="#i-paperclip"/></svg>
+											Subir imagen o PDF
+										</label>
+										<input id="f-receipt-file" type="file" accept="image/*,application/pdf" hidden />
+										<span class="file-name" id="f-receipt-status">o pegá un link / N.º de factura abajo</span>
+									</div>
+									<input id="f-receipt" type="text" placeholder="drive.google.com/… o Factura A-0001-00003391" style="margin-top:8px" />
 								</div>
 								<div class="actions">
 									<span class="rule-hint" id="form-rule-hint">Requiere <strong>1 aprobación</strong> de otro socio.</span>
@@ -3286,6 +3294,26 @@
 	const apiGet = (p) => api(p).then((r) => (r && r.data !== undefined ? r.data : r));
 	const apiSend = (p, body, method = 'POST') =>
 		api(p, { method, body }).then((r) => (r && r.data !== undefined ? r.data : r));
+
+	// Subida de archivos (multipart). No lleva Content-Type: el navegador arma el
+	// boundary. Solo adjunta el JWT de la sesión.
+	async function apiUpload(path, file) {
+		const { data: { session } } = await supabase.auth.getSession();
+		const fd = new FormData();
+		fd.append('file', file);
+		const headers = {};
+		if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
+		const res = await fetch(`${API_URL}${path}`, { method: 'POST', headers, body: fd });
+		const text = await res.text();
+		let data = null;
+		try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
+		if (!res.ok) {
+			const err = new Error((data && data.message) || `Error ${res.status}`);
+			err.status = res.status;
+			throw err;
+		}
+		return data && data.data !== undefined ? data.data : data;
+	}
 
 	/* ---- Tema (mismo mecanismo que el sitio: data-theme + lince-theme) ---- */
 	const themeToggles = $$('.theme-toggle');
@@ -3814,7 +3842,9 @@
 			.join('');
 
 		const receipt = g.receipt
-			? `<span class="rcpt"><svg class="icon"><use href="#i-paperclip"/></svg>${g.receipt}</span>`
+			? /^https?:\/\//i.test(g.receipt)
+				? `<a class="rcpt" href="${g.receipt}" target="_blank" rel="noopener"><svg class="icon"><use href="#i-paperclip"/></svg>Ver comprobante</a>`
+				: `<span class="rcpt"><svg class="icon"><use href="#i-paperclip"/></svg>${g.receipt}</span>`
 			: `<span class="rcpt none"><svg class="icon"><use href="#i-alert"/></svg>Sin comprobante</span>`;
 
 		let foot = '';
@@ -3985,6 +4015,22 @@
 				: 'Requiere <strong>1 aprobación</strong> de otro socio.';
 	}
 
+	// Al elegir un archivo, se sube al toque y su URL queda en el campo de texto.
+	async function onReceiptFile(e) {
+		const file = e.target.files && e.target.files[0];
+		if (!file) return;
+		const status = $('#f-receipt-status');
+		status.textContent = 'Subiendo ' + file.name + '…';
+		try {
+			const up = await apiUpload('/api/uploads', file);
+			$('#f-receipt').value = up.url;
+			status.textContent = '✓ ' + file.name;
+		} catch (err) {
+			status.textContent = 'No se pudo subir: ' + (err.message || 'error');
+			e.target.value = '';
+		}
+	}
+
 	async function onRegister(ev) {
 		ev.preventDefault();
 		const concepto = $('#f-concepto').value.trim();
@@ -4007,6 +4053,7 @@
 			gastos.unshift(created);
 			renderGastos();
 			$('#gasto-form').reset();
+			$('#f-receipt-status').textContent = 'o pegá un link / N.º de factura abajo';
 			updateRuleHint();
 			setForm(false);
 			toast('accent', '#i-receipt', `Registraste "${created.concepto}". Falta la aprobación de otro socio.`);
@@ -4029,6 +4076,7 @@
 			);
 			$('#gasto-cancel').addEventListener('click', () => setForm(false));
 			$('#f-monto').addEventListener('input', updateRuleHint);
+			$('#f-receipt-file').addEventListener('change', onReceiptFile);
 			$('#gasto-form').addEventListener('submit', onRegister);
 			$('#gasto-list').addEventListener('click', onListClick);
 		}

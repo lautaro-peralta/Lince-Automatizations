@@ -123,3 +123,15 @@ admin, con datos y reglas anti-fraude en el servidor.
 **Reglas que aplica el backend** (no el navegador): quien registra un gasto no puede
 aprobarlo (segregación de funciones); ≥ US$ 1.000 exige 2 socios distintos; la
 bitácora (`expense_events`) es append-only. Ver `api/src/routes/expenses.js`.
+
+### Comprobantes (subida de imágenes / PDF)
+
+La subida pasa por `POST /api/uploads` y guarda solo la URL en `receipt_url`. El
+proveedor se elige con `UPLOADS_PROVIDER` (ver `api/.env.example`):
+
+- **UploadThing (activo).** Creá una app en [uploadthing.com](https://uploadthing.com),
+  copiá el **token** a `UPLOADTHING_TOKEN` en Render. Listo. Tier gratuito generoso.
+- **Supabase Storage (cuando quieras migrar).** Es **gratis** en el tier free (1 GB).
+  Storage → **New bucket** llamado `receipts`; poné `UPLOADS_PROVIDER=supabase` y
+  `SUPABASE_RECEIPTS_BUCKET=receipts`. El código ya está (`api/src/lib/uploads.js`);
+  si el bucket es privado, cambiá `getPublicUrl` por una URL firmada.

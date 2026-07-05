@@ -24,6 +24,13 @@ export const config = {
   supabaseUrl: required('SUPABASE_URL'),
   supabaseServiceKey: required('SUPABASE_SERVICE_ROLE_KEY'),
 
+  // Subida de comprobantes (Startup OS). provider: 'uploadthing' | 'supabase'.
+  uploads: {
+    provider: process.env.UPLOADS_PROVIDER || 'uploadthing',
+    uploadthingToken: process.env.UPLOADTHING_TOKEN || '',
+    supabaseBucket: process.env.SUPABASE_RECEIPTS_BUCKET || 'receipts',
+  },
+
   // Lista blanca de orígenes para CORS. Vacío => se permite todo (solo dev).
   // Normalizamos: sin espacios y SIN barra final (el header Origin nunca la trae,
   // así que una barra de más en la env rompería la comparación).

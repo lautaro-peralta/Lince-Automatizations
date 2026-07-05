@@ -19,6 +19,7 @@ import prospectsRouter from './routes/prospects.js';
 import meRouter from './routes/me.js';
 import expensesRouter from './routes/expenses.js';
 import adsRouter from './routes/ads.js';
+import uploadsRouter from './routes/uploads.js';
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use('/api/prospects', prospectsRouter); // prospectos del formulario web
 app.use('/api/me', meRouter);               // identidad del Startup OS
 app.use('/api/expenses', expensesRouter);   // gastos y aprobaciones (Startup OS)
 app.use('/api/ads', adsRouter);             // rendimiento de anuncios (Startup OS)
+app.use('/api/uploads', uploadsRouter);     // subida de comprobantes (Startup OS)
 
 // 404 y manejador de errores SIEMPRE al final.
 app.use(notFound);

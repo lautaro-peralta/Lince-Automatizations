@@ -157,6 +157,7 @@ async function testRoutes() {
       ['POST', '/api/expenses/abc/reject', null, 401],
       ['GET', '/api/ads', null, 401],
       ['POST', '/api/ads', {}, 401],
+      ['POST', '/api/uploads', null, 401],
       ['GET', '/nope', null, 404],
     ];
     for (const [m, p, b, exp] of cases) {
