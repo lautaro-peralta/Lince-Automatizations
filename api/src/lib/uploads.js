@@ -4,13 +4,19 @@
  *   UPLOADS_PROVIDER=supabase     (Supabase Storage; activo. Tier gratuito de 1 GB)
  *   UPLOADS_PROVIDER=uploadthing  (todavía NO implementado; ver más abajo)
  *
- * El contrato es `uploadReceipt({ buffer, filename, mimetype })` ->
- * `{ url, key, provider }`. El archivo llega desde la API (Express + multer),
- * nunca del navegador directo, y la URL resultante se guarda en
- * `expenses.receipt_url`.
+ * El bucket es PRIVADO (recomendado para comprobantes financieros): no hay URL
+ * pública fija. `uploadReceipt()` devuelve una `ref` ESTABLE (para guardar en
+ * `expenses.receipt_url`) y `getSignedReceiptUrl()` la convierte, bajo demanda,
+ * en un link firmado con vencimiento corto — se regenera en cada lectura desde
+ * `routes/expenses.js`, así que el link mostrado siempre está vigente.
  */
 import { config } from '../config.js';
 import { supabase } from '../db/supabase.js';
+
+// Prefijo que distingue "referencia interna a Storage" de un link/texto que el
+// socio pegó a mano (una URL externa o un N.° de factura en texto libre).
+const STORAGE_PREFIX = 'sb-storage:';
+const SIGNED_URL_TTL_SECONDS = 60 * 60 * 6; // 6 horas: de sobra para una sesión de trabajo
 
 async function toSupabase({ buffer, filename, mimetype }) {
   const bucket = config.uploads.supabaseBucket;
@@ -22,8 +28,8 @@ async function toSupabase({ buffer, filename, mimetype }) {
   if (error) {
     throw Object.assign(new Error('Falló la subida a Supabase Storage.'), { status: 502, cause: error });
   }
-  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-  return { url: data.publicUrl, key: path, provider: 'supabase' };
+  // No hay `url` pública (bucket privado): la referencia estable es el path.
+  return { ref: STORAGE_PREFIX + path, provider: 'supabase' };
 }
 
 /**
@@ -36,7 +42,7 @@ async function toSupabase({ buffer, filename, mimetype }) {
  *   const file = new UTFile([buffer], filename, { type: mimetype });
  *   const { data, error } = await utapi.uploadFiles(file);
  *   if (error) throw error;
- *   return { url: data.ufsUrl, key: data.key, provider: 'uploadthing' };
+ *   return { ref: data.ufsUrl, provider: 'uploadthing' }; // acá sí sería pública
  */
 async function toUploadthing() {
   throw Object.assign(
@@ -45,7 +51,25 @@ async function toUploadthing() {
   );
 }
 
-/** Sube un comprobante con el proveedor configurado y devuelve su URL. */
+/** Sube un comprobante con el proveedor configurado y devuelve su referencia estable. */
 export async function uploadReceipt(fileInput) {
   return config.uploads.provider === 'uploadthing' ? toUploadthing(fileInput) : toSupabase(fileInput);
+}
+
+/**
+ * Convierte una `receipt_url` guardada en un link usable para el navegador:
+ *   · Referencia interna (`sb-storage:...`) -> link firmado, fresco, TTL corto.
+ *   · Cualquier otro valor (link externo pegado a mano, N.° de factura, vacío)
+ *     -> se devuelve tal cual; no todo lo que pega un socio es un archivo nuestro.
+ * Si falla la firma (objeto borrado, bucket mal configurado) devuelve null en
+ * vez de romper la lectura de gastos.
+ */
+export async function getSignedReceiptUrl(receiptUrl) {
+  if (!receiptUrl || !receiptUrl.startsWith(STORAGE_PREFIX)) return receiptUrl || null;
+  const path = receiptUrl.slice(STORAGE_PREFIX.length);
+  const { data, error } = await supabase.storage
+    .from(config.uploads.supabaseBucket)
+    .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
+  if (error) return null;
+  return data.signedUrl;
 }

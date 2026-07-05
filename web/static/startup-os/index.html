@@ -3199,6 +3199,7 @@
 										<input id="f-receipt-file" type="file" accept="image/*,application/pdf" hidden />
 										<span class="file-name" id="f-receipt-status">o pegá un link / N.º de factura abajo</span>
 									</div>
+									<input id="f-receipt-ref" type="hidden" />
 									<input id="f-receipt" type="text" placeholder="drive.google.com/… o Factura A-0001-00003391" style="margin-top:8px" />
 								</div>
 								<div class="actions">
@@ -4015,7 +4016,9 @@
 				: 'Requiere <strong>1 aprobación</strong> de otro socio.';
 	}
 
-	// Al elegir un archivo, se sube al toque y su URL queda en el campo de texto.
+	// Al elegir un archivo, se sube al toque. La referencia (interna, no una URL
+	// legible: el bucket es privado) va a un campo oculto; el campo de texto
+	// visible queda libre para pegar un link/N.º a mano si el socio prefiere eso.
 	async function onReceiptFile(e) {
 		const file = e.target.files && e.target.files[0];
 		if (!file) return;
@@ -4023,9 +4026,12 @@
 		status.textContent = 'Subiendo ' + file.name + '…';
 		try {
 			const up = await apiUpload('/api/uploads', file);
-			$('#f-receipt').value = up.url;
-			status.textContent = '✓ ' + file.name;
+			$('#f-receipt-ref').value = up.ref;
+			$('#f-receipt').value = '';
+			$('#f-receipt').placeholder = file.name + ' (subido ✓)';
+			status.textContent = '✓ ' + file.name + ' subido';
 		} catch (err) {
+			$('#f-receipt-ref').value = '';
 			status.textContent = 'No se pudo subir: ' + (err.message || 'error');
 			e.target.value = '';
 		}
@@ -4047,12 +4053,15 @@
 					category: $('#f-categoria').value,
 					description: concepto,
 					provider: $('#f-proveedor').value.trim() || undefined,
-					receipt_url: $('#f-receipt').value.trim() || undefined
+					// El archivo subido manda sobre el texto manual si hay ambos.
+					receipt_url: $('#f-receipt-ref').value.trim() || $('#f-receipt').value.trim() || undefined
 				})
 			);
 			gastos.unshift(created);
 			renderGastos();
 			$('#gasto-form').reset();
+			$('#f-receipt-ref').value = '';
+			$('#f-receipt').placeholder = 'drive.google.com/… o Factura A-0001-00003391';
 			$('#f-receipt-status').textContent = 'o pegá un link / N.º de factura abajo';
 			updateRuleHint();
 			setForm(false);
@@ -4077,6 +4086,11 @@
 			$('#gasto-cancel').addEventListener('click', () => setForm(false));
 			$('#f-monto').addEventListener('input', updateRuleHint);
 			$('#f-receipt-file').addEventListener('change', onReceiptFile);
+			// Si el socio escribe a mano, el texto manda sobre un archivo ya subido.
+			$('#f-receipt').addEventListener('input', () => {
+				$('#f-receipt-ref').value = '';
+				$('#f-receipt').placeholder = 'drive.google.com/… o Factura A-0001-00003391';
+			});
 			$('#gasto-form').addEventListener('submit', onRegister);
 			$('#gasto-list').addEventListener('click', onListClick);
 		}

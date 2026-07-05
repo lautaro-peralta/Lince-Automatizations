@@ -126,14 +126,21 @@ bitácora (`expense_events`) es append-only. Ver `api/src/routes/expenses.js`.
 
 ### Comprobantes (subida de imágenes / PDF)
 
-La subida pasa por `POST /api/uploads` y guarda solo la URL en `receipt_url`. El
-proveedor se elige con `UPLOADS_PROVIDER` (ver `api/.env.example`):
+La subida pasa por `POST /api/uploads`. El proveedor se elige con
+`UPLOADS_PROVIDER` (ver `api/.env.example`):
 
 - **Supabase Storage (activo).** Es **gratis** en el tier free (1 GB) — no hace
-  falta pagar. Pasos: Storage → **New bucket** llamado `receipts` (marcalo
-  **público**, o si lo dejás privado cambiá `getPublicUrl` por una URL firmada en
-  `api/src/lib/uploads.js`). Dejá `UPLOADS_PROVIDER=supabase` y
-  `SUPABASE_RECEIPTS_BUCKET=receipts` en Render.
+  falta pagar. Pasos: Storage → **New bucket** llamado `receipts`, dejalo
+  **privado** (recomendado para comprobantes financieros). Dejá
+  `UPLOADS_PROVIDER=supabase` y `SUPABASE_RECEIPTS_BUCKET=receipts` en Render.
+
+  Como el bucket es privado, en `expenses.receipt_url` **no se guarda una URL
+  pública**: se guarda una referencia estable (`sb-storage:...`). Cada vez que
+  se lee un gasto (`GET /api/expenses`, o tras registrar/aprobar/rechazar), el
+  backend la convierte en un **link firmado** válido por 6 horas — se regenera
+  en cada lectura, así que nunca queda vencido para quien lo mira. Un link
+  externo pegado a mano (Drive, un N.° de factura) no se toca, se muestra tal
+  cual. Ver `api/src/lib/uploads.js` (`getSignedReceiptUrl`).
 - **UploadThing (no implementado).** Queda solo como referencia comentada en
   `api/src/lib/uploads.js` para el día que se quiera retomar; el paquete
   `uploadthing` no está instalado y `UPLOADS_PROVIDER=uploadthing` responde 501.

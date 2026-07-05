@@ -17,6 +17,7 @@ import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
 import { requireSocio } from '../middleware/auth.js';
 import { EXPENSE_CATEGORIES, APPROVAL_THRESHOLD } from '../constants.js';
+import { getSignedReceiptUrl } from '../lib/uploads.js';
 
 const router = Router();
 
@@ -65,15 +66,20 @@ async function attachDetails(expenses) {
     (eventsByExpense[ev.expense_id] ||= []).push({ ...ev, actor_name: nameOf[ev.actor] || null });
   }
 
-  return expenses.map((e) => {
-    const evs = eventsByExpense[e.id] || [];
-    return {
-      ...e,
-      registered_by_name: nameOf[e.registered_by] || null,
-      approvals: evs.filter((ev) => ev.action === 'aprobado').length,
-      events: evs,
-    };
-  });
+  return Promise.all(
+    expenses.map(async (e) => {
+      const evs = eventsByExpense[e.id] || [];
+      return {
+        ...e,
+        // Referencia interna de Storage -> link firmado fresco (el bucket es
+        // privado); un link externo o texto pegado a mano queda tal cual.
+        receipt_url: await getSignedReceiptUrl(e.receipt_url),
+        registered_by_name: nameOf[e.registered_by] || null,
+        approvals: evs.filter((ev) => ev.action === 'aprobado').length,
+        events: evs,
+      };
+    })
+  );
 }
 
 /** Carga un gasto por id, ya enriquecido (o null si no existe). */
