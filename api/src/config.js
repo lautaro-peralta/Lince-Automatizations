@@ -24,9 +24,10 @@ export const config = {
   supabaseUrl: required('SUPABASE_URL'),
   supabaseServiceKey: required('SUPABASE_SERVICE_ROLE_KEY'),
 
-  // Subida de comprobantes (Startup OS). provider: 'uploadthing' | 'supabase'.
+  // Subida de comprobantes (Startup OS). provider: 'supabase' (activo) |
+  // 'uploadthing' (no implementado todavía, ver api/src/lib/uploads.js).
   uploads: {
-    provider: process.env.UPLOADS_PROVIDER || 'uploadthing',
+    provider: process.env.UPLOADS_PROVIDER || 'supabase',
     uploadthingToken: process.env.UPLOADTHING_TOKEN || '',
     supabaseBucket: process.env.SUPABASE_RECEIPTS_BUCKET || 'receipts',
   },

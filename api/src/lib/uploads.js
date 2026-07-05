@@ -1,40 +1,16 @@
 /**
- * Subida de comprobantes — abstracción con dos proveedores intercambiables.
+ * Subida de comprobantes — abstracción con proveedor intercambiable.
  *
- *   UPLOADS_PROVIDER=uploadthing  (por defecto, activo hoy)
- *   UPLOADS_PROVIDER=supabase     (Supabase Storage; tier gratuito de 1 GB)
+ *   UPLOADS_PROVIDER=supabase     (Supabase Storage; activo. Tier gratuito de 1 GB)
+ *   UPLOADS_PROVIDER=uploadthing  (todavía NO implementado; ver más abajo)
  *
- * Ambos exponen el mismo contrato `uploadReceipt({ buffer, filename, mimetype })`
- * -> `{ url, key, provider }`, así cambiar de uno a otro es solo una variable de
- * entorno. El archivo llega desde la API (Express + multer), nunca del navegador
- * directo, y la URL resultante se guarda en `expenses.receipt_url`.
+ * El contrato es `uploadReceipt({ buffer, filename, mimetype })` ->
+ * `{ url, key, provider }`. El archivo llega desde la API (Express + multer),
+ * nunca del navegador directo, y la URL resultante se guarda en
+ * `expenses.receipt_url`.
  */
-import { UTApi, UTFile } from 'uploadthing/server';
 import { config } from '../config.js';
 import { supabase } from '../db/supabase.js';
-
-let _utapi = null;
-function utapi() {
-  if (!config.uploads.uploadthingToken) {
-    throw Object.assign(new Error('Falta UPLOADTHING_TOKEN en el servidor.'), { status: 503 });
-  }
-  if (!_utapi) _utapi = new UTApi({ token: config.uploads.uploadthingToken });
-  return _utapi;
-}
-
-async function toUploadthing({ buffer, filename, mimetype }) {
-  const file = new UTFile([buffer], filename, { type: mimetype });
-  const out = await utapi().uploadFiles(file);
-  const r = Array.isArray(out) ? out[0] : out;
-  if (!r || r.error) {
-    throw Object.assign(new Error('Falló la subida a UploadThing.'), {
-      status: 502,
-      cause: r && r.error,
-    });
-  }
-  // v7 usa `ufsUrl`; `url` sigue disponible por compatibilidad.
-  return { url: r.data.ufsUrl || r.data.url, key: r.data.key, provider: 'uploadthing' };
-}
 
 async function toSupabase({ buffer, filename, mimetype }) {
   const bucket = config.uploads.supabaseBucket;
@@ -50,9 +26,26 @@ async function toSupabase({ buffer, filename, mimetype }) {
   return { url: data.publicUrl, key: path, provider: 'supabase' };
 }
 
+/**
+ * UploadThing — NO IMPLEMENTADO todavía. Queda solo como referencia de cómo
+ * se integraría si en algún momento se vuelve a usar (no está instalado el
+ * paquete `uploadthing`):
+ *
+ *   import { UTApi, UTFile } from 'uploadthing/server';
+ *   const utapi = new UTApi({ token: config.uploads.uploadthingToken });
+ *   const file = new UTFile([buffer], filename, { type: mimetype });
+ *   const { data, error } = await utapi.uploadFiles(file);
+ *   if (error) throw error;
+ *   return { url: data.ufsUrl, key: data.key, provider: 'uploadthing' };
+ */
+async function toUploadthing() {
+  throw Object.assign(
+    new Error('UploadThing no está implementado. Usá UPLOADS_PROVIDER=supabase.'),
+    { status: 501 }
+  );
+}
+
 /** Sube un comprobante con el proveedor configurado y devuelve su URL. */
 export async function uploadReceipt(fileInput) {
-  return config.uploads.provider === 'supabase'
-    ? toSupabase(fileInput)
-    : toUploadthing(fileInput);
+  return config.uploads.provider === 'uploadthing' ? toUploadthing(fileInput) : toSupabase(fileInput);
 }
