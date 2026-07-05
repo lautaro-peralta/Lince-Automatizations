@@ -131,6 +131,12 @@
 		padding: 0;
 	}
 
+	/* El atributo [hidden] debe ganar aunque una clase declare otro display
+	   (p. ej. .gasto-empty { display:flex }). */
+	[hidden] {
+		display: none !important;
+	}
+
 	body {
 		background: var(--color-bg);
 		color: var(--color-ink);
@@ -943,8 +949,10 @@
 	}
 
 	.span-12 { grid-column: span 12; }
+	.span-8 { grid-column: span 8; }
 	.span-7 { grid-column: span 7; }
 	.span-5 { grid-column: span 5; }
+	.span-4 { grid-column: span 4; }
 
 	/* ---- Widget financiero ---- */
 	.fin-body {
@@ -1474,6 +1482,669 @@
 	.toast.t-danger .icon { color: var(--color-danger); }
 	.toast.t-accent .icon { color: var(--color-rust); }
 
+	/* ==========================================================================
+	   MÓDULOS: ANUNCIOS + GASTOS
+	   ========================================================================== */
+
+	/* KPI row reutilizable (usa .tile del dashboard). */
+	.kpi-row {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 16px;
+		margin-bottom: 18px;
+	}
+
+	.section-grid {
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 18px;
+	}
+
+	/* ---- Gráficos (SVG, specs de dataviz) ---- */
+	.chart-wrap {
+		padding: 14px 18px 18px;
+	}
+
+	.chart-wrap svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+
+	.ch-grid {
+		stroke: var(--color-line);
+		stroke-width: 1;
+	}
+
+	.ch-baseline {
+		stroke: var(--color-line-strong);
+		stroke-width: 1;
+	}
+
+	.ch-cat {
+		fill: var(--color-ink);
+		font-size: 12.5px;
+		font-weight: 600;
+		font-family: var(--font-sans);
+	}
+
+	.ch-tick {
+		fill: var(--color-sage);
+		font-size: 11px;
+		font-family: var(--font-mono);
+	}
+
+	.ch-val {
+		fill: var(--color-ink);
+		font-size: 12px;
+		font-weight: 700;
+		font-family: var(--font-sans);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.ch-bar {
+		fill: var(--color-rust);
+	}
+
+	.ch-area {
+		fill: var(--color-rust);
+		opacity: 0.13;
+	}
+
+	.ch-line-a {
+		stroke: var(--color-rust);
+		stroke-width: 2;
+		fill: none;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+	}
+
+	.ch-line-b {
+		stroke: var(--color-moss);
+		stroke-width: 2;
+		fill: none;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+	}
+
+	.ch-dot-a {
+		fill: var(--color-rust);
+		stroke: var(--color-surface);
+		stroke-width: 2;
+	}
+
+	.ch-dot-b {
+		fill: var(--color-moss);
+		stroke: var(--color-surface);
+		stroke-width: 2;
+	}
+
+	.chart-legend {
+		display: flex;
+		gap: 18px;
+		flex-wrap: wrap;
+		padding: 0 18px 4px;
+		font-size: 12.5px;
+		color: var(--color-sage);
+	}
+
+	.chart-legend span {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+	}
+
+	.chart-legend i {
+		width: 11px;
+		height: 3px;
+		border-radius: 2px;
+	}
+
+	.chart-legend i.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 999px;
+	}
+
+	.lg-a { background: var(--color-rust); }
+	.lg-b { background: var(--color-moss); }
+
+	/* Micro-barra dentro de la tabla de canales. */
+	.cbar {
+		height: 6px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--color-rust) 12%, transparent);
+		overflow: hidden;
+		min-width: 60px;
+	}
+
+	.cbar i {
+		display: block;
+		height: 100%;
+		border-radius: 999px;
+		background: var(--color-rust);
+	}
+
+	.roas-tag {
+		font-variant-numeric: tabular-nums;
+		font-weight: 700;
+	}
+
+	/* ---- GASTOS: panel de reglas de control ---- */
+	.rules {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px 22px;
+		padding: 16px 18px 18px;
+	}
+
+	.rule {
+		display: flex;
+		gap: 12px;
+	}
+
+	.rule .r-ico {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 34px;
+		height: 34px;
+		border-radius: 9px;
+		background: var(--color-rust-soft);
+		color: var(--color-rust-deep);
+	}
+
+	:root[data-theme='dark'] .rule .r-ico {
+		color: var(--color-rust);
+	}
+
+	.rule .r-ico .icon {
+		width: 17px;
+		height: 17px;
+	}
+
+	.rule strong {
+		display: block;
+		font-size: 13.5px;
+		margin-bottom: 1px;
+	}
+
+	.rule p {
+		margin: 0;
+		font-size: 12.5px;
+		color: var(--color-sage);
+		line-height: 1.5;
+	}
+
+	.security-note {
+		display: flex;
+		align-items: flex-start;
+		gap: 9px;
+		margin: 0 18px 16px;
+		padding: 11px 13px;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-md);
+		background: var(--color-bg);
+		font-size: 12.5px;
+		color: var(--color-sage);
+		line-height: 1.5;
+	}
+
+	.security-note .icon {
+		width: 16px;
+		height: 16px;
+		flex: none;
+		margin-top: 1px;
+		color: var(--color-moss);
+	}
+
+	/* ---- Barra de acción: "actuando como" + registrar ---- */
+	.acting-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+		flex-wrap: wrap;
+		margin-bottom: 18px;
+	}
+
+	.acting {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 6px 8px 6px 6px;
+		border: 1px solid var(--color-line);
+		border-radius: 999px;
+		background: var(--color-surface);
+	}
+
+	.acting .lbl {
+		font-size: 12px;
+		color: var(--color-sage);
+		padding-left: 6px;
+	}
+
+	.acting select {
+		font: inherit;
+		font-size: 13.5px;
+		font-weight: 600;
+		color: var(--color-ink);
+		background: transparent;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		padding-right: 4px;
+	}
+
+	.acting select option {
+		color: var(--color-ink);
+		background: var(--color-surface);
+	}
+
+	/* ---- Avatares de socios ---- */
+	.sav {
+		display: inline-grid;
+		place-items: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 999px;
+		font-size: 10.5px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		flex: none;
+		color: var(--color-cream);
+	}
+
+	:root[data-theme='dark'] .sav {
+		color: var(--color-night);
+	}
+
+	.sav.sm {
+		width: 22px;
+		height: 22px;
+		font-size: 9.5px;
+	}
+
+	.av-lau { background: var(--color-moss); }
+	.av-sof { background: var(--color-rust); }
+	.av-bru { background: var(--color-ink); color: var(--color-bg); }
+	:root[data-theme='dark'] .av-bru { color: var(--color-bg); }
+
+	/* ---- Formulario de registro ---- */
+	.gasto-form {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 14px 16px;
+		padding: 16px 18px 18px;
+	}
+
+	.gasto-form .field {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.gasto-form .field.wide {
+		grid-column: span 2;
+	}
+
+	.gasto-form label {
+		font-size: 12.5px;
+		font-weight: 600;
+		color: var(--color-moss);
+	}
+
+	.gasto-form input,
+	.gasto-form select {
+		font: inherit;
+		font-size: 14px;
+		color: var(--color-ink);
+		background: var(--color-bg);
+		border: 1px solid var(--color-line-strong);
+		border-radius: 8px;
+		padding: 8px 11px;
+		outline: none;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	}
+
+	.gasto-form input:focus,
+	.gasto-form select:focus {
+		border-color: var(--color-rust);
+		box-shadow: var(--shadow-glow);
+	}
+
+	.gasto-form .file-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.gasto-form .file-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		padding: 8px 12px;
+		border: 1px dashed var(--color-line-strong);
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--color-moss);
+		cursor: pointer;
+		white-space: nowrap;
+	}
+
+	.gasto-form .file-btn:hover {
+		border-color: var(--color-rust);
+		color: var(--color-rust-deep);
+	}
+
+	.gasto-form .file-name {
+		font-size: 12.5px;
+		color: var(--color-sage);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.gasto-form .actions {
+		grid-column: span 2;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		justify-content: flex-end;
+	}
+
+	.gasto-form .rule-hint {
+		margin-right: auto;
+		font-size: 12px;
+		color: var(--color-sage);
+	}
+
+	.gasto-form .rule-hint strong {
+		color: var(--color-ink);
+	}
+
+	.form-collapse {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.3s var(--ease-out-expo);
+	}
+
+	.form-collapse.open {
+		grid-template-rows: 1fr;
+	}
+
+	.form-collapse > div {
+		overflow: hidden;
+	}
+
+	/* ---- Lista de gastos ---- */
+	.gasto-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.gasto-item {
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-card);
+		overflow: hidden;
+	}
+
+	.gasto-item.is-aprobado {
+		border-color: color-mix(in srgb, var(--color-success) 30%, var(--color-line));
+	}
+
+	.gasto-item.is-rechazado {
+		opacity: 0.72;
+	}
+
+	.gasto-top {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 6px 14px;
+		padding: 14px 16px 12px;
+	}
+
+	.gasto-title {
+		display: flex;
+		align-items: center;
+		gap: 9px;
+		font-size: 15px;
+		font-weight: 600;
+		min-width: 0;
+	}
+
+	.gasto-title .g-cat {
+		flex: none;
+	}
+
+	.gasto-amount {
+		font-size: 17px;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+		text-align: right;
+	}
+
+	.gasto-sub {
+		display: flex;
+		align-items: center;
+		gap: 8px 14px;
+		flex-wrap: wrap;
+		font-size: 12.5px;
+		color: var(--color-sage);
+		grid-column: 1 / -1;
+	}
+
+	.gasto-sub .by {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--color-ink);
+		font-weight: 500;
+	}
+
+	.gasto-sub .rcpt {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+	}
+
+	.gasto-sub .rcpt .icon {
+		width: 13px;
+		height: 13px;
+	}
+
+	.gasto-sub .rcpt.none {
+		color: var(--color-danger);
+	}
+
+	.gasto-foot {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		padding: 11px 16px;
+		border-top: 1px solid var(--color-line);
+		background: var(--color-bg);
+	}
+
+	/* Progreso de aprobaciones: puntos + texto */
+	.appr-progress {
+		display: flex;
+		align-items: center;
+		gap: 9px;
+		font-size: 12.5px;
+		color: var(--color-sage);
+	}
+
+	.appr-dots {
+		display: inline-flex;
+		gap: 4px;
+	}
+
+	.appr-dots i {
+		width: 9px;
+		height: 9px;
+		border-radius: 999px;
+		border: 1.5px solid var(--color-line-strong);
+	}
+
+	.appr-dots i.on {
+		background: var(--color-success);
+		border-color: var(--color-success);
+	}
+
+	.appr-who {
+		display: inline-flex;
+		gap: 4px;
+		margin-left: 2px;
+	}
+
+	.gasto-actions {
+		display: flex;
+		gap: 7px;
+		flex-wrap: wrap;
+	}
+
+	.gasto-actions .btn[disabled] {
+		cursor: not-allowed;
+	}
+
+	.link-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 12.5px;
+		font-weight: 600;
+		color: var(--color-moss);
+		padding: 5px 4px;
+	}
+
+	.link-btn:hover {
+		color: var(--color-rust-deep);
+	}
+
+	:root[data-theme='dark'] .link-btn:hover {
+		color: var(--color-rust);
+	}
+
+	.link-btn .icon {
+		width: 14px;
+		height: 14px;
+	}
+
+	/* ---- Línea de auditoría ---- */
+	.audit {
+		display: none;
+		padding: 4px 16px 14px 18px;
+		border-top: 1px solid var(--color-line);
+		background: var(--color-bg);
+	}
+
+	.audit.show {
+		display: block;
+	}
+
+	.audit-title {
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		color: var(--color-sage);
+		margin: 10px 0 12px;
+	}
+
+	.audit ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+
+	.audit li {
+		position: relative;
+		display: flex;
+		gap: 11px;
+		align-items: flex-start;
+	}
+
+	.audit li:not(:last-child)::before {
+		content: '';
+		position: absolute;
+		left: 12px;
+		top: 26px;
+		bottom: -14px;
+		width: 1.5px;
+		background: var(--color-line);
+	}
+
+	.audit .a-ico {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 25px;
+		height: 25px;
+		border-radius: 999px;
+		background: var(--color-surface-2);
+		color: var(--color-moss);
+		z-index: 1;
+	}
+
+	.audit .a-ico.ok { color: var(--color-success); }
+	.audit .a-ico.no { color: var(--color-danger); }
+	.audit .a-ico .icon {
+		width: 13px;
+		height: 13px;
+	}
+
+	.audit .a-body {
+		font-size: 13px;
+		padding-top: 3px;
+	}
+
+	.audit .a-body strong {
+		font-weight: 600;
+	}
+
+	.audit .a-body time {
+		display: block;
+		margin-top: 1px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--color-sage);
+	}
+
+	.audit .a-reason {
+		margin-top: 4px;
+		font-size: 12.5px;
+		color: var(--color-danger);
+	}
+
+	.gasto-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		padding: 40px 20px;
+		text-align: center;
+		color: var(--color-sage);
+		font-size: 13.5px;
+	}
+
+	.gasto-empty .icon {
+		width: 28px;
+		height: 28px;
+		color: var(--color-moss);
+	}
+
 	/* ---- Gate de validación de acceso ---- */
 	.app[hidden],
 	.gate[hidden] {
@@ -1637,8 +2308,14 @@
 		}
 
 		.span-7,
-		.span-5 {
+		.span-5,
+		.span-8,
+		.span-4 {
 			grid-column: span 12;
+		}
+
+		.kpi-row {
+			grid-template-columns: repeat(2, 1fr);
 		}
 	}
 
@@ -1704,6 +2381,53 @@
 			grid-column: 2;
 			justify-self: start;
 		}
+
+		.kpi-row {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 12px;
+		}
+
+		.rules {
+			grid-template-columns: 1fr;
+		}
+
+		.gasto-form {
+			grid-template-columns: 1fr;
+		}
+
+		.gasto-form .field.wide,
+		.gasto-form .actions {
+			grid-column: span 1;
+		}
+
+		.gasto-form .actions {
+			flex-wrap: wrap;
+		}
+
+		.gasto-form .rule-hint {
+			flex-basis: 100%;
+			margin-right: 0;
+		}
+
+		.gasto-top {
+			grid-template-columns: 1fr;
+		}
+
+		.gasto-amount {
+			text-align: left;
+		}
+
+		.gasto-foot {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.kpi-row {
+			grid-template-columns: 1fr;
+		}
+	}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -1752,6 +2476,15 @@
 		<symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
 		<symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M14 8H8M16 12H8M13 16H8"/></symbol>
 		<symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+		<symbol id="i-megaphone" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+		<symbol id="i-bars" viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="4" width="3" height="14" rx="1"/></symbol>
+		<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+		<symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+		<symbol id="i-paperclip" viewBox="0 0 24 24"><path d="M13.2 5.7 6 12.9a3 3 0 0 0 4.2 4.2l7.6-7.6a5 5 0 0 0-7-7L3.1 10a7 7 0 0 0 9.9 9.9l6.4-6.4"/></symbol>
+		<symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+		<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+		<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+		<symbol id="i-split" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
 	</defs>
 </svg>
 
@@ -1816,6 +2549,20 @@
 						<a class="nav-item" href="#/cloud" data-route="cloud"><svg class="icon"><use href="#i-cloud"/></svg>Presupuesto cloud</a>
 						<a class="nav-item" href="#/saas" data-route="saas"><svg class="icon"><use href="#i-blocks"/></svg>Suscripciones SaaS</a>
 						<a class="nav-item" href="#/facturacion" data-route="facturacion"><svg class="icon"><use href="#i-card"/></svg>Facturación</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="nav-group">
+				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-mkt">
+					Marketing &amp; Ads
+					<svg class="icon"><use href="#i-chev"/></svg>
+				</button>
+				<div class="nav-group-list" id="grp-mkt">
+					<div>
+						<a class="nav-item" href="#/anuncios" data-route="anuncios"><svg class="icon"><use href="#i-megaphone"/></svg>Rendimiento de anuncios</a>
+						<a class="nav-item" href="#/campanas" data-route="campanas"><svg class="icon"><use href="#i-bars"/></svg>Campañas</a>
+						<a class="nav-item" href="#/canales" data-route="canales"><svg class="icon"><use href="#i-split"/></svg>Canales y atribución</a>
 					</div>
 				</div>
 			</div>
@@ -2215,6 +2962,302 @@
 				</div>
 			</section>
 
+			<!-- ============ VISTA: RENDIMIENTO DE ANUNCIOS ============ -->
+			<section class="view" id="view-ads">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Marketing &amp; Ads · últimos 30 días</span>
+						<h1>Rendimiento de anuncios</h1>
+					</div>
+					<div class="meta">datos simulados<br />1 – 30 jun 2026</div>
+				</div>
+
+				<div class="kpi-row">
+					<div class="tile">
+						<span class="label">Inversión total</span>
+						<div class="value">US$ 18.400</div>
+						<span class="delta muted">+12% vs mayo</span>
+					</div>
+					<div class="tile">
+						<span class="label">ROAS combinado</span>
+						<div class="value">3,6×</div>
+						<span class="sema sema-success" style="margin-top:4px">
+							<svg class="icon"><use href="#i-check-c"/></svg>
+							Sobre objetivo
+						</span>
+					</div>
+					<div class="tile">
+						<span class="label">CAC combinado</span>
+						<div class="value">US$ 214</div>
+						<span class="delta good">
+							<svg class="icon"><use href="#i-down"/></svg>
+							−8% vs mayo
+						</span>
+					</div>
+					<div class="tile">
+						<span class="label">Clientes nuevos</span>
+						<div class="value">86</div>
+						<span class="delta good">
+							<svg class="icon"><use href="#i-up"/></svg>
+							+18% vs mayo
+						</span>
+					</div>
+				</div>
+
+				<div class="section-grid">
+					<article class="card span-8">
+						<div class="card-head">
+							<h2>
+								<svg class="icon"><use href="#i-up"/></svg>
+								Inversión y retorno por semana
+							</h2>
+							<span class="badge badge-neutral">8 semanas · USD</span>
+						</div>
+						<div class="chart-legend">
+							<span><i class="lg-a"></i>Inversión</span>
+							<span><i class="dot lg-b"></i>Retorno atribuido</span>
+						</div>
+						<div class="chart-wrap" id="chart-trend"></div>
+					</article>
+
+					<article class="card span-4">
+						<div class="card-head">
+							<h2>
+								<svg class="icon"><use href="#i-zap"/></svg>
+								Lectura rápida
+							</h2>
+						</div>
+						<div style="padding:14px 18px 18px; display:flex; flex-direction:column; gap:14px">
+							<div class="rule">
+								<span class="r-ico" style="background:color-mix(in srgb, var(--color-success) 14%, transparent); color:var(--color-moss-deep)"><svg class="icon"><use href="#i-up"/></svg></span>
+								<div><strong>Escalar: Meta Ads</strong><p>ROAS 4,3× y el CAC más bajo (US$ 177). Tiene margen para más presupuesto.</p></div>
+							</div>
+							<div class="rule">
+								<span class="r-ico" style="background:color-mix(in srgb, var(--color-danger) 12%, transparent); color:var(--color-danger)"><svg class="icon"><use href="#i-down"/></svg></span>
+								<div><strong>Pausar: TikTok Ads</strong><p>ROAS 1,4×, por debajo del punto de equilibrio. Quema presupuesto sin retorno.</p></div>
+							</div>
+							<div class="rule">
+								<span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span>
+								<div><strong>Objetivo del trimestre</strong><p>ROAS ≥ 3,5×. Vas en <strong style="color:var(--color-ink)">3,6×</strong> combinado — apenas por encima.</p></div>
+							</div>
+						</div>
+					</article>
+
+					<article class="card span-12">
+						<div class="card-head">
+							<h2>
+								<svg class="icon"><use href="#i-bars"/></svg>
+								Desglose por canal
+							</h2>
+							<span class="badge badge-neutral">4 canales</span>
+						</div>
+						<div class="table-scroll">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Canal</th>
+										<th scope="col">Inversión</th>
+										<th scope="col">Clientes</th>
+										<th scope="col">CAC</th>
+										<th scope="col">ROAS</th>
+										<th scope="col">Acción sugerida</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>Meta Ads</strong></td>
+										<td>
+											<div style="display:flex; align-items:center; gap:9px">
+												<span class="cbar"><i style="width:100%"></i></span>
+												<span class="num" style="font-weight:600">US$ 7.800</span>
+											</div>
+										</td>
+										<td class="num">44</td>
+										<td class="num">US$ 177</td>
+										<td class="num roas-tag">4,3×</td>
+										<td><span class="badge badge-success"><svg class="icon"><use href="#i-up"/></svg>Escalar</span></td>
+									</tr>
+									<tr>
+										<td><strong>Google Ads</strong></td>
+										<td>
+											<div style="display:flex; align-items:center; gap:9px">
+												<span class="cbar"><i style="width:79%"></i></span>
+												<span class="num" style="font-weight:600">US$ 6.200</span>
+											</div>
+										</td>
+										<td class="num">34</td>
+										<td class="num">US$ 182</td>
+										<td class="num roas-tag">3,9×</td>
+										<td><span class="badge badge-success"><svg class="icon"><use href="#i-check-c"/></svg>Mantener</span></td>
+									</tr>
+									<tr>
+										<td><strong>LinkedIn Ads</strong></td>
+										<td>
+											<div style="display:flex; align-items:center; gap:9px">
+												<span class="cbar"><i style="width:37%"></i></span>
+												<span class="num" style="font-weight:600">US$ 2.900</span>
+											</div>
+										</td>
+										<td class="num">6</td>
+										<td class="num">US$ 483</td>
+										<td class="num roas-tag">2,1×</td>
+										<td><span class="badge badge-warning"><svg class="icon"><use href="#i-alert"/></svg>Vigilar</span></td>
+									</tr>
+									<tr>
+										<td><strong>TikTok Ads</strong></td>
+										<td>
+											<div style="display:flex; align-items:center; gap:9px">
+												<span class="cbar"><i style="width:19%"></i></span>
+												<span class="num" style="font-weight:600">US$ 1.500</span>
+											</div>
+										</td>
+										<td class="num">2</td>
+										<td class="num">US$ 750</td>
+										<td class="num roas-tag">1,4×</td>
+										<td><span class="badge badge-danger"><svg class="icon"><use href="#i-x"/></svg>Pausar</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</article>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: GASTOS Y APROBACIONES (control entre socios) ============ -->
+			<section class="view" id="view-gastos">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Finanzas &amp; Cloud · control entre socios</span>
+						<h1>Gastos y aprobaciones</h1>
+					</div>
+					<div class="meta">datos simulados<br />julio 2026</div>
+				</div>
+
+				<!-- Reglas de control anti-fraude -->
+				<article class="card" style="margin-bottom:18px">
+					<div class="card-head">
+						<h2>
+							<svg class="icon"><use href="#i-shield"/></svg>
+							Reglas de control
+						</h2>
+						<span class="badge badge-success"><svg class="icon"><use href="#i-lock"/></svg>anti-fraude</span>
+					</div>
+					<div class="rules">
+						<div class="rule">
+							<span class="r-ico"><svg class="icon"><use href="#i-split"/></svg></span>
+							<div>
+								<strong>Segregación de funciones</strong>
+								<p>Quien registra un gasto no puede aprobarlo. Siempre lo valida otro socio.</p>
+							</div>
+						</div>
+						<div class="rule">
+							<span class="r-ico"><svg class="icon"><use href="#i-check-c"/></svg></span>
+							<div>
+								<strong>Doble control por monto</strong>
+								<p>Menos de US$ 1.000 → 1 aprobación de otro socio. US$ 1.000 o más → 2 socios distintos.</p>
+							</div>
+						</div>
+						<div class="rule">
+							<span class="r-ico"><svg class="icon"><use href="#i-history"/></svg></span>
+							<div>
+								<strong>Registro auditable</strong>
+								<p>Cada acción queda firmada con autor y fecha. No se edita ni se borra: solo se agrega.</p>
+							</div>
+						</div>
+						<div class="rule">
+							<span class="r-ico"><svg class="icon"><use href="#i-eye"/></svg></span>
+							<div>
+								<strong>Transparencia total</strong>
+								<p>Los tres socios ven todos los movimientos y el historial completo de cada uno.</p>
+							</div>
+						</div>
+					</div>
+					<p class="security-note">
+						<svg class="icon"><use href="#i-alert"/></svg>
+						<span><strong>Prototipo:</strong> acá las reglas se aplican en el navegador (demo). En producción se aplican en el servidor con Supabase Auth + un registro append-only con RLS, para que nadie pueda editar el historial ni aprobar su propio gasto saltándose el control.</span>
+					</p>
+				</article>
+
+				<!-- Barra de acción: quién sos + registrar -->
+				<div class="acting-bar">
+					<label class="acting">
+						<span class="lbl">Actuando como</span>
+						<span class="sav sm" id="acting-av">LP</span>
+						<select id="acting-select" aria-label="Socio activo"></select>
+					</label>
+					<button class="btn btn-accent" id="registrar-btn">
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Registrar compra
+					</button>
+				</div>
+
+				<!-- Formulario de registro (colapsable) -->
+				<div class="form-collapse" id="gasto-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-receipt"/></svg>Registrar una compra o gasto</h2>
+							</div>
+							<form class="gasto-form" id="gasto-form" novalidate>
+								<div class="field wide">
+									<label for="f-concepto">Concepto</label>
+									<input id="f-concepto" type="text" placeholder="Ej: Campaña Meta Ads — agosto" required />
+								</div>
+								<div class="field">
+									<label for="f-monto">Monto (US$)</label>
+									<input id="f-monto" type="number" min="1" step="1" placeholder="0" required />
+								</div>
+								<div class="field">
+									<label for="f-categoria">Categoría</label>
+									<select id="f-categoria">
+										<option>Publicidad</option>
+										<option>Software/SaaS</option>
+										<option>Hardware</option>
+										<option>Viáticos</option>
+										<option>Servicios profesionales</option>
+										<option>Otros</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="f-proveedor">Proveedor</label>
+									<input id="f-proveedor" type="text" placeholder="Ej: Meta Platforms" />
+								</div>
+								<div class="field">
+									<label>Comprobante</label>
+									<div class="file-row">
+										<label class="file-btn" for="f-receipt">
+											<svg class="icon"><use href="#i-paperclip"/></svg>
+											Adjuntar
+										</label>
+										<input id="f-receipt" type="file" hidden />
+										<span class="file-name" id="f-receipt-name">Sin archivo</span>
+									</div>
+								</div>
+								<div class="actions">
+									<span class="rule-hint" id="form-rule-hint">Requiere <strong>1 aprobación</strong> de otro socio.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="gasto-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm">
+										<svg class="icon"><use href="#i-plus"/></svg>
+										Registrar gasto
+									</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<!-- KPIs (render por JS) -->
+				<div class="kpi-row" id="gasto-kpis"></div>
+
+				<!-- Lista de gastos (render por JS) -->
+				<div class="gasto-list" id="gasto-list"></div>
+				<div class="gasto-empty" id="gasto-empty" hidden>
+					<svg class="icon"><use href="#i-check-c"/></svg>
+					<strong style="color:var(--color-ink)">Sin gastos registrados</strong>
+					Registrá la primera compra para arrancar el circuito de aprobación.
+				</div>
+			</section>
+
 			<!-- ============ VISTA: PLACEHOLDER (módulos) ============ -->
 			<section class="view" id="view-module">
 				<div class="page-head">
@@ -2406,10 +3449,412 @@
 	hamburger.addEventListener('click', () => setSidebar(!sidebar.classList.contains('open')));
 	backdrop.addEventListener('click', () => setSidebar(false));
 
+	/* =======================================================================
+	   MÓDULO: Rendimiento de anuncios — gráfico de tendencia (SVG, dataviz)
+	   ======================================================================= */
+	let _adsInit = false;
+
+	function initAds() {
+		if (_adsInit) return;
+		_adsInit = true;
+		renderTrend($('#chart-trend'));
+	}
+
+	function renderTrend(host) {
+		if (!host) return;
+		const inv = [1900, 2100, 2000, 2300, 2200, 2500, 2600, 2800];
+		const rev = [5800, 6100, 6900, 7400, 8200, 9100, 9600, 12800];
+		const n = inv.length;
+		const W = 760,
+			H = 232;
+		const pad = { l: 46, r: 20, t: 14, b: 30 };
+		const iw = W - pad.l - pad.r;
+		const ih = H - pad.t - pad.b;
+		const max = 14000;
+		const x = (i) => pad.l + (iw * i) / (n - 1);
+		const y = (v) => pad.t + ih - (ih * v) / max;
+
+		let grid = '';
+		for (let g = 0; g <= 4; g++) {
+			const v = (max / 4) * g;
+			const gy = y(v);
+			grid += `<line class="ch-grid" x1="${pad.l}" y1="${gy}" x2="${W - pad.r}" y2="${gy}"/>`;
+			grid += `<text class="ch-tick" x="${pad.l - 8}" y="${gy + 4}" text-anchor="end">${v ? v / 1000 + 'K' : 0}</text>`;
+		}
+
+		let xl = '';
+		for (let i = 0; i < n; i++) {
+			xl += `<text class="ch-tick" x="${x(i)}" y="${H - 9}" text-anchor="middle">S${i + 1}</text>`;
+		}
+
+		const line = (arr) =>
+			arr.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+		const area = `${line(inv)} L${x(n - 1).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
+		const dot = (arr, cls) => `<circle class="${cls}" cx="${x(n - 1).toFixed(1)}" cy="${y(arr[n - 1]).toFixed(1)}" r="4.5"/>`;
+
+		host.innerHTML =
+			`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inversión y retorno atribuido por semana durante 8 semanas: la inversión sube de 1.900 a 2.800 dólares y el retorno de 5.800 a 12.800 dólares.">` +
+			grid +
+			`<path class="ch-area" d="${area}"/>` +
+			`<path class="ch-line-b" d="${line(rev)}"/>` +
+			`<path class="ch-line-a" d="${line(inv)}"/>` +
+			dot(rev, 'ch-dot-b') +
+			dot(inv, 'ch-dot-a') +
+			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(inv[n - 1]) + 19).toFixed(1)}" text-anchor="end">US$ 2,8K</text>` +
+			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(rev[n - 1]) - 10).toFixed(1)}" text-anchor="end">US$ 12,8K</text>` +
+			xl +
+			`</svg>`;
+	}
+
+	/* =======================================================================
+	   MÓDULO: Gastos y aprobaciones — control multi-socio (demo anti-fraude)
+	   ======================================================================= */
+	const SOCIOS = [
+		{ id: 'lau', name: 'Lautaro Peralta', first: 'Lautaro', initials: 'LP', role: 'CEO', cls: 'av-lau' },
+		{ id: 'sof', name: 'Sofía Márquez', first: 'Sofía', initials: 'SM', role: 'COO', cls: 'av-sof' },
+		{ id: 'bru', name: 'Bruno Aguirre', first: 'Bruno', initials: 'BA', role: 'CTO', cls: 'av-bru' }
+	];
+	const socioById = (id) => SOCIOS.find((s) => s.id === id) || SOCIOS[0];
+	const THRESHOLD = 1000;
+	const requiredFor = (amount) => (amount >= THRESHOLD ? 2 : 1);
+	const CAT_ICON = {
+		Publicidad: '#i-megaphone',
+		'Software/SaaS': '#i-blocks',
+		Hardware: '#i-card',
+		Viáticos: '#i-plane',
+		'Servicios profesionales': '#i-users',
+		Otros: '#i-receipt'
+	};
+	let activeSocio = 'lau';
+
+	const GASTOS_KEY = 'lince-os-gastos';
+
+	function nowLabel() {
+		const d = new Date();
+		return 'hoy ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+	}
+
+	function seedGastos() {
+		return [
+			{ id: 'g1', concepto: 'Campaña Meta Ads — julio', monto: 3200, categoria: 'Publicidad', proveedor: 'Meta Platforms', receipt: 'meta-julio.pdf', registeredBy: 'sof', when: 'hoy 08:20', required: 2, approvals: [], status: 'pendiente', audit: [{ who: 'sof', action: 'registro', ts: 'hoy 08:20' }] },
+			{ id: 'g2', concepto: 'MacBook Air M4 — nuevo dev', monto: 1450, categoria: 'Hardware', proveedor: 'Apple', receipt: 'apple-inv-3391.pdf', registeredBy: 'bru', when: 'ayer 17:04', required: 2, approvals: ['lau'], status: 'pendiente', audit: [{ who: 'bru', action: 'registro', ts: 'ayer 17:04' }, { who: 'lau', action: 'aprobo', ts: 'ayer 18:12' }] },
+			{ id: 'g3', concepto: 'Notion Team — 12 asientos', monto: 288, categoria: 'Software/SaaS', proveedor: 'Notion Labs', receipt: 'notion-jul.pdf', registeredBy: 'lau', when: 'hoy 09:41', required: 1, approvals: [], status: 'pendiente', audit: [{ who: 'lau', action: 'registro', ts: 'hoy 09:41' }] },
+			{ id: 'g4', concepto: 'Google Ads — cierre junio', monto: 2800, categoria: 'Publicidad', proveedor: 'Google', receipt: 'google-ads-jun.pdf', registeredBy: 'sof', when: '2 jul', required: 2, approvals: ['lau', 'bru'], status: 'aprobado', audit: [{ who: 'sof', action: 'registro', ts: '2 jul 10:02' }, { who: 'lau', action: 'aprobo', ts: '2 jul 11:20' }, { who: 'bru', action: 'aprobo', ts: '2 jul 14:47' }] },
+			{ id: 'g5', concepto: 'Suscripción anual sin factura', monto: 1900, categoria: 'Otros', proveedor: 'Proveedor no verificado', receipt: null, registeredBy: 'bru', when: '1 jul', required: 2, approvals: [], status: 'rechazado', rejectedBy: 'lau', rejectedReason: 'Sin comprobante y proveedor no verificado.', audit: [{ who: 'bru', action: 'registro', ts: '1 jul 09:10' }, { who: 'lau', action: 'rechazo', ts: '1 jul 09:35', reason: 'Sin comprobante y proveedor no verificado.' }] }
+		];
+	}
+
+	let gastos;
+	try {
+		const raw = localStorage.getItem(GASTOS_KEY);
+		gastos = raw ? JSON.parse(raw) : seedGastos();
+	} catch (e) {
+		gastos = seedGastos();
+	}
+
+	function saveGastos() {
+		try {
+			localStorage.setItem(GASTOS_KEY, JSON.stringify(gastos));
+		} catch (e) {}
+	}
+
+	function fmtMonto(n) {
+		return 'US$ ' + Number(n).toLocaleString('es-AR');
+	}
+
+	function canApprove(g) {
+		return (
+			g.status === 'pendiente' &&
+			g.registeredBy !== activeSocio &&
+			g.approvals.indexOf(activeSocio) === -1
+		);
+	}
+
+	function renderActing() {
+		const sel = $('#acting-select');
+		if (!sel.dataset.filled) {
+			sel.innerHTML = SOCIOS.map((s) => `<option value="${s.id}">${s.name} · ${s.role}</option>`).join('');
+			sel.dataset.filled = '1';
+		}
+		sel.value = activeSocio;
+		const s = socioById(activeSocio);
+		const av = $('#acting-av');
+		av.className = 'sav sm ' + s.cls;
+		av.textContent = s.initials;
+	}
+
+	function renderGastoKPIs() {
+		const pend = gastos.filter((g) => g.status === 'pendiente');
+		const pendMonto = pend.reduce((a, g) => a + g.monto, 0);
+		const aprob = gastos.filter((g) => g.status === 'aprobado').reduce((a, g) => a + g.monto, 0);
+		const rech = gastos.filter((g) => g.status === 'rechazado').reduce((a, g) => a + g.monto, 0);
+		const total = gastos.reduce((a, g) => a + g.monto, 0);
+		const mine = pend.filter(canApprove).length;
+		$('#gasto-kpis').innerHTML =
+			`<div class="tile"><span class="label">Pendientes de aprobación</span><div class="value">${pend.length}</div>` +
+			(mine
+				? `<span class="delta" style="color:var(--color-warning)"><svg class="icon"><use href="#i-alert"/></svg>${mine} esperan tu OK</span>`
+				: `<span class="delta muted">${fmtMonto(pendMonto)} en juego</span>`) +
+			`</div>` +
+			`<div class="tile"><span class="label">Aprobado</span><div class="value">${fmtMonto(aprob)}</div><span class="delta muted">este mes</span></div>` +
+			`<div class="tile"><span class="label">Rechazado</span><div class="value">${fmtMonto(rech)}</div><span class="delta muted">frenado a tiempo</span></div>` +
+			`<div class="tile"><span class="label">Gasto total</span><div class="value">${fmtMonto(total)}</div><span class="delta muted">${gastos.length} movimientos</span></div>`;
+	}
+
+	function gastoCard(g) {
+		const reg = socioById(g.registeredBy);
+		const catIcon = CAT_ICON[g.categoria] || '#i-receipt';
+		const statusBadge = {
+			pendiente: '<span class="badge badge-warning"><svg class="icon"><use href="#i-alert"/></svg>Pendiente</span>',
+			aprobado: '<span class="badge badge-success"><svg class="icon"><use href="#i-check-c"/></svg>Aprobado</span>',
+			rechazado: '<span class="badge badge-danger"><svg class="icon"><use href="#i-x"/></svg>Rechazado</span>'
+		}[g.status];
+
+		let dots = '';
+		for (let i = 0; i < g.required; i++) dots += `<i class="${i < g.approvals.length ? 'on' : ''}"></i>`;
+		const whoAvatars = g.approvals
+			.map((id) => {
+				const s = socioById(id);
+				return `<span class="sav sm ${s.cls}" title="${s.name}">${s.initials}</span>`;
+			})
+			.join('');
+
+		const receipt = g.receipt
+			? `<span class="rcpt"><svg class="icon"><use href="#i-paperclip"/></svg>${g.receipt}</span>`
+			: `<span class="rcpt none"><svg class="icon"><use href="#i-alert"/></svg>Sin comprobante</span>`;
+
+		let foot = '';
+		if (g.status === 'pendiente' && g._rejecting) {
+			foot =
+				`<div class="gasto-actions" style="flex:1; gap:8px; width:100%">` +
+				`<input class="reject-reason" type="text" placeholder="Motivo del rechazo (queda en el historial)" style="flex:1; min-width:150px; font:inherit; font-size:13px; padding:7px 11px; border:1px solid var(--color-line-strong); border-radius:8px; background:var(--color-bg); color:var(--color-ink)" />` +
+				`<button class="btn btn-danger btn-sm" data-reject-confirm><svg class="icon"><use href="#i-x"/></svg>Confirmar rechazo</button>` +
+				`<button class="btn btn-ghost btn-sm" data-reject-cancel>Cancelar</button>` +
+				`</div>`;
+		} else if (g.status === 'pendiente') {
+			const approvable = canApprove(g);
+			const why =
+				g.registeredBy === activeSocio
+					? 'No podés aprobar tu propio gasto (segregación de funciones)'
+					: g.approvals.indexOf(activeSocio) !== -1
+						? 'Ya aprobaste este gasto'
+						: '';
+			foot =
+				`<div class="appr-progress"><span class="appr-dots">${dots}</span><span>${g.approvals.length}/${g.required} aprobaciones</span><span class="appr-who">${whoAvatars}</span></div>` +
+				`<div class="gasto-actions">` +
+				`<button class="btn btn-success btn-sm" data-approve ${approvable ? '' : 'disabled'}${why ? ` title="${why}"` : ''}><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>` +
+				`<button class="btn btn-danger btn-sm" data-reject><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>` +
+				`<button class="link-btn" data-audit aria-expanded="false"><svg class="icon"><use href="#i-history"/></svg>Historial</button>` +
+				`</div>`;
+		} else {
+			const summary =
+				g.status === 'aprobado'
+					? `<div class="appr-progress"><span class="appr-dots">${dots}</span><span>Aprobado por ${g.approvals.map((id) => socioById(id).first).join(' y ')}</span><span class="appr-who">${whoAvatars}</span></div>`
+					: `<div class="appr-progress"><svg class="icon" style="width:15px;height:15px;color:var(--color-danger)"><use href="#i-x"/></svg><span>Rechazado por ${socioById(g.rejectedBy).first}</span></div>`;
+			foot = summary + `<div class="gasto-actions"><button class="link-btn" data-audit aria-expanded="false"><svg class="icon"><use href="#i-history"/></svg>Historial</button></div>`;
+		}
+
+		let approvedCount = 0;
+		const audit = g.audit
+			.map((e) => {
+				const s = socioById(e.who);
+				let ico = '#i-receipt',
+					cls = '',
+					txt = '';
+				if (e.action === 'registro') {
+					ico = '#i-plus';
+					txt = `<strong>${s.name}</strong> registró el gasto`;
+				} else if (e.action === 'aprobo') {
+					approvedCount++;
+					ico = '#i-check-c';
+					cls = 'ok';
+					txt = `<strong>${s.name}</strong> aprobó (${approvedCount}/${g.required})`;
+				} else if (e.action === 'rechazo') {
+					ico = '#i-x';
+					cls = 'no';
+					txt = `<strong>${s.name}</strong> rechazó el gasto`;
+				}
+				const reason = e.reason ? `<div class="a-reason">“${e.reason}”</div>` : '';
+				return `<li><span class="a-ico ${cls}"><svg class="icon"><use href="${ico}"/></svg></span><div class="a-body">${txt}<time>${e.ts}</time>${reason}</div></li>`;
+			})
+			.join('');
+
+		return (
+			`<article class="gasto-item is-${g.status}" data-id="${g.id}">` +
+			`<div class="gasto-top">` +
+			`<div class="gasto-title"><span class="badge badge-neutral g-cat"><svg class="icon"><use href="${catIcon}"/></svg>${g.categoria}</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.concepto}</span></div>` +
+			`<div class="gasto-amount">${fmtMonto(g.monto)}</div>` +
+			`<div class="gasto-sub"><span class="by"><span class="sav sm ${reg.cls}">${reg.initials}</span>${reg.first} registró · ${g.when}</span><span>·</span><span>${g.proveedor}</span><span>·</span>${receipt}<span style="margin-left:auto">${statusBadge}</span></div>` +
+			`</div>` +
+			`<div class="gasto-foot">${foot}</div>` +
+			`<div class="audit"><div class="audit-title">Historial · registro auditable</div><ol>${audit}</ol></div>` +
+			`</article>`
+		);
+	}
+
+	function renderGastoList() {
+		const list = $('#gasto-list');
+		if (!list) return;
+		$('#gasto-empty').hidden = gastos.length > 0;
+		list.innerHTML = gastos.map(gastoCard).join('');
+	}
+
+	function renderGastos() {
+		renderGastoKPIs();
+		renderGastoList();
+	}
+
+	function approveGasto(id) {
+		const g = gastos.find((x) => x.id === id);
+		if (!g || !canApprove(g)) return;
+		g.approvals.push(activeSocio);
+		g.audit.push({ who: activeSocio, action: 'aprobo', ts: nowLabel() });
+		if (g.approvals.length >= g.required) g.status = 'aprobado';
+		saveGastos();
+		renderGastos();
+		const s = socioById(activeSocio);
+		if (g.status === 'aprobado')
+			toast('success', '#i-check-c', `Gasto aprobado: "${g.concepto}" (${g.approvals.length}/${g.required}).`);
+		else
+			toast('success', '#i-check', `${s.first} aprobó (${g.approvals.length}/${g.required}). Falta otro socio.`);
+	}
+
+	function startReject(id) {
+		const g = gastos.find((x) => x.id === id);
+		if (!g || g.status !== 'pendiente') return;
+		gastos.forEach((x) => delete x._rejecting);
+		g._rejecting = true;
+		renderGastoList();
+		const inp = document.querySelector(`[data-id="${id}"] .reject-reason`);
+		if (inp) inp.focus();
+	}
+
+	function rejectGasto(id, reason) {
+		const g = gastos.find((x) => x.id === id);
+		if (!g || g.status !== 'pendiente') return;
+		delete g._rejecting;
+		g.status = 'rechazado';
+		g.rejectedBy = activeSocio;
+		g.rejectedReason = reason || 'Sin motivo especificado.';
+		g.audit.push({ who: activeSocio, action: 'rechazo', ts: nowLabel(), reason: g.rejectedReason });
+		saveGastos();
+		renderGastos();
+		toast('danger', '#i-x', `Gasto rechazado: "${g.concepto}".`);
+	}
+
+	function toggleAudit(id, btn) {
+		const card = document.querySelector(`[data-id="${id}"]`);
+		if (!card) return;
+		const a = card.querySelector('.audit');
+		const open = a.classList.toggle('show');
+		btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+	}
+
+	function onListClick(ev) {
+		const btn = ev.target.closest('button');
+		if (!btn) return;
+		const card = ev.target.closest('[data-id]');
+		if (!card) return;
+		const id = card.dataset.id;
+		if (btn.hasAttribute('data-approve')) approveGasto(id);
+		else if (btn.hasAttribute('data-reject')) startReject(id);
+		else if (btn.hasAttribute('data-reject-confirm')) {
+			const inp = card.querySelector('.reject-reason');
+			rejectGasto(id, inp ? inp.value.trim() : '');
+		} else if (btn.hasAttribute('data-reject-cancel')) {
+			const g = gastos.find((x) => x.id === id);
+			if (g) delete g._rejecting;
+			renderGastoList();
+		} else if (btn.hasAttribute('data-audit')) toggleAudit(id, btn);
+	}
+
+	function setForm(open) {
+		$('#gasto-form-wrap').classList.toggle('open', open);
+		$('#registrar-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+		if (open) setTimeout(() => $('#f-concepto').focus(), 60);
+	}
+
+	function updateRuleHint() {
+		const m = Number($('#f-monto').value) || 0;
+		$('#form-rule-hint').innerHTML =
+			m >= THRESHOLD
+				? 'Monto alto: requiere <strong>2 aprobaciones</strong> de socios distintos.'
+				: 'Requiere <strong>1 aprobación</strong> de otro socio.';
+	}
+
+	function onRegister(ev) {
+		ev.preventDefault();
+		const concepto = $('#f-concepto').value.trim();
+		const monto = Math.round(Number($('#f-monto').value) || 0);
+		if (!concepto) return $('#f-concepto').focus();
+		if (monto <= 0) return $('#f-monto').focus();
+		const rf = $('#f-receipt');
+		const g = {
+			id: 'g' + Date.now(),
+			concepto: concepto,
+			monto: monto,
+			categoria: $('#f-categoria').value,
+			proveedor: $('#f-proveedor').value.trim() || '—',
+			receipt: rf.files && rf.files[0] ? rf.files[0].name : null,
+			registeredBy: activeSocio,
+			when: nowLabel(),
+			required: requiredFor(monto),
+			approvals: [],
+			status: 'pendiente',
+			audit: [{ who: activeSocio, action: 'registro', ts: nowLabel() }]
+		};
+		gastos.unshift(g);
+		saveGastos();
+		renderGastos();
+		$('#gasto-form').reset();
+		$('#f-receipt-name').textContent = 'Sin archivo';
+		updateRuleHint();
+		setForm(false);
+		const s = socioById(activeSocio);
+		toast('accent', '#i-receipt', `${s.first} registró "${concepto}". Falta la aprobación de otro socio.`);
+	}
+
+	let _gastosInit = false;
+
+	function initGastos() {
+		if (!_gastosInit) {
+			_gastosInit = true;
+
+			// El socio activo arranca según quién inició sesión (si coincide).
+			const email = getSession();
+			if (email) {
+				const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+				const first = norm(nameFrom(email).split(' ')[0]);
+				const match = SOCIOS.find((s) => norm(s.first) === first);
+				if (match) activeSocio = match.id;
+			}
+
+			$('#acting-select').addEventListener('change', (e) => {
+				activeSocio = e.target.value;
+				renderActing();
+				renderGastos();
+			});
+			$('#registrar-btn').addEventListener('click', () =>
+				setForm(!$('#gasto-form-wrap').classList.contains('open'))
+			);
+			$('#gasto-cancel').addEventListener('click', () => setForm(false));
+			$('#f-monto').addEventListener('input', updateRuleHint);
+			$('#f-receipt').addEventListener('change', (e) => {
+				$('#f-receipt-name').textContent =
+					e.target.files && e.target.files[0] ? e.target.files[0].name : 'Sin archivo';
+			});
+			$('#gasto-form').addEventListener('submit', onRegister);
+			$('#gasto-list').addEventListener('click', onListClick);
+		}
+		renderActing();
+		renderGastos();
+	}
+
 	/* ---- Router por hash: dashboard + módulos placeholder ---- */
 	const MODULES = {
-		gastos: { cat: 'Finanzas & Cloud', name: 'Gastos y aprobaciones', icon: '#i-wallet', desc: 'Circuito completo de gastos, viáticos y licencias: políticas, límites por equipo y auditoría de cada aprobación.' },
 		cloud: { cat: 'Finanzas & Cloud', name: 'Presupuesto cloud', icon: '#i-cloud', desc: 'Consumo por proveedor y por servicio, alertas de presupuesto y recomendaciones de ahorro (rightsizing, reservas).' },
+		campanas: { cat: 'Marketing & Ads', name: 'Campañas', icon: '#i-bars', desc: 'Detalle por campaña y conjunto de anuncios: presupuesto, creatividades, CTR y coste por resultado.' },
+		canales: { cat: 'Marketing & Ads', name: 'Canales y atribución', icon: '#i-split', desc: 'Modelo de atribución entre canales y el recorrido del cliente hasta la conversión.' },
 		saas: { cat: 'Finanzas & Cloud', name: 'Suscripciones SaaS', icon: '#i-blocks', desc: 'Inventario de licencias, asientos sin uso y renovaciones próximas para cortar gasto silencioso.' },
 		facturacion: { cat: 'Finanzas & Cloud', name: 'Facturación', icon: '#i-card', desc: 'Facturas emitidas, cobranzas pendientes y conciliación automática contra el MRR.' },
 		okrs: { cat: 'Estrategia & Equipo', name: 'OKRs y metas', icon: '#i-target', desc: 'Objetivos del trimestre con key results medibles, check-ins semanales y score de confianza.' },
@@ -2425,19 +3870,33 @@
 	const viewDash = $('#view-dashboard');
 	const viewModule = $('#view-module');
 
+	// Vistas dedicadas (además del dashboard): renderizan módulos reales.
+	const CUSTOM_VIEWS = {
+		anuncios: { el: '#view-ads', cat: 'Marketing & Ads', name: 'Rendimiento de anuncios', init: () => initAds() },
+		gastos: { el: '#view-gastos', cat: 'Finanzas & Cloud', name: 'Gastos y aprobaciones', init: () => initGastos() }
+	};
+
 	function route() {
 		const key = (location.hash || '#/dashboard').replace('#/', '');
-		const mod = MODULES[key];
+		const custom = CUSTOM_VIEWS[key];
+		const mod = !custom && MODULES[key];
 
-		viewDash.classList.toggle('active', !mod);
+		viewDash.classList.toggle('active', !custom && !mod);
 		viewModule.classList.toggle('active', !!mod);
+		Object.values(CUSTOM_VIEWS).forEach((v) =>
+			$(v.el).classList.toggle('active', !!custom && v.el === custom.el)
+		);
 
-		if (mod) {
+		if (custom) {
+			$('#crumb-title').textContent = custom.name;
+			$('#crumb-cat').textContent = custom.cat;
+			custom.init();
+		} else if (mod) {
 			$('#ph-kicker').textContent = mod.cat;
 			$('#ph-title').textContent = mod.name;
 			$('#ph-name').textContent = mod.name;
 			$('#ph-desc').textContent =
-				mod.desc + ' Este prototipo se centra en el Dashboard General.';
+				mod.desc + ' Este prototipo se centra en el Dashboard General, Anuncios y Gastos.';
 			$('#ph-icon > use').setAttribute('href', mod.icon);
 			$('#crumb-title').textContent = mod.name;
 			$('#crumb-cat').textContent = mod.cat;
@@ -2446,9 +3905,10 @@
 			$('#crumb-cat').textContent = 'Management';
 		}
 
+		const activeKey = custom || mod ? key : 'dashboard';
 		$$('.nav-item').forEach((a) => {
-			const active = a.dataset.route === (mod ? key : 'dashboard');
-			if (active) a.setAttribute('aria-current', 'page');
+			const on = a.dataset.route === activeKey;
+			if (on) a.setAttribute('aria-current', 'page');
 			else a.removeAttribute('aria-current');
 		});
 
