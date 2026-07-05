@@ -1767,9 +1767,9 @@
 	}
 
 	.av-lau { background: var(--color-moss); }
-	.av-sof { background: var(--color-rust); }
-	.av-bru { background: var(--color-ink); color: var(--color-bg); }
-	:root[data-theme='dark'] .av-bru { color: var(--color-bg); }
+	.av-ian { background: var(--color-rust); }
+	.av-ago { background: var(--color-ink); color: var(--color-bg); }
+	:root[data-theme='dark'] .av-ago { color: var(--color-bg); }
 
 	/* ---- Formulario de registro ---- */
 	.gasto-form {
@@ -2799,7 +2799,7 @@
 								<span class="appr-ico"><svg class="icon"><use href="#i-blocks"/></svg></span>
 								<div class="appr-main">
 									<strong>Figma Organization × 8 asientos</strong>
-									<small><span class="badge badge-neutral">Licencia SaaS</span><span class="who">Sofía Márquez · hace 2 h</span></small>
+									<small><span class="badge badge-neutral">Licencia SaaS</span><span class="who">Ian Kasperczak · hace 2 h</span></small>
 								</div>
 								<span class="appr-amount">US$ 360 <small>/mes</small></span>
 								<div class="appr-actions">
@@ -2812,7 +2812,7 @@
 								<span class="appr-ico"><svg class="icon"><use href="#i-receipt"/></svg></span>
 								<div class="appr-main">
 									<strong>Notebooks onboarding ingeniería</strong>
-									<small><span class="badge badge-neutral">Gasto</span><span class="who">Bruno Aguirre · hace 5 h</span></small>
+									<small><span class="badge badge-neutral">Gasto</span><span class="who">Agustín Fabbri · hace 5 h</span></small>
 								</div>
 								<span class="appr-amount">US$ 2.840</span>
 								<div class="appr-actions">
@@ -2947,7 +2947,7 @@
 								<div class="okr-track" role="img" aria-label="Avance 38 por ciento">
 									<div class="okr-fill" data-progress="38"></div>
 								</div>
-								<small>Bruno · beta con 5 clientes</small>
+								<small>Agustín · beta con 5 clientes</small>
 							</div>
 
 							<div class="okr">
@@ -2955,7 +2955,7 @@
 								<div class="okr-track" role="img" aria-label="Avance 21 por ciento">
 									<div class="okr-fill" data-progress="21"></div>
 								</div>
-								<small>Sofía · primera medición en curso</small>
+								<small>Ian · primera medición en curso</small>
 							</div>
 						</div>
 					</article>
@@ -3510,9 +3510,9 @@
 	   MÓDULO: Gastos y aprobaciones — control multi-socio (demo anti-fraude)
 	   ======================================================================= */
 	const SOCIOS = [
-		{ id: 'lau', name: 'Lautaro Peralta', first: 'Lautaro', initials: 'LP', role: 'CEO', cls: 'av-lau' },
-		{ id: 'sof', name: 'Sofía Márquez', first: 'Sofía', initials: 'SM', role: 'COO', cls: 'av-sof' },
-		{ id: 'bru', name: 'Bruno Aguirre', first: 'Bruno', initials: 'BA', role: 'CTO', cls: 'av-bru' }
+		{ id: 'lau', name: 'Lautaro Peralta', first: 'Lautaro', initials: 'LP', role: 'Founder', cls: 'av-lau' },
+		{ id: 'ian', name: 'Ian Kasperczak', first: 'Ian', initials: 'IK', role: 'Socio', cls: 'av-ian' },
+		{ id: 'ago', name: 'Agustín Fabbri', first: 'Agustín', initials: 'AF', role: 'Socio', cls: 'av-ago' }
 	];
 	const socioById = (id) => SOCIOS.find((s) => s.id === id) || SOCIOS[0];
 	const THRESHOLD = 1000;
