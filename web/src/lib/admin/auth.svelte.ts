@@ -9,9 +9,12 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase, supabaseConfigured } from '$lib/supabase';
 import { t } from '$lib/i18n/index.svelte';
 
-export const auth = $state<{ session: Session | null; ready: boolean }>({
+export const auth = $state<{ session: Session | null; ready: boolean; recovery: boolean }>({
 	session: null,
-	ready: false
+	ready: false,
+	// true cuando el usuario llega desde un email de recuperación: hay que
+	// mostrarle el formulario para elegir una contraseña nueva.
+	recovery: false
 });
 
 let initialized = false;
@@ -30,10 +33,25 @@ export function initAuth() {
 		auth.session = data.session;
 		auth.ready = true;
 	});
-	supabase.auth.onAuthStateChange((_event, session) => {
+	supabase.auth.onAuthStateChange((event, session) => {
 		auth.session = session;
 		auth.ready = true;
+		if (event === 'PASSWORD_RECOVERY') auth.recovery = true;
 	});
+}
+
+/** Envía el email de recuperación de contraseña. */
+export function sendPasswordReset(email: string) {
+	const redirectTo =
+		typeof window !== 'undefined' ? `${window.location.origin}/admin` : undefined;
+	return supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo });
+}
+
+/** Fija la contraseña nueva (tras llegar desde el email de recuperación). */
+export async function updatePassword(password: string) {
+	const { error } = await supabase.auth.updateUser({ password });
+	if (!error) auth.recovery = false;
+	return { error };
 }
 
 /** JWT de la sesión actual (o null). */

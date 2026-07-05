@@ -327,12 +327,22 @@ export const es = {
 		loading: 'Cargando panel…',
 		login: {
 			subtitle: 'Acceso para el equipo',
-			missingEnvBefore: 'Faltan las variables de Supabase. Copiá',
-			missingEnvAfter: 'y completalas.',
 			email: 'Email',
 			password: 'Contraseña',
 			submit: 'Entrar',
-			submitting: 'Entrando…'
+			submitting: 'Entrando…',
+			forgot: '¿Olvidaste tu contraseña?',
+			resetSending: 'Enviando…',
+			resetSent: 'Si ese email tiene una cuenta, te enviamos un enlace para restablecerla.',
+			resetError: 'No pudimos enviar el email. Reintentá en un momento.',
+			recoverTitle: 'Elegí una contraseña nueva',
+			recoverSubtitle: 'Ingresá tu nueva contraseña para terminar.',
+			newPassword: 'Contraseña nueva',
+			newPasswordPh: 'Mínimo 8 caracteres',
+			savePassword: 'Guardar contraseña',
+			savingPassword: 'Guardando…',
+			passwordSaved: 'Listo, tu contraseña quedó actualizada.',
+			passwordTooShort: 'La contraseña debe tener al menos 8 caracteres.'
 		},
 		tabs: {
 			summary: 'Resumen',

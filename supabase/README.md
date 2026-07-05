@@ -94,31 +94,43 @@ admin, con datos y reglas anti-fraude en el servidor.
    → **Run** (agrega `expenses`, `expense_events` append-only y `ad_metrics`, todas
    con RLS).
 
-2. **Cerrar los registros públicos** (clave para que _solo_ entren los socios):
-   **Authentication → Providers → Email** → desactivar **"Enable Sign Ups"**. Desde
-   ese momento, las cuentas solo las creás vos.
+2. **Cerrar los registros públicos** (clave para que _solo_ entre tu equipo):
+   **Authentication → Providers → Email** → desactivar **"Enable Sign Ups"** y
+   dejar **"Confirm email"** activado. Desde ahí, las cuentas solo las creás vos
+   (Add user / Invite), y el usuario confirma su email al entrar la primera vez.
 
-3. **Crear las cuentas de los socios:** **Authentication → Users → Add user** por cada
-   uno (poné el nombre real en **User Metadata** como `full_name`, ej.
-   `{"full_name": "Ian Kasperczak"}`). Después promovelos a `socio` en el SQL Editor:
+3. **Un solo padrón de cuentas.** Son **las mismas cuentas del panel**: cualquiera
+   con rol `admin` (tu equipo de la landing) **ya tiene acceso al Startup OS**. Si
+   querés un integrante que _solo_ entre al Startup OS y no al panel, usá el rol
+   `socio`. Para crear una cuenta: **Authentication → Users → Add user** (o Invite),
+   con el nombre real en **User Metadata** como `full_name`, ej.
+   `{"full_name": "Ian Kasperczak"}`. Rol, en el SQL Editor:
 
    ```sql
-   update public.profiles set role = 'socio'
-   where id in (
-     select id from auth.users
-     where email in ('vos@...','ian@...','agustin@...')
-   );
+   -- Equipo (panel + Startup OS):
+   update public.profiles set role = 'admin'
+   where id in (select id from auth.users where email in ('vos@...','ian@...','agustin@...'));
+
+   -- (Opcional) alguien SOLO para Startup OS:
+   -- update public.profiles set role = 'socio' where id = '<uuid>';
    ```
 
    > El nombre que ve cada uno sale de `full_name`; **no** se deduce del email.
 
-4. **Configurar el frontend:** en `web/static/startup-os/index.html`, completá el
+4. **Recuperación de contraseña / links de invitación.** En **Authentication → URL
+   Configuration**, agregá a **Redirect URLs** las dos páginas que reciben el enlace:
+   `https://TU-SITIO/admin` y `https://TU-SITIO/startup-os/` (más sus equivalentes
+   locales si probás en dev). Ambas pantallas detectan el enlace y muestran el
+   formulario para elegir una contraseña nueva.
+
+5. **Configurar el frontend:** en `web/static/startup-os/index.html`, completá el
    bloque `CONFIGURACIÓN` (arriba del `<script type="module">`) con tu
    `SUPABASE_URL`, tu `anon key` (pública) y la `API_URL` del backend. Deben coincidir
    con las del panel admin.
 
-5. **CORS:** agregá el origen del sitio (ej. `https://lince-automate.com`) a
-   `FRONTEND_ORIGIN` en Render, para que la API acepte las llamadas del Startup OS.
+6. **CORS:** agregá el origen del sitio (ej. `https://lince-automate.com`) a
+   `FRONTEND_ORIGIN` del backend (donde lo hostees: Render, Oracle Cloud, etc.),
+   para que la API acepte las llamadas del Startup OS.
 
 **Reglas que aplica el backend** (no el navegador): quien registra un gasto no puede
 aprobarlo (segregación de funciones); ≥ US$ 1.000 exige 2 socios distintos; la
@@ -132,7 +144,7 @@ La subida pasa por `POST /api/uploads`. El proveedor se elige con
 - **Supabase Storage (activo).** Es **gratis** en el tier free (1 GB) — no hace
   falta pagar. Pasos: Storage → **New bucket** llamado `receipts`, dejalo
   **privado** (recomendado para comprobantes financieros). Dejá
-  `UPLOADS_PROVIDER=supabase` y `SUPABASE_RECEIPTS_BUCKET=receipts` en Render.
+  `UPLOADS_PROVIDER=supabase` y `SUPABASE_RECEIPTS_BUCKET=receipts` en el backend.
 
   Como el bucket es privado, en `expenses.receipt_url` **no se guarda una URL
   pública**: se guarda una referencia estable (`sb-storage:...`). Cada vez que

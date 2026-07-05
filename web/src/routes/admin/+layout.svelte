@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { auth, initAuth, loginErrorMessage } from '$lib/admin/auth.svelte';
-	import { supabase, supabaseConfigured } from '$lib/supabase';
+	import {
+		auth,
+		initAuth,
+		loginErrorMessage,
+		sendPasswordReset,
+		updatePassword
+	} from '$lib/admin/auth.svelte';
+	import { supabase } from '$lib/supabase';
 	import Button from '$lib/components/Button.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import LangToggle from '$lib/components/LangToggle.svelte';
@@ -16,6 +22,16 @@
 	let password = $state('');
 	let loginError = $state('');
 	let submitting = $state(false);
+	let emailEl = $state<HTMLInputElement | null>(null);
+
+	// Recuperación de contraseña
+	let resetMsg = $state('');
+	let resetSending = $state(false);
+
+	// Vista "elegí una contraseña nueva" (tras llegar desde el email)
+	let newPassword = $state('');
+	let savingPassword = $state(false);
+	let pwError = $state('');
 
 	const tabs = $derived([
 		{ href: '/admin', label: t('admin.tabs.summary') },
@@ -27,6 +43,7 @@
 	async function onLogin(event: SubmitEvent) {
 		event.preventDefault();
 		loginError = '';
+		resetMsg = '';
 		submitting = true;
 		try {
 			const { error } = await supabase.auth.signInWithPassword({
@@ -39,6 +56,42 @@
 			loginError = loginErrorMessage(err as { message?: string });
 		} finally {
 			submitting = false;
+		}
+	}
+
+	async function onForgot() {
+		if (!email.trim()) {
+			emailEl?.focus();
+			return;
+		}
+		loginError = '';
+		resetMsg = '';
+		resetSending = true;
+		try {
+			const { error } = await sendPasswordReset(email);
+			resetMsg = error ? t('admin.login.resetError') : t('admin.login.resetSent');
+		} catch {
+			resetMsg = t('admin.login.resetError');
+		} finally {
+			resetSending = false;
+		}
+	}
+
+	async function onSetPassword(event: SubmitEvent) {
+		event.preventDefault();
+		pwError = '';
+		if (newPassword.length < 8) {
+			pwError = t('admin.login.passwordTooShort');
+			return;
+		}
+		savingPassword = true;
+		try {
+			const { error } = await updatePassword(newPassword);
+			if (error) pwError = loginErrorMessage(error);
+			else newPassword = '';
+			// Al limpiar auth.recovery, la vista pasa sola al panel (ya hay sesión).
+		} finally {
+			savingPassword = false;
 		}
 	}
 
@@ -56,6 +109,46 @@
 	<div class="grid min-h-dvh place-items-center bg-bg text-sage">
 		<p class="font-mono text-sm">{t('admin.loading')}</p>
 	</div>
+{:else if auth.recovery}
+	<!-- ELEGIR CONTRASEÑA NUEVA (llegó desde el email de recuperación) -->
+	<main class="grid min-h-dvh place-items-center bg-bg px-5">
+		<form
+			class="w-full max-w-[360px] rounded-xl border border-line bg-surface p-7 shadow-card"
+			onsubmit={onSetPassword}
+		>
+			<div class="mb-5 flex items-start justify-between gap-3">
+				<div>
+					<h1 class="font-display text-[20px] font-semibold">{t('admin.login.recoverTitle')}</h1>
+					<p class="text-sm text-sage">{t('admin.login.recoverSubtitle')}</p>
+				</div>
+				<div class="flex items-center gap-2">
+					<LangToggle />
+					<ThemeToggle />
+				</div>
+			</div>
+
+			<label class="text-[13px] font-semibold text-moss" for="newpass"
+				>{t('admin.login.newPassword')}</label
+			>
+			<input
+				id="newpass"
+				class="mt-1.5 mb-5 w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] outline-none focus:border-rust focus:shadow-glow"
+				bind:value={newPassword}
+				type="password"
+				required
+				autocomplete="new-password"
+				placeholder={t('admin.login.newPasswordPh')}
+			/>
+
+			<Button type="submit" full disabled={savingPassword}>
+				{savingPassword ? t('admin.login.savingPassword') : t('admin.login.savePassword')}
+			</Button>
+
+			{#if pwError}
+				<p class="mt-4 text-[13px] text-danger" role="alert">{pwError}</p>
+			{/if}
+		</form>
+	</main>
 {:else if !auth.session}
 	<!-- LOGIN -->
 	<main class="grid min-h-dvh place-items-center bg-bg px-5">
@@ -74,20 +167,11 @@
 				</div>
 			</div>
 
-			{#if !supabaseConfigured}
-				<p
-					class="mb-4 rounded-[8px] border border-danger/25 bg-danger/5 p-3 text-[13px] text-danger"
-				>
-					{t('admin.login.missingEnvBefore')} <code>web/.env.example</code> →
-					<code>web/.env</code>
-					{t('admin.login.missingEnvAfter')}
-				</p>
-			{/if}
-
 			<label class="text-[13px] font-semibold text-moss" for="email">{t('admin.login.email')}</label
 			>
 			<input
 				id="email"
+				bind:this={emailEl}
 				class="mt-1.5 mb-3.5 w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] outline-none focus:border-rust focus:shadow-glow"
 				bind:value={email}
 				type="email"
@@ -110,6 +194,19 @@
 			<Button type="submit" full disabled={submitting}>
 				{submitting ? t('admin.login.submitting') : t('admin.login.submit')}
 			</Button>
+
+			<button
+				type="button"
+				class="mt-3 text-[13px] text-moss underline underline-offset-2 hover:text-rust disabled:opacity-60"
+				onclick={onForgot}
+				disabled={resetSending}
+			>
+				{resetSending ? t('admin.login.resetSending') : t('admin.login.forgot')}
+			</button>
+
+			{#if resetMsg}
+				<p class="mt-3 text-[13px] text-sage">{resetMsg}</p>
+			{/if}
 
 			{#if loginError}
 				<p class="mt-4 text-[13px] text-danger" role="alert">{loginError}</p>
