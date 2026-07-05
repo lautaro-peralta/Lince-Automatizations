@@ -325,12 +325,22 @@ export const en: Dictionary = {
 		loading: 'Loading panel…',
 		login: {
 			subtitle: 'Team access',
-			missingEnvBefore: 'Supabase variables are missing. Copy',
-			missingEnvAfter: 'and fill them in.',
 			email: 'Email',
 			password: 'Password',
 			submit: 'Sign in',
-			submitting: 'Signing in…'
+			submitting: 'Signing in…',
+			forgot: 'Forgot your password?',
+			resetSending: 'Sending…',
+			resetSent: 'If that email has an account, we sent a link to reset it.',
+			resetError: "We couldn't send the email. Try again in a moment.",
+			recoverTitle: 'Choose a new password',
+			recoverSubtitle: 'Enter your new password to finish.',
+			newPassword: 'New password',
+			newPasswordPh: 'At least 8 characters',
+			savePassword: 'Save password',
+			savingPassword: 'Saving…',
+			passwordSaved: 'Done, your password was updated.',
+			passwordTooShort: 'Password must be at least 8 characters.'
 		},
 		tabs: {
 			summary: 'Summary',

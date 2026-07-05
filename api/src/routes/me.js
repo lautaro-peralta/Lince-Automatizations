@@ -25,13 +25,15 @@ router.get('/', requireSocio, (req, res) => {
   });
 });
 
-// GET /api/me/partners — todos los socios del Startup OS
+// GET /api/me/partners — integrantes con acceso al Startup OS.
+//   Mismas cuentas que el panel: quien está como 'admin' (el equipo de la
+//   landing) o como 'socio' tiene acceso, así no hay que mantener dos padrones.
 router.get('/partners', requireSocio, async (_req, res, next) => {
   try {
     const { data, error } = await supabase
       .from('profiles')
       .select('id, full_name, role')
-      .eq('role', 'socio')
+      .in('role', ['socio', 'admin'])
       .order('created_at', { ascending: true });
     if (error) throw error;
     return res.json({ data });

@@ -1,0 +1,26 @@
+# Servicio systemd para el backend de Lince (Express).
+# Instalar en la VM de Oracle Cloud:
+#   sudo cp /opt/lince/deploy/lince-api.service /etc/systemd/system/lince-api.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now lince-api
+#   sudo systemctl status lince-api     # ver estado
+#   journalctl -u lince-api -f          # ver logs en vivo
+#
+# Las variables de entorno se leen de /opt/lince/api/.env (vía dotenv), por eso
+# alcanza con el WorkingDirectory. NO commitees ese .env (tiene la service-role key).
+
+[Unit]
+Description=Lince API (Express)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/lince/api
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

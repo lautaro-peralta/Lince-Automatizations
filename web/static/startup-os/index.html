@@ -2246,23 +2246,27 @@
 		opacity: 0.9;
 	}
 
-	.gate-hint {
-		margin: 16px 0 0;
-		padding: 10px 12px;
-		border: 1px dashed var(--color-line-strong);
-		border-radius: 8px;
-		font-family: var(--font-mono);
-		font-size: 11.5px;
-		line-height: 1.6;
-		color: var(--color-sage);
+	.gate-link {
+		display: inline-block;
+		margin-top: 12px;
+		font-size: 13px;
+		color: var(--color-moss);
+		text-decoration: underline;
+		text-underline-offset: 2px;
 	}
 
-	.gate-hint code {
+	.gate-link:hover {
 		color: var(--color-rust-deep);
 	}
 
-	:root[data-theme='dark'] .gate-hint code {
+	:root[data-theme='dark'] .gate-link:hover {
 		color: var(--color-rust);
+	}
+
+	.gate-note {
+		margin: 12px 0 0;
+		font-size: 12.5px;
+		color: var(--color-sage);
 	}
 
 	/* ---- Backdrop móvil ---- */
@@ -2505,8 +2509,8 @@
 			</button>
 		</div>
 
-		<h1>Validación de acceso</h1>
-		<p class="sub">Ingresá con la cuenta que te dieron para entrar al dashboard de management.</p>
+		<h1 id="gate-title">Validación de acceso</h1>
+		<p class="sub" id="gate-sub">Ingresá con tu cuenta del equipo.</p>
 
 		<form id="gate-form" novalidate>
 			<label for="gate-email">Email</label>
@@ -2518,9 +2522,18 @@
 			<p class="gate-error" id="gate-error" role="alert"></p>
 
 			<button class="btn btn-primary" type="submit" id="gate-submit">Ingresar</button>
+			<button class="gate-link" type="button" id="gate-forgot">¿Olvidaste tu contraseña?</button>
+			<p class="gate-note" id="gate-note" hidden></p>
 		</form>
 
-		<p class="gate-hint">Acceso exclusivo para socios.<br />¿No podés entrar? Pedile una cuenta al fundador.</p>
+		<form id="gate-recover-form" novalidate hidden>
+			<label for="gate-newpass">Contraseña nueva</label>
+			<input id="gate-newpass" type="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" required />
+
+			<p class="gate-error" id="gate-recover-error" role="alert"></p>
+
+			<button class="btn btn-primary" type="submit" id="gate-recover-submit">Guardar contraseña</button>
+		</form>
 	</div>
 </section>
 
@@ -3348,8 +3361,17 @@
 	const gatePass = $('#gate-pass');
 	const gateError = $('#gate-error');
 	const gateSubmit = $('#gate-submit');
+	const gateForgot = $('#gate-forgot');
+	const gateNote = $('#gate-note');
+	const gateTitle = $('#gate-title');
+	const gateSub = $('#gate-sub');
+	const recoverForm = $('#gate-recover-form');
+	const gateNewPass = $('#gate-newpass');
+	const recoverError = $('#gate-recover-error');
+	const recoverSubmit = $('#gate-recover-submit');
 
 	let ME = null; // { id, email, full_name, role } del usuario logueado
+	let recovering = false; // true mientras se fija una contraseña nueva
 	let SOCIOS = []; // socios del Startup OS (de /api/me/partners)
 	const AV_CLASSES = ['av-lau', 'av-ian', 'av-ago'];
 
@@ -3380,9 +3402,26 @@
 	function showGate() {
 		app.hidden = true;
 		gate.hidden = false;
+		recoverForm.hidden = true;
+		gateForm.hidden = false;
+		gateTitle.textContent = 'Validación de acceso';
+		gateSub.textContent = 'Ingresá con tu cuenta del equipo.';
+		gateNote.hidden = true;
 		gatePass.value = '';
 		gateError.classList.remove('show');
 		setTimeout(() => gateEmail.focus(), 60);
+	}
+
+	// Vista "elegí una contraseña nueva" (tras llegar desde el email).
+	function showRecover() {
+		app.hidden = true;
+		gate.hidden = false;
+		gateForm.hidden = true;
+		recoverForm.hidden = false;
+		gateTitle.textContent = 'Elegí una contraseña nueva';
+		gateSub.textContent = 'Ingresá tu nueva contraseña para terminar.';
+		recoverError.classList.remove('show');
+		setTimeout(() => gateNewPass.focus(), 60);
 	}
 
 	function gateFail(msg) {
@@ -3439,8 +3478,14 @@
 		// Si es correcto, onAuthStateChange se encarga de mostrar la app.
 	});
 
-	// Reacciona a login / logout / refresh de token.
-	supabase.auth.onAuthStateChange(async (_event, session) => {
+	// Reacciona a login / logout / refresh de token / recuperación.
+	supabase.auth.onAuthStateChange(async (event, session) => {
+		if (event === 'PASSWORD_RECOVERY') {
+			recovering = true;
+			showRecover();
+			return;
+		}
+		if (recovering) return; // mientras se fija la nueva contraseña, no navegamos
 		if (session) {
 			const wasHidden = app.hidden;
 			try {
@@ -3450,7 +3495,7 @@
 				showGate();
 				gateFail(
 					e.status === 403
-						? 'Tu cuenta no tiene acceso al Startup OS. Pedísela al fundador.'
+						? 'Tu cuenta no tiene acceso al Startup OS.'
 						: 'No se pudo cargar tu sesión. Reintentá en un momento.'
 				);
 				return;
@@ -3473,6 +3518,67 @@
 		setPopover(false);
 		await supabase.auth.signOut();
 		toast('accent', '#i-logout', 'Cerraste sesión.');
+	});
+
+	// Recuperación de contraseña: envía el email (mismo mecanismo que el panel).
+	gateForgot.addEventListener('click', async () => {
+		const email = gateEmail.value.trim();
+		if (!email) {
+			gateEmail.focus();
+			return;
+		}
+		gateForgot.disabled = true;
+		gateForgot.textContent = 'Enviando…';
+		try {
+			await supabase.auth.resetPasswordForEmail(email, {
+				redirectTo: location.origin + location.pathname
+			});
+		} catch (e) {
+			/* mostramos el mismo mensaje pase lo que pase, para no filtrar cuentas */
+		}
+		gateForgot.disabled = false;
+		gateForgot.textContent = '¿Olvidaste tu contraseña?';
+		gateNote.textContent = 'Si ese email tiene una cuenta, te enviamos un enlace para restablecerla.';
+		gateNote.hidden = false;
+	});
+
+	// Guardar la contraseña nueva (tras llegar desde el email de recuperación).
+	recoverForm.addEventListener('submit', async (ev) => {
+		ev.preventDefault();
+		const pass = gateNewPass.value;
+		if (pass.length < 8) {
+			recoverError.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+			recoverError.classList.add('show');
+			return;
+		}
+		recoverError.classList.remove('show');
+		recoverSubmit.disabled = true;
+		recoverSubmit.textContent = 'Guardando…';
+		const { error } = await supabase.auth.updateUser({ password: pass });
+		recoverSubmit.disabled = false;
+		recoverSubmit.textContent = 'Guardar contraseña';
+		if (error) {
+			recoverError.textContent = error.message || 'No se pudo actualizar la contraseña.';
+			recoverError.classList.add('show');
+			return;
+		}
+		recovering = false;
+		gateNewPass.value = '';
+		try {
+			await loadSession();
+		} catch (e) {
+			await supabase.auth.signOut();
+			showGate();
+			gateFail(
+				e.status === 403
+					? 'Tu cuenta no tiene acceso al Startup OS.'
+					: 'No se pudo cargar tu sesión. Reintentá en un momento.'
+			);
+			return;
+		}
+		showApp();
+		route();
+		toast('success', '#i-check-c', 'Contraseña actualizada. ¡Hola, ' + firstNameOf(ME.full_name || ME.email) + '!');
 	});
 
 	/* ---- Grupos colapsables del sidebar ---- */

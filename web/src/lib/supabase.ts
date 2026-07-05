@@ -18,10 +18,8 @@ const anonKey = env.PUBLIC_SUPABASE_ANON_KEY;
 export const supabaseConfigured = Boolean(url && anonKey);
 
 if (!supabaseConfigured) {
-	console.warn(
-		'[admin] Faltan PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY. ' +
-			'Copiá web/.env.example a web/.env y completá los valores.'
-	);
+	// Aviso solo para desarrollo (consola), sin exponer detalles al usuario.
+	console.warn('[auth] Configuración de autenticación incompleta.');
 }
 
 // Placeholders válidos para que el módulo no rompa si faltan las variables.
