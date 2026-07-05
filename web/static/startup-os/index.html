@@ -2489,8 +2489,9 @@
 </svg>
 
 <!-- ================= GATE DE VALIDACIÓN DE ACCESO ================= -->
-<!-- Validación demo del lado del cliente (prototipo, datos simulados).
-     En producción este gate se reemplaza por Supabase Auth, como el panel admin. -->
+<!-- Autenticación real con Supabase Auth (mismo proveedor que el panel admin).
+     Solo entran las cuentas que crea el fundador; los registros públicos están
+     deshabilitados en Supabase. -->
 <section class="gate" id="gate" aria-label="Validación de acceso">
 	<div class="gate-card">
 		<div class="gate-head">
@@ -2505,13 +2506,13 @@
 		</div>
 
 		<h1>Validación de acceso</h1>
-		<p class="sub">Ingresá tus credenciales para entrar al dashboard de management.</p>
+		<p class="sub">Ingresá con la cuenta que te dieron para entrar al dashboard de management.</p>
 
 		<form id="gate-form" novalidate>
 			<label for="gate-email">Email</label>
-			<input id="gate-email" type="email" autocomplete="email" placeholder="founder@lince-automate.com" required />
+			<input id="gate-email" type="email" autocomplete="email" placeholder="tu@email.com" required />
 
-			<label for="gate-pass">Clave de acceso</label>
+			<label for="gate-pass">Contraseña</label>
 			<input id="gate-pass" type="password" autocomplete="current-password" required />
 
 			<p class="gate-error" id="gate-error" role="alert"></p>
@@ -2519,7 +2520,7 @@
 			<button class="btn btn-primary" type="submit" id="gate-submit">Ingresar</button>
 		</form>
 
-		<p class="gate-hint">demo · cualquier email válido<br />clave de acceso: <code>lince2026</code></p>
+		<p class="gate-hint">Acceso exclusivo para socios.<br />¿No podés entrar? Pedile una cuenta al fundador.</p>
 	</div>
 </section>
 
@@ -2966,52 +2967,80 @@
 			<section class="view" id="view-ads">
 				<div class="page-head">
 					<div>
-						<span class="kicker">Marketing &amp; Ads · últimos 30 días</span>
+						<span class="kicker">Marketing &amp; Ads · carga manual</span>
 						<h1>Rendimiento de anuncios</h1>
 					</div>
-					<div class="meta">datos simulados<br />1 – 30 jun 2026</div>
+					<div class="meta" id="ads-period">—</div>
 				</div>
 
-				<div class="kpi-row">
-					<div class="tile">
-						<span class="label">Inversión total</span>
-						<div class="value">US$ 18.400</div>
-						<span class="delta muted">+12% vs mayo</span>
+				<!-- Barra de acción: cargar métricas del mes -->
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl">Métricas por canal y mes · ROAS y CAC calculados</span>
 					</div>
-					<div class="tile">
-						<span class="label">ROAS combinado</span>
-						<div class="value">3,6×</div>
-						<span class="sema sema-success" style="margin-top:4px">
-							<svg class="icon"><use href="#i-check-c"/></svg>
-							Sobre objetivo
-						</span>
-					</div>
-					<div class="tile">
-						<span class="label">CAC combinado</span>
-						<div class="value">US$ 214</div>
-						<span class="delta good">
-							<svg class="icon"><use href="#i-down"/></svg>
-							−8% vs mayo
-						</span>
-					</div>
-					<div class="tile">
-						<span class="label">Clientes nuevos</span>
-						<div class="value">86</div>
-						<span class="delta good">
-							<svg class="icon"><use href="#i-up"/></svg>
-							+18% vs mayo
-						</span>
+					<button class="btn btn-accent" id="ads-load-btn">
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Cargar métricas
+					</button>
+				</div>
+
+				<!-- Formulario de carga (colapsable) -->
+				<div class="form-collapse" id="ads-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-bars"/></svg>Cargar métricas de un canal</h2>
+							</div>
+							<form class="gasto-form" id="ads-form" novalidate>
+								<div class="field">
+									<label for="a-period">Mes</label>
+									<input id="a-period" type="month" required />
+								</div>
+								<div class="field">
+									<label for="a-channel">Canal</label>
+									<select id="a-channel">
+										<option value="meta">Meta Ads</option>
+										<option value="google">Google Ads</option>
+										<option value="linkedin">LinkedIn Ads</option>
+										<option value="tiktok">TikTok Ads</option>
+										<option value="otros">Otros</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="a-spend">Inversión (US$)</label>
+									<input id="a-spend" type="number" min="0" step="1" placeholder="0" required />
+								</div>
+								<div class="field">
+									<label for="a-revenue">Retorno atribuido (US$)</label>
+									<input id="a-revenue" type="number" min="0" step="1" placeholder="0" required />
+								</div>
+								<div class="field">
+									<label for="a-conversions">Clientes / conversiones</label>
+									<input id="a-conversions" type="number" min="0" step="1" placeholder="0" required />
+								</div>
+								<div class="actions">
+									<span class="rule-hint" id="ads-form-hint">Se guarda por mes + canal. Volver a cargar el mismo mes/canal lo <strong>actualiza</strong>.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="ads-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm">
+										<svg class="icon"><use href="#i-plus"/></svg>
+										Guardar
+									</button>
+								</div>
+							</form>
+						</article>
 					</div>
 				</div>
+
+				<div class="kpi-row" id="ads-kpis"></div>
 
 				<div class="section-grid">
 					<article class="card span-8">
 						<div class="card-head">
 							<h2>
 								<svg class="icon"><use href="#i-up"/></svg>
-								Inversión y retorno por semana
+								Inversión y retorno por mes
 							</h2>
-							<span class="badge badge-neutral">8 semanas · USD</span>
+							<span class="badge badge-neutral">USD</span>
 						</div>
 						<div class="chart-legend">
 							<span><i class="lg-a"></i>Inversión</span>
@@ -3027,20 +3056,7 @@
 								Lectura rápida
 							</h2>
 						</div>
-						<div style="padding:14px 18px 18px; display:flex; flex-direction:column; gap:14px">
-							<div class="rule">
-								<span class="r-ico" style="background:color-mix(in srgb, var(--color-success) 14%, transparent); color:var(--color-moss-deep)"><svg class="icon"><use href="#i-up"/></svg></span>
-								<div><strong>Escalar: Meta Ads</strong><p>ROAS 4,3× y el CAC más bajo (US$ 177). Tiene margen para más presupuesto.</p></div>
-							</div>
-							<div class="rule">
-								<span class="r-ico" style="background:color-mix(in srgb, var(--color-danger) 12%, transparent); color:var(--color-danger)"><svg class="icon"><use href="#i-down"/></svg></span>
-								<div><strong>Pausar: TikTok Ads</strong><p>ROAS 1,4×, por debajo del punto de equilibrio. Quema presupuesto sin retorno.</p></div>
-							</div>
-							<div class="rule">
-								<span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span>
-								<div><strong>Objetivo del trimestre</strong><p>ROAS ≥ 3,5×. Vas en <strong style="color:var(--color-ink)">3,6×</strong> combinado — apenas por encima.</p></div>
-							</div>
-						</div>
+						<div id="ads-reading" style="padding:14px 18px 18px; display:flex; flex-direction:column; gap:14px"></div>
 					</article>
 
 					<article class="card span-12">
@@ -3049,7 +3065,7 @@
 								<svg class="icon"><use href="#i-bars"/></svg>
 								Desglose por canal
 							</h2>
-							<span class="badge badge-neutral">4 canales</span>
+							<span class="badge badge-neutral" id="ads-channel-count">—</span>
 						</div>
 						<div class="table-scroll">
 							<table>
@@ -3063,61 +3079,12 @@
 										<th scope="col">Acción sugerida</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td><strong>Meta Ads</strong></td>
-										<td>
-											<div style="display:flex; align-items:center; gap:9px">
-												<span class="cbar"><i style="width:100%"></i></span>
-												<span class="num" style="font-weight:600">US$ 7.800</span>
-											</div>
-										</td>
-										<td class="num">44</td>
-										<td class="num">US$ 177</td>
-										<td class="num roas-tag">4,3×</td>
-										<td><span class="badge badge-success"><svg class="icon"><use href="#i-up"/></svg>Escalar</span></td>
-									</tr>
-									<tr>
-										<td><strong>Google Ads</strong></td>
-										<td>
-											<div style="display:flex; align-items:center; gap:9px">
-												<span class="cbar"><i style="width:79%"></i></span>
-												<span class="num" style="font-weight:600">US$ 6.200</span>
-											</div>
-										</td>
-										<td class="num">34</td>
-										<td class="num">US$ 182</td>
-										<td class="num roas-tag">3,9×</td>
-										<td><span class="badge badge-success"><svg class="icon"><use href="#i-check-c"/></svg>Mantener</span></td>
-									</tr>
-									<tr>
-										<td><strong>LinkedIn Ads</strong></td>
-										<td>
-											<div style="display:flex; align-items:center; gap:9px">
-												<span class="cbar"><i style="width:37%"></i></span>
-												<span class="num" style="font-weight:600">US$ 2.900</span>
-											</div>
-										</td>
-										<td class="num">6</td>
-										<td class="num">US$ 483</td>
-										<td class="num roas-tag">2,1×</td>
-										<td><span class="badge badge-warning"><svg class="icon"><use href="#i-alert"/></svg>Vigilar</span></td>
-									</tr>
-									<tr>
-										<td><strong>TikTok Ads</strong></td>
-										<td>
-											<div style="display:flex; align-items:center; gap:9px">
-												<span class="cbar"><i style="width:19%"></i></span>
-												<span class="num" style="font-weight:600">US$ 1.500</span>
-											</div>
-										</td>
-										<td class="num">2</td>
-										<td class="num">US$ 750</td>
-										<td class="num roas-tag">1,4×</td>
-										<td><span class="badge badge-danger"><svg class="icon"><use href="#i-x"/></svg>Pausar</span></td>
-									</tr>
-								</tbody>
+								<tbody id="ads-tbody"></tbody>
 							</table>
+						</div>
+						<div class="empty" id="ads-empty">
+							<svg class="icon" style="color:var(--color-sage)"><use href="#i-bars"/></svg>
+							Todavía no cargaste métricas. Usá “Cargar métricas” para empezar.
 						</div>
 					</article>
 				</div>
@@ -3173,18 +3140,18 @@
 						</div>
 					</div>
 					<p class="security-note">
-						<svg class="icon"><use href="#i-alert"/></svg>
-						<span><strong>Prototipo:</strong> acá las reglas se aplican en el navegador (demo). En producción se aplican en el servidor con Supabase Auth + un registro append-only con RLS, para que nadie pueda editar el historial ni aprobar su propio gasto saltándose el control.</span>
+						<svg class="icon"><use href="#i-lock"/></svg>
+						<span>Estas reglas se aplican en el <strong>servidor</strong> (Supabase Auth + registro append-only con RLS): nadie puede editar el historial ni aprobar su propio gasto salteándose el control, aunque manipule el navegador.</span>
 					</p>
 				</article>
 
-				<!-- Barra de acción: quién sos + registrar -->
+				<!-- Barra de acción: quién sos (de tu sesión) + registrar -->
 				<div class="acting-bar">
-					<label class="acting">
-						<span class="lbl">Actuando como</span>
-						<span class="sav sm" id="acting-av">LP</span>
-						<select id="acting-select" aria-label="Socio activo"></select>
-					</label>
+					<div class="acting">
+						<span class="lbl">Registrás como</span>
+						<span class="sav sm" id="acting-av">··</span>
+						<span id="acting-name" style="font-size:13.5px;font-weight:600">—</span>
+					</div>
 					<button class="btn btn-accent" id="registrar-btn">
 						<svg class="icon"><use href="#i-plus"/></svg>
 						Registrar compra
@@ -3223,15 +3190,8 @@
 									<input id="f-proveedor" type="text" placeholder="Ej: Meta Platforms" />
 								</div>
 								<div class="field">
-									<label>Comprobante</label>
-									<div class="file-row">
-										<label class="file-btn" for="f-receipt">
-											<svg class="icon"><use href="#i-paperclip"/></svg>
-											Adjuntar
-										</label>
-										<input id="f-receipt" type="file" hidden />
-										<span class="file-name" id="f-receipt-name">Sin archivo</span>
-									</div>
+									<label for="f-receipt">Comprobante (link o N.º de factura)</label>
+									<input id="f-receipt" type="text" placeholder="Ej: drive.google.com/… o Factura A-0001-00003391" />
 								</div>
 								<div class="actions">
 									<span class="rule-hint" id="form-rule-hint">Requiere <strong>1 aprobación</strong> de otro socio.</span>
@@ -3281,12 +3241,51 @@
 
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
-<script>
+<script type="module">
 	/* =========================================================================
-	   Startup OS — interacciones. Vanilla JS, sin dependencias.
+	   Startup OS — interacciones (módulo ES). Auth real con Supabase + API.
 	   ========================================================================= */
+	import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+	/* ─── CONFIGURACIÓN ───────────────────────────────────────────────────────
+	   Completá estos 3 valores con los de TU proyecto (Project Settings → API).
+	   La anon key es PÚBLICA por diseño (la protege RLS); es seguro dejarla acá.
+	   Deben coincidir con PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY del panel
+	   y PUBLIC_API_URL (backend Express en Render). */
+	const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
+	const SUPABASE_ANON_KEY = 'tu-anon-key-publica';
+	const API_URL = 'http://localhost:3000';
+	/* ─────────────────────────────────────────────────────────────────────── */
+
+	const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 	const $ = (sel, root) => (root || document).querySelector(sel);
 	const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+	/* ---- Cliente HTTP mínimo hacia el backend (adjunta el JWT de la sesión). ---- */
+	async function api(path, { method = 'GET', body } = {}) {
+		const { data: { session } } = await supabase.auth.getSession();
+		const headers = { 'Content-Type': 'application/json' };
+		if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
+		const res = await fetch(`${API_URL}${path}`, {
+			method,
+			headers,
+			body: body ? JSON.stringify(body) : undefined
+		});
+		const text = await res.text();
+		let data = null;
+		try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
+		if (!res.ok) {
+			const err = new Error((data && data.message) || `Error ${res.status}`);
+			err.status = res.status;
+			err.data = data;
+			throw err;
+		}
+		return data;
+	}
+	const apiGet = (p) => api(p).then((r) => (r && r.data !== undefined ? r.data : r));
+	const apiSend = (p, body, method = 'POST') =>
+		api(p, { method, body }).then((r) => (r && r.data !== undefined ? r.data : r));
 
 	/* ---- Tema (mismo mecanismo que el sitio: data-theme + lince-theme) ---- */
 	const themeToggles = $$('.theme-toggle');
@@ -3312,10 +3311,7 @@
 	);
 	syncThemeIcon();
 
-	/* ---- Validación de acceso (demo del lado del cliente; en producción,
-	        Supabase Auth como en el panel admin) ---- */
-	const SESSION_KEY = 'lince-os-session';
-	const ACCESS_CODE = 'lince2026';
+	/* ---- Autenticación real (Supabase Auth, como el panel admin) ---- */
 	const gate = $('#gate');
 	const app = $('#app');
 	const gateForm = $('#gate-form');
@@ -3324,39 +3320,26 @@
 	const gateError = $('#gate-error');
 	const gateSubmit = $('#gate-submit');
 
-	let memSession = '';
+	let ME = null; // { id, email, full_name, role } del usuario logueado
+	let SOCIOS = []; // socios del Startup OS (de /api/me/partners)
+	const AV_CLASSES = ['av-lau', 'av-ian', 'av-ago'];
 
-	function getSession() {
-		try {
-			return localStorage.getItem(SESSION_KEY) || memSession;
-		} catch (e) {
-			return memSession;
-		}
+	const firstNameOf = (full) => (full || '').trim().split(/\s+/)[0] || 'Socio';
+	function initialsOf(full) {
+		const p = (full || '').trim().split(/\s+/).filter(Boolean);
+		return (p.length > 1 ? p[0][0] + p[1][0] : (p[0] || '·').slice(0, 2)).toUpperCase();
 	}
 
-	function setSession(email) {
-		memSession = email;
-		try {
-			if (email) localStorage.setItem(SESSION_KEY, email);
-			else localStorage.removeItem(SESSION_KEY);
-		} catch (e) {}
-	}
-
-	function nameFrom(email) {
-		const parts = email.split('@')[0].split(/[._\-+]+/).filter(Boolean);
-		if (!parts.length) return 'Invitado';
-		return parts.map((p) => p[0].toUpperCase() + p.slice(1)).join(' ');
-	}
-
-	function applyUser(email) {
-		const name = nameFrom(email);
-		const parts = name.split(' ');
-		const initials = (parts.length > 1 ? parts[0][0] + parts[1][0] : parts[0].slice(0, 2)).toUpperCase();
-		$('#user-name').textContent = parts[0];
+	// El nombre sale del perfil (full_name), NO se deduce cortando el email.
+	function applyUser() {
+		if (!ME) return;
+		const name = ME.full_name || ME.email;
+		const ini = initialsOf(name);
+		$('#user-name').textContent = firstNameOf(name);
 		$('#pop-name').textContent = name;
-		$('#pop-email').textContent = 'founder · ' + email;
+		$('#pop-email').textContent = (ME.role === 'admin' ? 'admin' : 'socio') + ' · ' + ME.email;
 		$$('.js-avatar').forEach((el) => {
-			el.firstChild.nodeValue = initials;
+			el.firstChild.nodeValue = ini;
 		});
 	}
 
@@ -3378,53 +3361,88 @@
 		gateError.classList.add('show');
 	}
 
-	gateForm.addEventListener('submit', (ev) => {
+	// Tras un login válido: carga identidad + lista de socios desde la API.
+	async function loadSession() {
+		ME = await apiGet('/api/me');
+		const partners = await apiGet('/api/me/partners');
+		SOCIOS = (partners || []).map((p, i) => ({
+			id: p.id,
+			name: p.full_name || 'Socio',
+			first: firstNameOf(p.full_name),
+			initials: initialsOf(p.full_name),
+			role: p.role === 'admin' ? 'Admin' : 'Socio',
+			cls: AV_CLASSES[i % AV_CLASSES.length]
+		}));
+		// Garantizamos que YO esté en la lista (por si mi rol no es 'socio').
+		if (!SOCIOS.some((s) => s.id === ME.id)) {
+			SOCIOS.unshift({
+				id: ME.id,
+				name: ME.full_name || ME.email,
+				first: firstNameOf(ME.full_name || ME.email),
+				initials: initialsOf(ME.full_name || ME.email),
+				role: 'Socio',
+				cls: AV_CLASSES[0]
+			});
+		}
+		activeSocio = ME.id;
+		applyUser();
+	}
+
+	gateForm.addEventListener('submit', async (ev) => {
 		ev.preventDefault();
 		const email = gateEmail.value.trim();
-		if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-			gateFail('Ingresá un email válido.');
-			gateEmail.focus();
+		const password = gatePass.value;
+		if (!email || !password) {
+			gateFail('Completá tu email y contraseña.');
 			return;
 		}
-		if (!gatePass.value) {
-			gateFail('Ingresá la clave de acceso.');
-			gatePass.focus();
-			return;
-		}
-
 		gateError.classList.remove('show');
 		gateSubmit.disabled = true;
 		gateSubmit.textContent = 'Verificando…';
-
-		// Simula la latencia de verificación contra el backend.
-		setTimeout(() => {
-			gateSubmit.disabled = false;
-			gateSubmit.textContent = 'Ingresar';
-			if (gatePass.value !== ACCESS_CODE) {
-				gateFail('Clave de acceso incorrecta. Probá con la clave demo.');
-				gatePass.focus();
-				gatePass.select();
-				return;
-			}
-			setSession(email);
-			applyUser(email);
-			showApp();
-			toast('success', '#i-check-c', 'Acceso validado. Hola, ' + nameFrom(email).split(' ')[0] + '.');
-		}, 650);
+		const { error } = await supabase.auth.signInWithPassword({ email, password });
+		gateSubmit.disabled = false;
+		gateSubmit.textContent = 'Ingresar';
+		if (error) {
+			const m = (error.message || '').toLowerCase();
+			gateFail(m.includes('invalid login') ? 'Email o contraseña incorrectos.' : error.message);
+			gatePass.select();
+		}
+		// Si es correcto, onAuthStateChange se encarga de mostrar la app.
 	});
 
-	const savedSession = getSession();
-	if (savedSession) {
-		applyUser(savedSession);
-		showApp();
-	} else {
-		showGate();
-	}
+	// Reacciona a login / logout / refresh de token.
+	supabase.auth.onAuthStateChange(async (_event, session) => {
+		if (session) {
+			const wasHidden = app.hidden;
+			try {
+				await loadSession();
+			} catch (e) {
+				await supabase.auth.signOut();
+				showGate();
+				gateFail(
+					e.status === 403
+						? 'Tu cuenta no tiene acceso al Startup OS. Pedísela al fundador.'
+						: 'No se pudo cargar tu sesión. Reintentá en un momento.'
+				);
+				return;
+			}
+			showApp();
+			if (wasHidden) {
+				// Primer ingreso (o recarga con sesión): pinta la vista actual con
+				// los datos de la sesión. En un refresh de token no re-inicializa.
+				route();
+				toast('success', '#i-check-c', 'Hola, ' + firstNameOf(ME.full_name || ME.email) + '.');
+			}
+		} else {
+			ME = null;
+			SOCIOS = [];
+			showGate();
+		}
+	});
 
-	$('#logout-btn').addEventListener('click', () => {
-		setSession('');
+	$('#logout-btn').addEventListener('click', async () => {
 		setPopover(false);
-		showGate();
+		await supabase.auth.signOut();
 		toast('accent', '#i-logout', 'Cerraste sesión.');
 	});
 
@@ -3450,28 +3468,184 @@
 	backdrop.addEventListener('click', () => setSidebar(false));
 
 	/* =======================================================================
-	   MÓDULO: Rendimiento de anuncios — gráfico de tendencia (SVG, dataviz)
+	   MÓDULO: Rendimiento de anuncios — métricas reales (carga manual vía API)
 	   ======================================================================= */
 	let _adsInit = false;
+	let adsRows = [];
 
-	function initAds() {
-		if (_adsInit) return;
-		_adsInit = true;
-		renderTrend($('#chart-trend'));
+	const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+	const MONTHS_LONG = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+	const CHANNEL_LABEL = { meta: 'Meta Ads', google: 'Google Ads', linkedin: 'LinkedIn Ads', tiktok: 'TikTok Ads', otros: 'Otros' };
+	const ROAS_TARGET = 3.5;
+
+	const monthShort = (p) => (p ? MONTHS_ES[Number(p.slice(5, 7)) - 1] + " '" + p.slice(2, 4) : '');
+	const monthLong = (p) => (p ? MONTHS_LONG[Number(p.slice(5, 7)) - 1] + ' ' + p.slice(0, 4) : '—');
+	const usd = (n) => 'US$ ' + Math.round(Number(n)).toLocaleString('es-AR');
+	const roasStr = (r) => (r == null ? '—' : r.toFixed(1).replace('.', ',') + '×');
+
+	function adsAction(roas) {
+		if (roas == null) return { cls: 'badge-neutral', ico: '#i-alert', txt: 'Sin datos' };
+		if (roas >= ROAS_TARGET) return { cls: 'badge-success', ico: '#i-up', txt: 'Escalar' };
+		if (roas >= 2.5) return { cls: 'badge-success', ico: '#i-check-c', txt: 'Mantener' };
+		if (roas >= 1.5) return { cls: 'badge-warning', ico: '#i-alert', txt: 'Vigilar' };
+		return { cls: 'badge-danger', ico: '#i-x', txt: 'Pausar' };
 	}
 
-	function renderTrend(host) {
+	function initAds() {
+		if (!ME) return; // requiere sesión
+		if (!_adsInit) {
+			_adsInit = true;
+			$('#ads-load-btn').addEventListener('click', () =>
+				$('#ads-form-wrap').classList.toggle('open')
+			);
+			$('#ads-cancel').addEventListener('click', () => $('#ads-form-wrap').classList.remove('open'));
+			$('#ads-form').addEventListener('submit', onAdsSubmit);
+		}
+		loadAds();
+	}
+
+	async function loadAds() {
+		try {
+			adsRows = (await apiGet('/api/ads')) || [];
+		} catch (e) {
+			adsRows = [];
+		}
+		renderAds();
+	}
+
+	async function onAdsSubmit(ev) {
+		ev.preventDefault();
+		const period = $('#a-period').value; // 'YYYY-MM'
+		if (!period) return $('#a-period').focus();
+		const btn = $('#ads-form button[type="submit"]');
+		btn.disabled = true;
+		try {
+			await apiSend('/api/ads', {
+				period,
+				channel: $('#a-channel').value,
+				spend: Number($('#a-spend').value) || 0,
+				revenue: Number($('#a-revenue').value) || 0,
+				conversions: Math.round(Number($('#a-conversions').value) || 0)
+			});
+			$('#ads-form').reset();
+			$('#ads-form-wrap').classList.remove('open');
+			await loadAds();
+			toast('accent', '#i-bars', 'Métricas guardadas.');
+		} catch (e) {
+			toast('danger', '#i-x', e.message || 'No se pudieron guardar las métricas.');
+		} finally {
+			btn.disabled = false;
+		}
+	}
+
+	function renderAds() {
+		const periods = [...new Set(adsRows.map((r) => r.period))].sort();
+		const latest = periods[periods.length - 1] || null;
+		$('#ads-period').innerHTML = latest ? 'Datos cargados<br>' + monthLong(latest) : 'sin datos';
+
+		// KPIs y tabla del período más reciente.
+		const rows = adsRows.filter((r) => r.period === latest);
+		const spend = rows.reduce((a, r) => a + Number(r.spend), 0);
+		const revenue = rows.reduce((a, r) => a + Number(r.revenue), 0);
+		const conv = rows.reduce((a, r) => a + Number(r.conversions), 0);
+		const roas = spend > 0 ? revenue / spend : null;
+		const cac = conv > 0 ? spend / conv : null;
+		const okRoas = roas != null && roas >= ROAS_TARGET;
+
+		$('#ads-kpis').innerHTML =
+			`<div class="tile"><span class="label">Inversión (mes)</span><div class="value">${usd(spend)}</div><span class="delta muted">${latest ? monthLong(latest) : '—'}</span></div>` +
+			`<div class="tile"><span class="label">ROAS combinado</span><div class="value">${roasStr(roas)}</div>` +
+			(roas == null
+				? `<span class="delta muted">cargá métricas</span>`
+				: `<span class="sema ${okRoas ? 'sema-success' : 'sema-warning'}" style="margin-top:4px"><svg class="icon"><use href="${okRoas ? '#i-check-c' : '#i-alert'}"/></svg>${okRoas ? 'Sobre objetivo' : 'Bajo objetivo'} (${roasStr(ROAS_TARGET)})</span>`) +
+			`</div>` +
+			`<div class="tile"><span class="label">CAC combinado</span><div class="value">${cac == null ? '—' : usd(cac)}</div><span class="delta muted">costo por cliente</span></div>` +
+			`<div class="tile"><span class="label">Clientes nuevos</span><div class="value">${conv}</div><span class="delta muted">en el mes</span></div>`;
+
+		// Tabla por canal + estado vacío.
+		const empty = $('#ads-empty');
+		const tbody = $('#ads-tbody');
+		$('#ads-channel-count').textContent = rows.length ? rows.length + (rows.length === 1 ? ' canal' : ' canales') : '—';
+		if (!rows.length) {
+			tbody.innerHTML = '';
+			empty.classList.add('show');
+		} else {
+			empty.classList.remove('show');
+			const maxSpend = Math.max(...rows.map((r) => Number(r.spend)), 1);
+			tbody.innerHTML = rows
+				.slice()
+				.sort((a, b) => Number(b.spend) - Number(a.spend))
+				.map((r) => {
+					const a = adsAction(r.roas);
+					const w = Math.round((Number(r.spend) / maxSpend) * 100);
+					return (
+						`<tr><td><strong>${CHANNEL_LABEL[r.channel] || r.channel}</strong></td>` +
+						`<td><div style="display:flex; align-items:center; gap:9px"><span class="cbar"><i style="width:${w}%"></i></span><span class="num" style="font-weight:600">${usd(r.spend)}</span></div></td>` +
+						`<td class="num">${r.conversions}</td>` +
+						`<td class="num">${r.cac == null ? '—' : usd(r.cac)}</td>` +
+						`<td class="num roas-tag">${roasStr(r.roas)}</td>` +
+						`<td><span class="badge ${a.cls}"><svg class="icon"><use href="${a.ico}"/></svg>${a.txt}</span></td></tr>`
+					);
+				})
+				.join('');
+		}
+
+		// Lectura rápida: mejor y peor canal por ROAS + objetivo.
+		renderAdsReading(rows, roas);
+
+		// Tendencia: inversión vs retorno por mes (sumando canales).
+		const series = periods.map((p) => {
+			const rr = adsRows.filter((x) => x.period === p);
+			return {
+				label: monthShort(p),
+				inv: rr.reduce((a, r) => a + Number(r.spend), 0),
+				rev: rr.reduce((a, r) => a + Number(r.revenue), 0)
+			};
+		});
+		renderTrend($('#chart-trend'), series);
+	}
+
+	function renderAdsReading(rows, combinedRoas) {
+		const host = $('#ads-reading');
 		if (!host) return;
-		const inv = [1900, 2100, 2000, 2300, 2200, 2500, 2600, 2800];
-		const rev = [5800, 6100, 6900, 7400, 8200, 9100, 9600, 12800];
-		const n = inv.length;
+		const rated = rows.filter((r) => r.roas != null);
+		if (!rated.length) {
+			host.innerHTML =
+				'<div class="rule"><span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span><div><strong>Sin lectura todavía</strong><p>Cargá inversión y retorno por canal para ver qué escalar y qué pausar.</p></div></div>';
+			return;
+		}
+		const best = rated.reduce((a, b) => (b.roas > a.roas ? b : a));
+		const worst = rated.reduce((a, b) => (b.roas < a.roas ? b : a));
+		let html =
+			`<div class="rule"><span class="r-ico" style="background:color-mix(in srgb, var(--color-success) 14%, transparent); color:var(--color-moss-deep)"><svg class="icon"><use href="#i-up"/></svg></span><div><strong>Escalar: ${CHANNEL_LABEL[best.channel] || best.channel}</strong><p>El mejor ROAS (${roasStr(best.roas)})${best.cac != null ? ' · CAC ' + usd(best.cac) : ''}. Tiene margen para más presupuesto.</p></div></div>`;
+		if (worst.channel !== best.channel) {
+			html +=
+				`<div class="rule"><span class="r-ico" style="background:color-mix(in srgb, var(--color-danger) 12%, transparent); color:var(--color-danger)"><svg class="icon"><use href="#i-down"/></svg></span><div><strong>Revisar: ${CHANNEL_LABEL[worst.channel] || worst.channel}</strong><p>El ROAS más bajo (${roasStr(worst.roas)}). ${worst.roas < 1 ? 'Está por debajo del punto de equilibrio.' : 'Vigilá de cerca su rendimiento.'}</p></div></div>`;
+		}
+		const okRoas = combinedRoas != null && combinedRoas >= ROAS_TARGET;
+		html +=
+			`<div class="rule"><span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span><div><strong>Objetivo</strong><p>ROAS ≥ ${roasStr(ROAS_TARGET)}. Vas en <strong style="color:var(--color-ink)">${roasStr(combinedRoas)}</strong> combinado — ${okRoas ? 'por encima.' : 'por debajo.'}</p></div></div>`;
+		host.innerHTML = html;
+	}
+
+	function renderTrend(host, series) {
+		if (!host) return;
+		series = series || [];
+		if (!series.length) {
+			host.innerHTML =
+				'<p style="padding:24px 4px; color:var(--color-sage); font-size:13.5px">Cargá métricas de al menos un mes para ver la tendencia de inversión y retorno.</p>';
+			return;
+		}
+		const n = series.length;
 		const W = 760,
 			H = 232;
-		const pad = { l: 46, r: 20, t: 14, b: 30 };
+		const pad = { l: 52, r: 20, t: 14, b: 30 };
 		const iw = W - pad.l - pad.r;
 		const ih = H - pad.t - pad.b;
-		const max = 14000;
-		const x = (i) => pad.l + (iw * i) / (n - 1);
+		const rawMax = Math.max(...series.map((s) => Math.max(s.inv, s.rev)), 1);
+		const step = Math.pow(10, Math.floor(Math.log10(rawMax)));
+		const max = Math.ceil(rawMax / step) * step;
+		const x = (i) => (n > 1 ? pad.l + (iw * i) / (n - 1) : pad.l + iw / 2);
 		const y = (v) => pad.t + ih - (ih * v) / max;
 
 		let grid = '';
@@ -3479,29 +3653,31 @@
 			const v = (max / 4) * g;
 			const gy = y(v);
 			grid += `<line class="ch-grid" x1="${pad.l}" y1="${gy}" x2="${W - pad.r}" y2="${gy}"/>`;
-			grid += `<text class="ch-tick" x="${pad.l - 8}" y="${gy + 4}" text-anchor="end">${v ? v / 1000 + 'K' : 0}</text>`;
+			grid += `<text class="ch-tick" x="${pad.l - 8}" y="${gy + 4}" text-anchor="end">${v >= 1000 ? Math.round(v / 1000) + 'K' : Math.round(v)}</text>`;
 		}
 
 		let xl = '';
 		for (let i = 0; i < n; i++) {
-			xl += `<text class="ch-tick" x="${x(i)}" y="${H - 9}" text-anchor="middle">S${i + 1}</text>`;
+			xl += `<text class="ch-tick" x="${x(i)}" y="${H - 9}" text-anchor="middle">${series[i].label}</text>`;
 		}
 
-		const line = (arr) =>
-			arr.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
-		const area = `${line(inv)} L${x(n - 1).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
-		const dot = (arr, cls) => `<circle class="${cls}" cx="${x(n - 1).toFixed(1)}" cy="${y(arr[n - 1]).toFixed(1)}" r="4.5"/>`;
+		const inv = series.map((s) => s.inv);
+		const rev = series.map((s) => s.rev);
+		const line = (arr) => arr.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+		const dots = (arr, cls) =>
+			arr.map((v, i) => `<circle class="${cls}" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="4.5"/>`).join('');
+		const path = n > 1 ? `<path class="ch-line-b" d="${line(rev)}"/><path class="ch-line-a" d="${line(inv)}"/>` : '';
+		const area = n > 1 ? `<path class="ch-area" d="${line(inv)} L${x(n - 1).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z"/>` : '';
 
 		host.innerHTML =
-			`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inversión y retorno atribuido por semana durante 8 semanas: la inversión sube de 1.900 a 2.800 dólares y el retorno de 5.800 a 12.800 dólares.">` +
+			`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inversión y retorno atribuido por mes.">` +
 			grid +
-			`<path class="ch-area" d="${area}"/>` +
-			`<path class="ch-line-b" d="${line(rev)}"/>` +
-			`<path class="ch-line-a" d="${line(inv)}"/>` +
-			dot(rev, 'ch-dot-b') +
-			dot(inv, 'ch-dot-a') +
-			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(inv[n - 1]) + 19).toFixed(1)}" text-anchor="end">US$ 2,8K</text>` +
-			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(rev[n - 1]) - 10).toFixed(1)}" text-anchor="end">US$ 12,8K</text>` +
+			area +
+			path +
+			dots(rev, 'ch-dot-b') +
+			dots(inv, 'ch-dot-a') +
+			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(inv[n - 1]) + 19).toFixed(1)}" text-anchor="end">${usd(inv[n - 1])}</text>` +
+			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(rev[n - 1]) - 10).toFixed(1)}" text-anchor="end">${usd(rev[n - 1])}</text>` +
 			xl +
 			`</svg>`;
 	}
@@ -3509,12 +3685,16 @@
 	/* =======================================================================
 	   MÓDULO: Gastos y aprobaciones — control multi-socio (demo anti-fraude)
 	   ======================================================================= */
-	const SOCIOS = [
-		{ id: 'lau', name: 'Lautaro Peralta', first: 'Lautaro', initials: 'LP', role: 'Founder', cls: 'av-lau' },
-		{ id: 'ian', name: 'Ian Kasperczak', first: 'Ian', initials: 'IK', role: 'Socio', cls: 'av-ian' },
-		{ id: 'ago', name: 'Agustín Fabbri', first: 'Agustín', initials: 'AF', role: 'Socio', cls: 'av-ago' }
-	];
-	const socioById = (id) => SOCIOS.find((s) => s.id === id) || SOCIOS[0];
+	// SOCIOS se carga de /api/me/partners en loadSession(). Fallback defensivo:
+	const socioById = (id) =>
+		SOCIOS.find((s) => s.id === id) || {
+			id,
+			name: 'Socio',
+			first: 'Socio',
+			initials: '··',
+			role: '',
+			cls: 'av-lau'
+		};
 	const THRESHOLD = 1000;
 	const requiredFor = (amount) => (amount >= THRESHOLD ? 2 : 1);
 	const CAT_ICON = {
@@ -3525,38 +3705,55 @@
 		'Servicios profesionales': '#i-users',
 		Otros: '#i-receipt'
 	};
-	let activeSocio = 'lau';
+	let activeSocio = null; // = ME.id tras el login
 
-	const GASTOS_KEY = 'lince-os-gastos';
-
-	function nowLabel() {
-		const d = new Date();
-		return 'hoy ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+	// Fecha corta y legible a partir de un timestamp ISO del backend.
+	function whenLabel(iso) {
+		if (!iso) return '';
+		const d = new Date(iso);
+		const hh = String(d.getHours()).padStart(2, '0');
+		const mm = String(d.getMinutes()).padStart(2, '0');
+		if (d.toDateString() === new Date().toDateString()) return 'hoy ' + hh + ':' + mm;
+		return d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }) + ' ' + hh + ':' + mm;
 	}
 
-	function seedGastos() {
-		return [
-			{ id: 'g1', concepto: 'Campaña Meta Ads — julio', monto: 3200, categoria: 'Publicidad', proveedor: 'Meta Platforms', receipt: 'meta-julio.pdf', registeredBy: 'sof', when: 'hoy 08:20', required: 2, approvals: [], status: 'pendiente', audit: [{ who: 'sof', action: 'registro', ts: 'hoy 08:20' }] },
-			{ id: 'g2', concepto: 'MacBook Air M4 — nuevo dev', monto: 1450, categoria: 'Hardware', proveedor: 'Apple', receipt: 'apple-inv-3391.pdf', registeredBy: 'bru', when: 'ayer 17:04', required: 2, approvals: ['lau'], status: 'pendiente', audit: [{ who: 'bru', action: 'registro', ts: 'ayer 17:04' }, { who: 'lau', action: 'aprobo', ts: 'ayer 18:12' }] },
-			{ id: 'g3', concepto: 'Notion Team — 12 asientos', monto: 288, categoria: 'Software/SaaS', proveedor: 'Notion Labs', receipt: 'notion-jul.pdf', registeredBy: 'lau', when: 'hoy 09:41', required: 1, approvals: [], status: 'pendiente', audit: [{ who: 'lau', action: 'registro', ts: 'hoy 09:41' }] },
-			{ id: 'g4', concepto: 'Google Ads — cierre junio', monto: 2800, categoria: 'Publicidad', proveedor: 'Google', receipt: 'google-ads-jun.pdf', registeredBy: 'sof', when: '2 jul', required: 2, approvals: ['lau', 'bru'], status: 'aprobado', audit: [{ who: 'sof', action: 'registro', ts: '2 jul 10:02' }, { who: 'lau', action: 'aprobo', ts: '2 jul 11:20' }, { who: 'bru', action: 'aprobo', ts: '2 jul 14:47' }] },
-			{ id: 'g5', concepto: 'Suscripción anual sin factura', monto: 1900, categoria: 'Otros', proveedor: 'Proveedor no verificado', receipt: null, registeredBy: 'bru', when: '1 jul', required: 2, approvals: [], status: 'rechazado', rejectedBy: 'lau', rejectedReason: 'Sin comprobante y proveedor no verificado.', audit: [{ who: 'bru', action: 'registro', ts: '1 jul 09:10' }, { who: 'lau', action: 'rechazo', ts: '1 jul 09:35', reason: 'Sin comprobante y proveedor no verificado.' }] }
-		];
+	const ACT_ES = { registrado: 'registro', aprobado: 'aprobo', rechazado: 'rechazo' };
+
+	// Adapta un gasto de la API a la forma que consumen las funciones de render.
+	function mapExpense(e) {
+		const evs = e.events || [];
+		const rejected = evs.find((ev) => ev.action === 'rechazado');
+		const registered = evs.find((ev) => ev.action === 'registrado');
+		return {
+			id: e.id,
+			concepto: e.description,
+			monto: Number(e.amount),
+			categoria: e.category,
+			proveedor: e.provider || '—',
+			receipt: e.receipt_url || null,
+			registeredBy: e.registered_by,
+			when: whenLabel((registered || {}).created_at) || whenLabel(e.created_at),
+			required: e.required_approvals,
+			approvals: evs.filter((ev) => ev.action === 'aprobado').map((ev) => ev.actor),
+			status: e.status,
+			rejectedBy: rejected ? rejected.actor : undefined,
+			rejectedReason: rejected ? rejected.note : undefined,
+			audit: evs.map((ev) => ({
+				who: ev.actor,
+				action: ACT_ES[ev.action] || ev.action,
+				ts: whenLabel(ev.created_at),
+				reason: ev.note || undefined
+			}))
+		};
 	}
 
-	let gastos;
-	try {
-		const raw = localStorage.getItem(GASTOS_KEY);
-		gastos = raw ? JSON.parse(raw) : seedGastos();
-	} catch (e) {
-		gastos = seedGastos();
+	async function loadGastos() {
+		const rows = await apiGet('/api/expenses');
+		gastos = (rows || []).map(mapExpense);
+		renderGastos();
 	}
 
-	function saveGastos() {
-		try {
-			localStorage.setItem(GASTOS_KEY, JSON.stringify(gastos));
-		} catch (e) {}
-	}
+	let gastos = [];
 
 	function fmtMonto(n) {
 		return 'US$ ' + Number(n).toLocaleString('es-AR');
@@ -3570,17 +3767,14 @@
 		);
 	}
 
+	// Solo lectura: registrás como vos mismo (el usuario logueado). No se elige
+	// socio — poder actuar como otro rompería la segregación de funciones.
 	function renderActing() {
-		const sel = $('#acting-select');
-		if (!sel.dataset.filled) {
-			sel.innerHTML = SOCIOS.map((s) => `<option value="${s.id}">${s.name} · ${s.role}</option>`).join('');
-			sel.dataset.filled = '1';
-		}
-		sel.value = activeSocio;
 		const s = socioById(activeSocio);
 		const av = $('#acting-av');
 		av.className = 'sav sm ' + s.cls;
 		av.textContent = s.initials;
+		$('#acting-name').textContent = s.name;
 	}
 
 	function renderGastoKPIs() {
@@ -3704,19 +3898,23 @@
 		renderGastoList();
 	}
 
-	function approveGasto(id) {
+	async function approveGasto(id) {
 		const g = gastos.find((x) => x.id === id);
 		if (!g || !canApprove(g)) return;
-		g.approvals.push(activeSocio);
-		g.audit.push({ who: activeSocio, action: 'aprobo', ts: nowLabel() });
-		if (g.approvals.length >= g.required) g.status = 'aprobado';
-		saveGastos();
-		renderGastos();
-		const s = socioById(activeSocio);
-		if (g.status === 'aprobado')
-			toast('success', '#i-check-c', `Gasto aprobado: "${g.concepto}" (${g.approvals.length}/${g.required}).`);
-		else
-			toast('success', '#i-check', `${s.first} aprobó (${g.approvals.length}/${g.required}). Falta otro socio.`);
+		try {
+			const updated = mapExpense(await apiSend('/api/expenses/' + id + '/approve', {}));
+			const i = gastos.findIndex((x) => x.id === id);
+			if (i !== -1) gastos[i] = updated;
+			renderGastos();
+			if (updated.status === 'aprobado')
+				toast('success', '#i-check-c', `Gasto aprobado: "${updated.concepto}" (${updated.approvals.length}/${updated.required}).`);
+			else
+				toast('success', '#i-check', `Aprobaste (${updated.approvals.length}/${updated.required}). Falta otro socio.`);
+		} catch (e) {
+			// El servidor es la fuente de verdad: si rechaza, avisamos y resincronizamos.
+			toast('danger', '#i-x', e.message || 'No se pudo aprobar.');
+			loadGastos();
+		}
 	}
 
 	function startReject(id) {
@@ -3729,17 +3927,22 @@
 		if (inp) inp.focus();
 	}
 
-	function rejectGasto(id, reason) {
+	async function rejectGasto(id, reason) {
 		const g = gastos.find((x) => x.id === id);
 		if (!g || g.status !== 'pendiente') return;
 		delete g._rejecting;
-		g.status = 'rechazado';
-		g.rejectedBy = activeSocio;
-		g.rejectedReason = reason || 'Sin motivo especificado.';
-		g.audit.push({ who: activeSocio, action: 'rechazo', ts: nowLabel(), reason: g.rejectedReason });
-		saveGastos();
-		renderGastos();
-		toast('danger', '#i-x', `Gasto rechazado: "${g.concepto}".`);
+		try {
+			const updated = mapExpense(
+				await apiSend('/api/expenses/' + id + '/reject', { note: reason || undefined })
+			);
+			const i = gastos.findIndex((x) => x.id === id);
+			if (i !== -1) gastos[i] = updated;
+			renderGastos();
+			toast('danger', '#i-x', `Gasto rechazado: "${updated.concepto}".`);
+		} catch (e) {
+			toast('danger', '#i-x', e.message || 'No se pudo rechazar.');
+			loadGastos();
+		}
 	}
 
 	function toggleAudit(id, btn) {
@@ -3782,72 +3985,56 @@
 				: 'Requiere <strong>1 aprobación</strong> de otro socio.';
 	}
 
-	function onRegister(ev) {
+	async function onRegister(ev) {
 		ev.preventDefault();
 		const concepto = $('#f-concepto').value.trim();
 		const monto = Math.round(Number($('#f-monto').value) || 0);
 		if (!concepto) return $('#f-concepto').focus();
 		if (monto <= 0) return $('#f-monto').focus();
-		const rf = $('#f-receipt');
-		const g = {
-			id: 'g' + Date.now(),
-			concepto: concepto,
-			monto: monto,
-			categoria: $('#f-categoria').value,
-			proveedor: $('#f-proveedor').value.trim() || '—',
-			receipt: rf.files && rf.files[0] ? rf.files[0].name : null,
-			registeredBy: activeSocio,
-			when: nowLabel(),
-			required: requiredFor(monto),
-			approvals: [],
-			status: 'pendiente',
-			audit: [{ who: activeSocio, action: 'registro', ts: nowLabel() }]
-		};
-		gastos.unshift(g);
-		saveGastos();
-		renderGastos();
-		$('#gasto-form').reset();
-		$('#f-receipt-name').textContent = 'Sin archivo';
-		updateRuleHint();
-		setForm(false);
-		const s = socioById(activeSocio);
-		toast('accent', '#i-receipt', `${s.first} registró "${concepto}". Falta la aprobación de otro socio.`);
+		const submitBtn = $('#gasto-form button[type="submit"]');
+		submitBtn.disabled = true;
+		try {
+			const created = mapExpense(
+				await apiSend('/api/expenses', {
+					amount: monto,
+					currency: 'USD',
+					category: $('#f-categoria').value,
+					description: concepto,
+					provider: $('#f-proveedor').value.trim() || undefined,
+					receipt_url: $('#f-receipt').value.trim() || undefined
+				})
+			);
+			gastos.unshift(created);
+			renderGastos();
+			$('#gasto-form').reset();
+			updateRuleHint();
+			setForm(false);
+			toast('accent', '#i-receipt', `Registraste "${created.concepto}". Falta la aprobación de otro socio.`);
+		} catch (e) {
+			toast('danger', '#i-x', e.message || 'No se pudo registrar el gasto.');
+		} finally {
+			submitBtn.disabled = false;
+		}
 	}
 
 	let _gastosInit = false;
 
 	function initGastos() {
+		if (!ME) return; // requiere la sesión cargada (ME + SOCIOS)
 		if (!_gastosInit) {
 			_gastosInit = true;
-
-			// El socio activo arranca según quién inició sesión (si coincide).
-			const email = getSession();
-			if (email) {
-				const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-				const first = norm(nameFrom(email).split(' ')[0]);
-				const match = SOCIOS.find((s) => norm(s.first) === first);
-				if (match) activeSocio = match.id;
-			}
-
-			$('#acting-select').addEventListener('change', (e) => {
-				activeSocio = e.target.value;
-				renderActing();
-				renderGastos();
-			});
+			// Identidad y socios ya vienen de loadSession(); registrás como vos.
 			$('#registrar-btn').addEventListener('click', () =>
 				setForm(!$('#gasto-form-wrap').classList.contains('open'))
 			);
 			$('#gasto-cancel').addEventListener('click', () => setForm(false));
 			$('#f-monto').addEventListener('input', updateRuleHint);
-			$('#f-receipt').addEventListener('change', (e) => {
-				$('#f-receipt-name').textContent =
-					e.target.files && e.target.files[0] ? e.target.files[0].name : 'Sin archivo';
-			});
 			$('#gasto-form').addEventListener('submit', onRegister);
 			$('#gasto-list').addEventListener('click', onListClick);
 		}
 		renderActing();
 		renderGastos();
+		loadGastos();
 	}
 
 	/* ---- Router por hash: dashboard + módulos placeholder ---- */

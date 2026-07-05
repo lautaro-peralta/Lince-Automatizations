@@ -84,3 +84,42 @@ select cron.schedule(
 
 > El cron vive en Supabase (no en Render), así el seguimiento funciona aunque
 > el backend esté dormido.
+
+## 5. Startup OS — gastos, aprobaciones y anuncios
+
+El Startup OS (`web/static/startup-os/`) usa **el mismo Supabase Auth** que el panel
+admin, con datos y reglas anti-fraude en el servidor.
+
+1. **Aplicar el esquema nuevo:** SQL Editor → pegar `migrations/0002_startup_os.sql`
+   → **Run** (agrega `expenses`, `expense_events` append-only y `ad_metrics`, todas
+   con RLS).
+
+2. **Cerrar los registros públicos** (clave para que _solo_ entren los socios):
+   **Authentication → Providers → Email** → desactivar **"Enable Sign Ups"**. Desde
+   ese momento, las cuentas solo las creás vos.
+
+3. **Crear las cuentas de los socios:** **Authentication → Users → Add user** por cada
+   uno (poné el nombre real en **User Metadata** como `full_name`, ej.
+   `{"full_name": "Ian Kasperczak"}`). Después promovelos a `socio` en el SQL Editor:
+
+   ```sql
+   update public.profiles set role = 'socio'
+   where id in (
+     select id from auth.users
+     where email in ('vos@...','ian@...','agustin@...')
+   );
+   ```
+
+   > El nombre que ve cada uno sale de `full_name`; **no** se deduce del email.
+
+4. **Configurar el frontend:** en `web/static/startup-os/index.html`, completá el
+   bloque `CONFIGURACIÓN` (arriba del `<script type="module">`) con tu
+   `SUPABASE_URL`, tu `anon key` (pública) y la `API_URL` del backend. Deben coincidir
+   con las del panel admin.
+
+5. **CORS:** agregá el origen del sitio (ej. `https://lince-automate.com`) a
+   `FRONTEND_ORIGIN` en Render, para que la API acepte las llamadas del Startup OS.
+
+**Reglas que aplica el backend** (no el navegador): quien registra un gasto no puede
+aprobarlo (segregación de funciones); ≥ US$ 1.000 exige 2 socios distintos; la
+bitácora (`expense_events`) es append-only. Ver `api/src/routes/expenses.js`.

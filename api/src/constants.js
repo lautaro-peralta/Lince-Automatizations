@@ -20,3 +20,22 @@ export const BUDGET_STATUSES = [
 ];
 
 export const REVIEW_STATUSES = ['nueva', 'analizando', 'respondida'];
+
+// ─── Startup OS ─────────────────────────────────────────────────────────────
+
+export const EXPENSE_STATUSES = ['pendiente', 'aprobado', 'rechazado'];
+
+export const EXPENSE_CATEGORIES = [
+  'Publicidad',
+  'Software/SaaS',
+  'Hardware',
+  'Viáticos',
+  'Servicios profesionales',
+  'Otros',
+];
+
+// A partir de este monto (en la moneda del gasto) hacen falta 2 aprobaciones
+// de socios distintos. Por debajo, alcanza con 1.
+export const APPROVAL_THRESHOLD = 1000;
+
+export const AD_CHANNELS = ['meta', 'google', 'linkedin', 'tiktok', 'otros'];
