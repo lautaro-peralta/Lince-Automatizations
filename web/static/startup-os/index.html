@@ -1474,6 +1474,126 @@
 	.toast.t-danger .icon { color: var(--color-danger); }
 	.toast.t-accent .icon { color: var(--color-rust); }
 
+	/* ---- Gate de validación de acceso ---- */
+	.app[hidden],
+	.gate[hidden] {
+		display: none;
+	}
+
+	.gate {
+		position: fixed;
+		inset: 0;
+		z-index: 90;
+		display: grid;
+		place-items: center;
+		background: var(--color-bg);
+		padding: 20px;
+	}
+
+	.gate-card {
+		width: min(400px, 100%);
+		background: var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-card);
+		padding: 24px 26px 26px;
+	}
+
+	.gate-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.gate-head .brand {
+		padding: 0;
+	}
+
+	.gate-card h1 {
+		font-size: 22px;
+		margin-top: 18px;
+	}
+
+	.gate-card .sub {
+		margin: 4px 0 18px;
+		font-size: 13.5px;
+		color: var(--color-sage);
+	}
+
+	.gate-card label {
+		display: block;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--color-moss);
+		margin-bottom: 6px;
+	}
+
+	.gate-card input {
+		width: 100%;
+		border: 1px solid var(--color-line-strong);
+		background: var(--color-bg);
+		color: var(--color-ink);
+		border-radius: 8px;
+		padding: 9px 12px;
+		font: inherit;
+		font-size: 14.5px;
+		outline: none;
+		margin-bottom: 14px;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	}
+
+	.gate-card input:focus {
+		border-color: var(--color-rust);
+		box-shadow: var(--shadow-glow);
+	}
+
+	.gate-error {
+		display: none;
+		margin: 0 0 14px;
+		padding: 9px 12px;
+		border: 1px solid color-mix(in srgb, var(--color-danger) 25%, transparent);
+		background: color-mix(in srgb, var(--color-danger) 6%, transparent);
+		border-radius: 8px;
+		color: var(--color-danger);
+		font-size: 13px;
+	}
+
+	.gate-error.show {
+		display: block;
+	}
+
+	.btn-primary {
+		background: var(--color-ink);
+		border-color: var(--color-ink);
+		color: var(--color-bg);
+		width: 100%;
+		padding: 10px 16px;
+		font-size: 14px;
+	}
+
+	.btn-primary:hover {
+		opacity: 0.9;
+	}
+
+	.gate-hint {
+		margin: 16px 0 0;
+		padding: 10px 12px;
+		border: 1px dashed var(--color-line-strong);
+		border-radius: 8px;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.6;
+		color: var(--color-sage);
+	}
+
+	.gate-hint code {
+		color: var(--color-rust-deep);
+	}
+
+	:root[data-theme='dark'] .gate-hint code {
+		color: var(--color-rust);
+	}
+
 	/* ---- Backdrop móvil ---- */
 	.backdrop {
 		display: none;
@@ -1635,7 +1755,42 @@
 	</defs>
 </svg>
 
-<div class="app">
+<!-- ================= GATE DE VALIDACIÓN DE ACCESO ================= -->
+<!-- Validación demo del lado del cliente (prototipo, datos simulados).
+     En producción este gate se reemplaza por Supabase Auth, como el panel admin. -->
+<section class="gate" id="gate" aria-label="Validación de acceso">
+	<div class="gate-card">
+		<div class="gate-head">
+			<div class="brand">
+				<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+				<span class="brand-name">lince</span>
+				<span class="brand-os">Startup&nbsp;OS</span>
+			</div>
+			<button class="icon-btn theme-toggle" aria-label="Cambiar tema">
+				<svg class="icon" style="width:17px;height:17px"><use class="theme-ico" href="#i-moon"/></svg>
+			</button>
+		</div>
+
+		<h1>Validación de acceso</h1>
+		<p class="sub">Ingresá tus credenciales para entrar al dashboard de management.</p>
+
+		<form id="gate-form" novalidate>
+			<label for="gate-email">Email</label>
+			<input id="gate-email" type="email" autocomplete="email" placeholder="founder@lince-automate.com" required />
+
+			<label for="gate-pass">Clave de acceso</label>
+			<input id="gate-pass" type="password" autocomplete="current-password" required />
+
+			<p class="gate-error" id="gate-error" role="alert"></p>
+
+			<button class="btn btn-primary" type="submit" id="gate-submit">Ingresar</button>
+		</form>
+
+		<p class="gate-hint">demo · cualquier email válido<br />clave de acceso: <code>lince2026</code></p>
+	</div>
+</section>
+
+<div class="app" id="app" hidden>
 	<!-- ================= SIDEBAR ================= -->
 	<aside class="sidebar" id="sidebar" aria-label="Navegación principal">
 		<div class="brand">
@@ -1728,8 +1883,8 @@
 				<kbd>/</kbd>
 			</label>
 
-			<button class="icon-btn" id="theme-btn" aria-label="Cambiar tema">
-				<svg class="icon" style="width:17px;height:17px"><use id="theme-ico" href="#i-moon"/></svg>
+			<button class="icon-btn theme-toggle" aria-label="Cambiar tema">
+				<svg class="icon" style="width:17px;height:17px"><use class="theme-ico" href="#i-moon"/></svg>
 			</button>
 
 			<button class="icon-btn" id="bell-btn" aria-label="Notificaciones">
@@ -1739,17 +1894,17 @@
 
 			<div class="profile-wrap">
 				<button class="profile-btn" id="profile-btn" aria-expanded="false" aria-haspopup="dialog">
-					<span class="avatar">LP<span class="dot" aria-hidden="true"></span></span>
-					<span class="name">Lautaro</span>
+					<span class="avatar js-avatar">LP<span class="dot" aria-hidden="true"></span></span>
+					<span class="name" id="user-name">Lautaro</span>
 					<svg class="icon"><use href="#i-chev"/></svg>
 				</button>
 
 				<div class="popover" id="popover" role="dialog" aria-label="Perfil y onboarding">
 					<div class="pop-head">
-						<span class="avatar">LP</span>
+						<span class="avatar js-avatar">LP</span>
 						<div class="who">
-							<strong>Lautaro Peralta</strong>
-							<span>founder · lautaro@lince-automate.com</span>
+							<strong id="pop-name">Lautaro Peralta</strong>
+							<span id="pop-email">founder · lautaro@lince-automate.com</span>
 						</div>
 					</div>
 
@@ -1774,7 +1929,7 @@
 					<div class="pop-menu">
 						<button><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
 						<button><svg class="icon"><use href="#i-sliders"/></svg>Configuración</button>
-						<button class="danger"><svg class="icon"><use href="#i-logout"/></svg>Cerrar sesión</button>
+						<button class="danger" id="logout-btn"><svg class="icon"><use href="#i-logout"/></svg>Cerrar sesión</button>
 					</div>
 				</div>
 			</div>
@@ -2091,25 +2246,144 @@
 	const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
 
 	/* ---- Tema (mismo mecanismo que el sitio: data-theme + lince-theme) ---- */
-	const themeBtn = $('#theme-btn');
-	const themeIco = $('#theme-ico');
+	const themeToggles = $$('.theme-toggle');
 
 	function syncThemeIcon() {
 		const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-		themeIco.setAttribute('href', dark ? '#i-sun' : '#i-moon');
-		themeBtn.setAttribute('aria-label', dark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+		$$('.theme-ico').forEach((u) => u.setAttribute('href', dark ? '#i-sun' : '#i-moon'));
+		themeToggles.forEach((b) =>
+			b.setAttribute('aria-label', dark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro')
+		);
 	}
 
-	themeBtn.addEventListener('click', () => {
-		const next =
-			document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-		document.documentElement.setAttribute('data-theme', next);
-		try {
-			localStorage.setItem('lince-theme', next);
-		} catch (e) {}
-		syncThemeIcon();
-	});
+	themeToggles.forEach((btn) =>
+		btn.addEventListener('click', () => {
+			const next =
+				document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', next);
+			try {
+				localStorage.setItem('lince-theme', next);
+			} catch (e) {}
+			syncThemeIcon();
+		})
+	);
 	syncThemeIcon();
+
+	/* ---- Validación de acceso (demo del lado del cliente; en producción,
+	        Supabase Auth como en el panel admin) ---- */
+	const SESSION_KEY = 'lince-os-session';
+	const ACCESS_CODE = 'lince2026';
+	const gate = $('#gate');
+	const app = $('#app');
+	const gateForm = $('#gate-form');
+	const gateEmail = $('#gate-email');
+	const gatePass = $('#gate-pass');
+	const gateError = $('#gate-error');
+	const gateSubmit = $('#gate-submit');
+
+	let memSession = '';
+
+	function getSession() {
+		try {
+			return localStorage.getItem(SESSION_KEY) || memSession;
+		} catch (e) {
+			return memSession;
+		}
+	}
+
+	function setSession(email) {
+		memSession = email;
+		try {
+			if (email) localStorage.setItem(SESSION_KEY, email);
+			else localStorage.removeItem(SESSION_KEY);
+		} catch (e) {}
+	}
+
+	function nameFrom(email) {
+		const parts = email.split('@')[0].split(/[._\-+]+/).filter(Boolean);
+		if (!parts.length) return 'Invitado';
+		return parts.map((p) => p[0].toUpperCase() + p.slice(1)).join(' ');
+	}
+
+	function applyUser(email) {
+		const name = nameFrom(email);
+		const parts = name.split(' ');
+		const initials = (parts.length > 1 ? parts[0][0] + parts[1][0] : parts[0].slice(0, 2)).toUpperCase();
+		$('#user-name').textContent = parts[0];
+		$('#pop-name').textContent = name;
+		$('#pop-email').textContent = 'founder · ' + email;
+		$$('.js-avatar').forEach((el) => {
+			el.firstChild.nodeValue = initials;
+		});
+	}
+
+	function showApp() {
+		gate.hidden = true;
+		app.hidden = false;
+	}
+
+	function showGate() {
+		app.hidden = true;
+		gate.hidden = false;
+		gatePass.value = '';
+		gateError.classList.remove('show');
+		setTimeout(() => gateEmail.focus(), 60);
+	}
+
+	function gateFail(msg) {
+		gateError.textContent = msg;
+		gateError.classList.add('show');
+	}
+
+	gateForm.addEventListener('submit', (ev) => {
+		ev.preventDefault();
+		const email = gateEmail.value.trim();
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+			gateFail('Ingresá un email válido.');
+			gateEmail.focus();
+			return;
+		}
+		if (!gatePass.value) {
+			gateFail('Ingresá la clave de acceso.');
+			gatePass.focus();
+			return;
+		}
+
+		gateError.classList.remove('show');
+		gateSubmit.disabled = true;
+		gateSubmit.textContent = 'Verificando…';
+
+		// Simula la latencia de verificación contra el backend.
+		setTimeout(() => {
+			gateSubmit.disabled = false;
+			gateSubmit.textContent = 'Ingresar';
+			if (gatePass.value !== ACCESS_CODE) {
+				gateFail('Clave de acceso incorrecta. Probá con la clave demo.');
+				gatePass.focus();
+				gatePass.select();
+				return;
+			}
+			setSession(email);
+			applyUser(email);
+			showApp();
+			toast('success', '#i-check-c', 'Acceso validado. Hola, ' + nameFrom(email).split(' ')[0] + '.');
+		}, 650);
+	});
+
+	const savedSession = getSession();
+	if (savedSession) {
+		applyUser(savedSession);
+		showApp();
+	} else {
+		showGate();
+	}
+
+	$('#logout-btn').addEventListener('click', () => {
+		setSession('');
+		setPopover(false);
+		showGate();
+		toast('accent', '#i-logout', 'Cerraste sesión.');
+	});
 
 	/* ---- Grupos colapsables del sidebar ---- */
 	$$('.nav-group-btn').forEach((btn) => {
@@ -2308,7 +2582,7 @@
 			setPopover(false);
 			setSidebar(false);
 		}
-		if (ev.key === '/' && document.activeElement !== $('#search-input')) {
+		if (ev.key === '/' && !app.hidden && document.activeElement !== $('#search-input')) {
 			ev.preventDefault();
 			const inp = $('#search-input');
 			if (inp && getComputedStyle(inp.closest('.search')).display !== 'none') inp.focus();
