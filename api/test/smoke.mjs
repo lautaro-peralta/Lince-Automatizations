@@ -148,6 +148,16 @@ async function testRoutes() {
       ['GET', '/api/reviews', null, 401],
       ['POST', '/api/reviews/abc/suggest', null, 401],
       ['GET', '/api/stats', null, 401],
+      // Startup OS: requireSocio corta antes que la validación => 401 sin token.
+      ['GET', '/api/me', null, 401],
+      ['GET', '/api/me/partners', null, 401],
+      ['GET', '/api/expenses', null, 401],
+      ['POST', '/api/expenses', {}, 401],
+      ['POST', '/api/expenses/abc/approve', null, 401],
+      ['POST', '/api/expenses/abc/reject', null, 401],
+      ['GET', '/api/ads', null, 401],
+      ['POST', '/api/ads', {}, 401],
+      ['POST', '/api/uploads', null, 401],
       ['GET', '/nope', null, 404],
     ];
     for (const [m, p, b, exp] of cases) {
