@@ -120,7 +120,7 @@ router.post('/', async (req, res, next) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-lince-secret': config.n8n.webhookSecret,
+          'Authentication': config.n8n.webhookSecret,
         },
         body: JSON.stringify(inserted),
       }).catch((e) => {
