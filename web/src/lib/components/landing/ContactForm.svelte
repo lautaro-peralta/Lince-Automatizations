@@ -4,8 +4,8 @@
 	import { t } from '$lib/i18n/index.svelte';
 
 	let name = $state('');
-	let business = $state('');
-	let contact = $state('');
+	let email = $state('');
+	let telefono = $state('');
 	let message = $state('');
 	let website = $state(''); // honeypot
 
@@ -24,6 +24,12 @@
 			return;
 		}
 
+		// Revisión cross-field: al menos email o teléfono debe estar presente.
+		if (email.trim() === '' && telefono.trim() === '') {
+			feedback = { text: t('form.requireEmailOrPhone') || 'Por favor ingresá un email o un teléfono.', kind: 'err' };
+			return;
+		}
+
 		// Trampa anti-bots: un humano nunca completa este campo oculto.
 		if (website.trim() !== '') {
 			feedback = { text: t('form.botThanks'), kind: 'ok' };
@@ -35,21 +41,22 @@
 		feedback = { text: t('form.sending'), kind: '' };
 
 		try {
-			await apiFetch('/api/leads', {
+			// Enviar a /api/prospects para que active el webhook n8n (y use rate-limit/validación del endpoint).
+			await apiFetch('/api/prospects', {
 				method: 'POST',
 				body: {
-					name: name.trim(),
-					business: business.trim(),
-					contact: contact.trim(),
-					message: message.trim(),
-					website
-				}
+					nombre: name.trim(),
+					email: email.trim(),
+					telefono: telefono.trim(),
+					mensaje: message.trim(),
+					website,
+				},
 			});
 			reset();
 			wasValidated = false;
 			feedback = {
 				text: t('form.success'),
-				kind: 'ok'
+				kind: 'ok',
 			};
 		} catch (e) {
 			const err = e as ApiError;
@@ -61,13 +68,13 @@
 	}
 
 	function reset() {
-		name = business = contact = message = website = '';
+		name = email = telefono = message = website = '';
 	}
 
 	const fieldClass =
 		'w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] text-ink ' +
 		'outline-none transition-[border-color,box-shadow] focus:border-rust focus:shadow-glow ' +
-		'data-[invalid=true]:border-danger';
+		"data-[invalid=true]:border-danger";
 	const labelClass = 'text-[13px] font-semibold text-moss';
 </script>
 
@@ -93,31 +100,30 @@
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-business">
-			{t('form.business')} <span class="font-normal text-sage">{t('form.businessOptional')}</span>
-		</label>
+		<label class={labelClass} for="lead-email">{t('form.email')}</label>
 		<input
-			id="lead-business"
+			id="lead-email"
 			class={fieldClass}
-			bind:value={business}
-			type="text"
-			maxlength="120"
-			autocomplete="organization"
-			placeholder={t('form.businessPh')}
+			data-invalid={wasValidated && email.trim() === '' && telefono.trim() === ''}
+			bind:value={email}
+			type="email"
+			maxlength="200"
+			placeholder={t('form.emailPh')}
+			autocomplete="email"
 		/>
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-contact">{t('form.contact')}</label>
+		<label class={labelClass} for="lead-phone">{t('form.phone')}</label>
 		<input
-			id="lead-contact"
+			id="lead-phone"
 			class={fieldClass}
-			data-invalid={wasValidated && !contact.trim()}
-			bind:value={contact}
-			type="text"
-			required
-			maxlength="120"
-			placeholder={t('form.contactPh')}
+			data-invalid={wasValidated && email.trim() === '' && telefono.trim() === ''}
+			bind:value={telefono}
+			type="tel"
+			maxlength="30"
+			placeholder={t('form.phonePh')}
+			autocomplete="tel"
 		/>
 	</div>
 
