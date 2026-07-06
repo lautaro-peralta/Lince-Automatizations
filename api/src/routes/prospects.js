@@ -7,9 +7,9 @@
  * Flujo:
  *   1. Honeypot: si `website` viene con valor, respondemos 200 sin guardar.
  *   2. Rate limit por IP (~5 peticiones/minuto, en memoria).
- *   3. Validación con Zod (nombre y email obligatorios; resto opcional).
+ *   3. Validación con Zod (nombre obligatorio; email o telefono al menos uno).
  *   4. Insert en Supabase (tabla `prospectos`). Si falla → 500 y no se notifica.
- *   5. Webhook n8n fire-and-forget. Si falla → se loguea pero se responde 200.
+ *   5. Webhook n8n fire-and-forget. Si falla → se loguea pero se responde 201.
  */
 import { Router } from 'express';
 import { z } from 'zod';
@@ -19,13 +19,10 @@ import { config } from '../config.js';
 const router = Router();
 
 // ─── Rate limiter en memoria ──────────────────────────────────────────────────
-// Estructura: Map<ip, { count, resetAt }>
-// Alcanza para una instancia single-process (Render free tier / hobby).
 const RATE_WINDOW_MS = 60_000; // 1 minuto
-const RATE_MAX = 5;            // intentos por ventana
+const RATE_MAX = 5; // intentos por ventana
 const _ipMap = new Map();
 
-// Limpieza periódica para no acumular IPs que ya pasaron su ventana.
 setInterval(() => {
   const now = Date.now();
   for (const [ip, entry] of _ipMap) {
@@ -48,16 +45,34 @@ function isRateLimited(ip) {
   return false;
 }
 
-// ─── Esquema de validación ────────────────────────────────────────────────────
-const prospectSchema = z.object({
-  nombre:   z.string().trim().min(1, 'El nombre es obligatorio.').max(100),
-  email:    z.string().trim().email('Email inválido.').max(200),
-  telefono: z.string().trim().max(30).optional().default(''),
-  rubro:    z.string().trim().max(120).optional().default(''),
-  mensaje:  z.string().trim().max(2000).optional().default(''),
-  // Honeypot: un humano nunca lo completa (campo oculto en el form).
-  website:  z.string().max(200).optional().default(''),
-});
+// ─── Esquema de validación: nombre obligatorio. email y telefono opcionales,
+// pero se exige que al menos uno de los dos venga presente y no vacío.
+const prospectSchema = z
+  .object({
+    nombre: z.string().trim().min(1, 'El nombre es obligatorio.').max(100),
+    // email opcional; si viene, comprobamos formato simple.
+    email: z
+      .string()
+      .trim()
+      .max(200)
+      .optional()
+      .refine((v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), {
+        message: 'Email inválido.',
+      }),
+    telefono: z.string().trim().max(30).optional(),
+    empresa: z.string().trim().max(120).optional(),
+    mensaje: z.string().trim().max(2000).optional().default(''),
+    // Honeypot
+    website: z.string().max(200).optional().default(''),
+  })
+  .refine((d) => {
+    const hasEmail = typeof d.email === 'string' && d.email.trim().length > 0;
+    const hasPhone = typeof d.telefono === 'string' && d.telefono.trim().length > 0;
+    return hasEmail || hasPhone;
+  }, {
+    message: 'Se requiere email o teléfono.',
+    path: ['email'],
+  });
 
 // ─── POST /api/prospects — público ───────────────────────────────────────────
 router.post('/', async (req, res, next) => {
@@ -88,11 +103,11 @@ router.post('/', async (req, res, next) => {
     const { data: inserted, error: dbError } = await supabase
       .from('prospectos')
       .insert({
-        nombre:   data.nombre,
-        email:    data.email,
-        telefono: data.telefono || null,
-        rubro:    data.rubro    || null,
-        mensaje:  data.mensaje  || null,
+        nombre: data.nombre,
+        email: data.email && data.email.trim() !== '' ? data.email : null,
+        telefono: data.telefono && data.telefono.trim() !== '' ? data.telefono : null,
+        empresa: data.empresa && data.empresa.trim() !== '' ? data.empresa : null,
+        mensaje: data.mensaje || null,
       })
       .select()
       .single();
@@ -100,7 +115,6 @@ router.post('/', async (req, res, next) => {
     if (dbError) throw dbError;
 
     // 5. Webhook n8n — fire-and-forget.
-    //    El prospecto ya está guardado; un fallo de notificación NO afecta la respuesta.
     if (config.n8n.webhookUrl) {
       fetch(config.n8n.webhookUrl, {
         method: 'POST',
