@@ -4,10 +4,25 @@
     "compatibility_date": "2026-07-03",
     "compatibility_flags": ["nodejs_compat"],
     
+    // Desactiva el subdominio por defecto *.workers.dev
+    "workers_dev": false,
+
+    // Configuración del dominio propio pago
+    "routes": [
+        {
+            "pattern": "lince-automate.com.ar", // Reemplazá por tu dominio o subdominio exacto
+            "custom_domain": true
+        },
+        {
+            "pattern": "www.lince-automate.com.ar", // Opcional: por si querés que responda con www
+            "custom_domain": true
+        }
+    ],
+    
     // VARIABLES DE ENTORNO PÚBLICAS (Persisten en cada deploy)
     "vars": {
-		"NODE_ENV": "production",
-		"PUBLIC_API_URL": "https://api.lince-automate.com.ar",
+        "NODE_ENV": "production",
+        "PUBLIC_API_URL": "https://api.lince-automate.com.ar",
         "PUBLIC_SUPABASE_URL": "https://uapszwevkwjeskmltdgf.supabase.co",
         "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHN6d2V2a3dqZXNrbWx0ZGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjE5MDEsImV4cCI6MjA5NzI5NzkwMX0.LK-B4q4SJldmqpHq6731yyAoBZkmOapgh0Lg6kyE6SI"
     },
