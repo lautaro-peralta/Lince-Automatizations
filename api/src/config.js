@@ -63,5 +63,7 @@ export const config = {
   n8n: {
     webhookUrl:    process.env.N8N_WEBHOOK_URL    || '',
     webhookSecret: process.env.N8N_WEBHOOK_SECRET || '',
+    webhookUsername: process.env.N8N_WEBHOOK_USERNAME || '', // NEW
+    webhookPassword: process.env.N8N_WEBHOOK_PASSWORD || '', // NEW
   },
 };

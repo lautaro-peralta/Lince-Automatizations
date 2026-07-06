@@ -120,7 +120,13 @@ router.post('/', async (req, res, next) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authentication': config.n8n.webhookSecret,
+          ...(config.n8n.webhookUsername && config.n8n.webhookPassword
+            ? {
+                'Authorization': 'Basic ' + Buffer.from(`${config.n8n.webhookUsername}:${config.n8n.webhookPassword}`).toString('base64'),
+              }
+            : config.n8n.webhookSecret
+              ? { 'Authentication': config.n8n.webhookSecret }
+              : {}),
         },
         body: JSON.stringify(inserted),
       }).catch((e) => {
