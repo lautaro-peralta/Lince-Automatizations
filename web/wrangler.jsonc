@@ -1,16 +1,19 @@
 {
-	// Configuración de Cloudflare Workers (static assets) para el frontend
-	// (SvelteKit + adapter-cloudflare). El nombre debe coincidir con el Worker
-	// creado en el dashboard de Cloudflare.
-	"name": "lince-automate",
-	// Entry del Worker que genera `@sveltejs/adapter-cloudflare` con `npm run build`.
-	"main": ".svelte-kit/cloudflare/_worker.js",
-	"compatibility_date": "2026-07-03",
-	"compatibility_flags": ["nodejs_compat"],
-	// Assets estáticos + páginas prerenderizadas. El adapter agrega un
-	// .assetsignore para que _worker.js y _routes.json no se sirvan como assets.
-	"assets": {
-		"binding": "ASSETS",
-		"directory": ".svelte-kit/cloudflare"
-	}
+    "name": "lince-automate",
+    "main": ".svelte-kit/cloudflare/_worker.js",
+    "compatibility_date": "2026-07-03",
+    "compatibility_flags": ["nodejs_compat"],
+    
+    // VARIABLES DE ENTORNO PÚBLICAS (Persisten en cada deploy)
+    "vars": {
+		"NODE_ENV": "production",
+		"PUBLIC_API_URL": "https://api.lince-automate.com.ar",
+        "PUBLIC_SUPABASE_URL": "https://uapszwevkwjeskmltdgf.supabase.co",
+        "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHN6d2V2a3dqZXNrbWx0ZGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjE5MDEsImV4cCI6MjA5NzI5NzkwMX0.LK-B4q4SJldmqpHq6731yyAoBZkmOapgh0Lg6kyE6SI"
+    },
+
+    "assets": {
+        "binding": "ASSETS",
+        "directory": ".svelte-kit/cloudflare"
+    }
 }
