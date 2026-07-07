@@ -15,6 +15,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
 import { config } from '../config.js';
+import { notifyProspect } from '../lib/notify.js';
 
 const router = Router();
 
@@ -116,22 +117,9 @@ router.post('/', async (req, res, next) => {
 
     // 5. Webhook n8n — fire-and-forget.
     if (config.n8n.webhookUrl) {
-      fetch(config.n8n.webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(config.n8n.webhookUsername && config.n8n.webhookPassword
-            ? {
-                'Authorization': 'Basic ' + Buffer.from(`${config.n8n.webhookUsername}:${config.n8n.webhookPassword}`).toString('base64'),
-              }
-            : config.n8n.webhookSecret
-              ? { 'Authentication': config.n8n.webhookSecret }
-              : {}),
-        },
-        body: JSON.stringify(inserted),
-      }).catch((e) => {
+      notifyProspect(inserted).catch((e) => {
         // eslint-disable-next-line no-console
-        console.error('[prospects] error disparando webhook n8n:', e?.message || e);
+        console.error('[prospects] error notificando prospecto:', e?.message || e);
       });
     }
 

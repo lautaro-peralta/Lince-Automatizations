@@ -5,6 +5,7 @@
 
 	let name = $state('');
 	let email = $state('');
+	let empresa = $state('');
 	let telefono = $state('');
 	let message = $state('');
 	let website = $state(''); // honeypot
@@ -47,6 +48,7 @@
 				body: {
 					nombre: name.trim(),
 					email: email.trim(),
+					empresa: empresa.trim(),
 					telefono: telefono.trim(),
 					mensaje: message.trim(),
 					website,
@@ -68,7 +70,7 @@
 	}
 
 	function reset() {
-		name = email = telefono = message = website = '';
+		name = email = empresa = telefono = message = website = '';
 	}
 
 	const fieldClass =
@@ -114,21 +116,21 @@
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-phone">{t('form.phone')}</label>
-		<input
-			id="lead-phone"
-			class={fieldClass}
-			data-invalid={wasValidated && email.trim() === '' && telefono.trim() === ''}
-			bind:value={telefono}
-			type="tel"
-			maxlength="30"
-			placeholder={t('form.phonePh')}
-			autocomplete="tel"
-		/>
-	</div>
+			<label class={labelClass} for="lead-business">
+				{t('form.business')} <span class="text-sm font-normal">{t('form.businessOptional')}</span>
+			</label>
+			<input
+				id="lead-business"
+				class={fieldClass}
+				bind:value={empresa}
+				type="text"
+				maxlength="120"
+				placeholder={t('form.businessPh')}
+				autocomplete="organization"
+			/>
+		</div>
 
-	<div class="flex flex-col gap-1.5">
-		<label class={labelClass} for="lead-message">{t('form.message')}</label>
+		<div class="flex flex-col gap-1.5">
 		<textarea
 			id="lead-message"
 			class="{fieldClass} resize-y"

@@ -257,6 +257,8 @@ export const es = {
 		contactPh: 'Por dónde te respondemos',
 		message: '¿Qué tarea se repite todos los días?',
 		messagePh: 'Contanos brevemente tu caso',
+		phone: 'Teléfono',
+		phonePh: 'Número o WhatsApp',
 		submit: 'Contar mi caso',
 		submitting: 'Enviando…',
 		invalid: 'Revisá los campos marcados, por favor.',

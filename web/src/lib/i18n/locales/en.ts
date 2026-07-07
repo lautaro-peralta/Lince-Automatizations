@@ -255,6 +255,8 @@ export const en: Dictionary = {
 		contactPh: 'Where we should reach you',
 		message: 'Which task repeats every day?',
 		messagePh: 'Tell us briefly about your case',
+		phone: 'Phone',
+		phonePh: 'Number or WhatsApp',
 		submit: 'Tell us about my case',
 		submitting: 'Sending…',
 		invalid: 'Please review the highlighted fields.',
