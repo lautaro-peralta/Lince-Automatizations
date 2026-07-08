@@ -117,16 +117,19 @@ admin, con datos y reglas anti-fraude en el servidor.
 
    > El nombre que ve cada uno sale de `full_name`; **no** se deduce del email.
 
-4. **Recuperación de contraseña / links de invitación.** En **Authentication → URL
-   Configuration**, agregá a **Redirect URLs** las dos páginas que reciben el enlace:
-   `https://TU-SITIO/admin` y `https://TU-SITIO/startup-os/` (más sus equivalentes
-   locales si probás en dev). Ambas pantallas detectan el enlace y muestran el
-   formulario para elegir una contraseña nueva.
+4. **Login unificado.** El Startup OS **no tiene login propio**: usa la misma
+   sesión que el panel. Si entrás a `/startup-os/` sin sesión, te manda a
+   `/admin` a iniciar sesión y vuelve solo. El panel tiene un botón **"Startup
+   OS ↗"** y el Startup OS uno **"Ir al panel de admin"**. Por eso, en
+   **Authentication → URL Configuration → Redirect URLs** alcanza con
+   `https://TU-SITIO/admin` (más el equivalente local si probás en dev). Ahí se
+   maneja también el enlace de recuperación de contraseña.
 
-5. **Configurar el frontend:** en `web/static/startup-os/index.html`, completá el
-   bloque `CONFIGURACIÓN` (arriba del `<script type="module">`) con tu
-   `SUPABASE_URL`, tu `anon key` (pública) y la `API_URL` del backend. Deben coincidir
-   con las del panel admin.
+5. **Configuración del frontend (automática).** No hay que hardcodear nada en el
+   estático: el Startup OS toma la URL/anon key/API en runtime del endpoint
+   `/auth-config` (que las lee de las mismas `PUBLIC_SUPABASE_URL` /
+   `PUBLIC_SUPABASE_ANON_KEY` / `PUBLIC_API_URL` del panel). Solo asegurate de que
+   esas variables estén cargadas en Cloudflare Pages.
 
 6. **CORS:** agregá el origen del sitio (ej. `https://lince-automate.com`) a
    `FRONTEND_ORIGIN` del backend (donde lo hostees: Render, Oracle Cloud, etc.),

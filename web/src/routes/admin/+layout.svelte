@@ -18,6 +18,14 @@
 
 	initAuth();
 
+	// Si se llegó con ?next=/startup-os/... (redirigido desde el Startup OS por
+	// falta de sesión), al quedar logueado lo mandamos de vuelta allá.
+	$effect(() => {
+		if (!auth.session || typeof window === 'undefined') return;
+		const next = page.url.searchParams.get('next');
+		if (next && next.startsWith('/startup-os')) window.location.href = next;
+	});
+
 	let email = $state('');
 	let password = $state('');
 	let loginError = $state('');
@@ -236,6 +244,12 @@
 				{/each}
 			</nav>
 			<div class="ml-auto flex items-center gap-3 text-[13px] text-sage">
+				<a
+					href="/startup-os/"
+					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"
+				>
+					{t('admin.startupOs')}
+				</a>
 				<span class="hidden sm:inline">{auth.session.user?.email}</span>
 				<LangToggle />
 				<ThemeToggle />

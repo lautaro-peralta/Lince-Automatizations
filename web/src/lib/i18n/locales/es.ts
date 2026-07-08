@@ -352,6 +352,7 @@ export const es = {
 		},
 		userEmailFallback: '',
 		logout: 'Salir',
+		startupOs: 'Startup OS ↗',
 		summary: {
 			title: 'Resumen',
 			subtitle: 'Una mirada rápida del estado del negocio.',

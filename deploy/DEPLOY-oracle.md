@@ -117,12 +117,11 @@ Probá desde tu compu: `https://api.TU-DOMINIO.com/health`.
 
 ## 9. Apuntar el frontend a la API nueva
 
-- **Panel admin** (Cloudflare Pages → Settings → Variables):
-  `PUBLIC_API_URL=https://api.TU-DOMINIO.com` → redeploy.
-- **Startup OS** (`web/static/startup-os/index.html`): en el bloque
-  `CONFIGURACIÓN`, `const API_URL = 'https://api.TU-DOMINIO.com';`.
-- **Supabase → Redirect URLs:** que estén `https://TU-SITIO.com/admin` y
-  `https://TU-SITIO.com/startup-os/`.
+- **Cloudflare Pages → Settings → Variables:** `PUBLIC_API_URL=https://api.TU-DOMINIO.com`
+  → redeploy. Esto alcanza para **ambos** frontends: el panel lo usa directo y el
+  Startup OS lo toma del endpoint `/auth-config` (no hay que tocar el HTML).
+- **Supabase → Redirect URLs:** que esté `https://TU-SITIO.com/admin` (el login
+  es único y vive ahí).
 
 ## Actualizar el backend más adelante
 

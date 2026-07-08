@@ -350,6 +350,7 @@ export const en: Dictionary = {
 		},
 		userEmailFallback: '',
 		logout: 'Sign out',
+		startupOs: 'Startup OS ↗',
 		summary: {
 			title: 'Summary',
 			subtitle: 'A quick look at how the business is doing.',
