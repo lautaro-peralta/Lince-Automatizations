@@ -23,6 +23,10 @@ import uploadsRouter from './routes/uploads.js';
 
 const app = express();
 
+// Detrás de nginx (que manda X-Forwarded-For): sin esto req.ip es siempre
+// 127.0.0.1 y el rate-limit de /api/prospects agrupa a todos los visitantes.
+app.set('trust proxy', 1);
+
 // Cuerpo JSON con límite chico: una landing/CRM no necesita payloads grandes.
 app.use(express.json({ limit: '10kb' }));
 

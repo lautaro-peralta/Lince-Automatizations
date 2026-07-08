@@ -27,7 +27,7 @@
 
 		// Revisión cross-field: al menos email o teléfono debe estar presente.
 		if (email.trim() === '' && telefono.trim() === '') {
-			feedback = { text: t('form.requireEmailOrPhone') || 'Por favor ingresá un email o un teléfono.', kind: 'err' };
+			feedback = { text: t('form.requireEmailOrPhone'), kind: 'err' };
 			return;
 		}
 
@@ -116,21 +116,36 @@
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-			<label class={labelClass} for="lead-business">
-				{t('form.business')} <span class="text-sm font-normal">{t('form.businessOptional')}</span>
-			</label>
-			<input
-				id="lead-business"
-				class={fieldClass}
-				bind:value={empresa}
-				type="text"
-				maxlength="120"
-				placeholder={t('form.businessPh')}
-				autocomplete="organization"
-			/>
-		</div>
+		<label class={labelClass} for="lead-phone">{t('form.phone')}</label>
+		<input
+			id="lead-phone"
+			class={fieldClass}
+			data-invalid={wasValidated && email.trim() === '' && telefono.trim() === ''}
+			bind:value={telefono}
+			type="tel"
+			maxlength="30"
+			placeholder={t('form.phonePh')}
+			autocomplete="tel"
+		/>
+	</div>
 
-		<div class="flex flex-col gap-1.5">
+	<div class="flex flex-col gap-1.5">
+		<label class={labelClass} for="lead-business">
+			{t('form.business')} <span class="text-sm font-normal">{t('form.businessOptional')}</span>
+		</label>
+		<input
+			id="lead-business"
+			class={fieldClass}
+			bind:value={empresa}
+			type="text"
+			maxlength="120"
+			placeholder={t('form.businessPh')}
+			autocomplete="organization"
+		/>
+	</div>
+
+	<div class="flex flex-col gap-1.5">
+		<label class={labelClass} for="lead-message">{t('form.message')}</label>
 		<textarea
 			id="lead-message"
 			class="{fieldClass} resize-y"

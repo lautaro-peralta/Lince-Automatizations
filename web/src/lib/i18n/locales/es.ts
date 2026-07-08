@@ -255,6 +255,8 @@ export const es = {
 		businessPh: 'Nombre del local o rubro',
 		contact: 'Email o WhatsApp',
 		contactPh: 'Por dónde te respondemos',
+		email: 'Tu email',
+		emailPh: 'nombre@correo.com',
 		message: '¿Qué tarea se repite todos los días?',
 		messagePh: 'Contanos brevemente tu caso',
 		phone: 'Teléfono',
@@ -262,6 +264,7 @@ export const es = {
 		submit: 'Contar mi caso',
 		submitting: 'Enviando…',
 		invalid: 'Revisá los campos marcados, por favor.',
+		requireEmailOrPhone: 'Dejanos un email o un teléfono para poder responderte.',
 		sending: 'Enviando…',
 		success: '¡Listo! Recibimos tu mensaje. Te respondemos dentro de 24 hs.',
 		botThanks: '¡Gracias! Te vamos a contactar.'
