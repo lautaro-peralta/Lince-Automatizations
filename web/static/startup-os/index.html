@@ -2509,31 +2509,10 @@
 			</button>
 		</div>
 
-		<h1 id="gate-title">Validación de acceso</h1>
-		<p class="sub" id="gate-sub">Ingresá con tu cuenta del equipo.</p>
-
-		<form id="gate-form" novalidate>
-			<label for="gate-email">Email</label>
-			<input id="gate-email" type="email" autocomplete="email" placeholder="tu@email.com" required />
-
-			<label for="gate-pass">Contraseña</label>
-			<input id="gate-pass" type="password" autocomplete="current-password" required />
-
-			<p class="gate-error" id="gate-error" role="alert"></p>
-
-			<button class="btn btn-primary" type="submit" id="gate-submit">Ingresar</button>
-			<button class="gate-link" type="button" id="gate-forgot">¿Olvidaste tu contraseña?</button>
-			<p class="gate-note" id="gate-note" hidden></p>
-		</form>
-
-		<form id="gate-recover-form" novalidate hidden>
-			<label for="gate-newpass">Contraseña nueva</label>
-			<input id="gate-newpass" type="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" required />
-
-			<p class="gate-error" id="gate-recover-error" role="alert"></p>
-
-			<button class="btn btn-primary" type="submit" id="gate-recover-submit">Guardar contraseña</button>
-		</form>
+		<h1 id="gate-title">Startup OS</h1>
+		<p class="sub" id="gate-sub">Verificando tu acceso…</p>
+		<p class="gate-note" id="gate-note" hidden></p>
+		<a class="gate-link" id="gate-login-link" href="/admin" hidden>Ir a iniciar sesión</a>
 	</div>
 </section>
 
@@ -2688,6 +2667,7 @@
 					</div>
 
 					<div class="pop-menu">
+						<button id="go-admin-btn"><svg class="icon"><use href="#i-blocks"/></svg>Ir al panel de admin</button>
 						<button><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
 						<button><svg class="icon"><use href="#i-sliders"/></svg>Configuración</button>
 						<button class="danger" id="logout-btn"><svg class="icon"><use href="#i-logout"/></svg>Cerrar sesión</button>
@@ -3270,16 +3250,22 @@
 	import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 	/* ─── CONFIGURACIÓN ───────────────────────────────────────────────────────
-	   Completá estos 3 valores con los de TU proyecto (Project Settings → API).
-	   La anon key es PÚBLICA por diseño (la protege RLS); es seguro dejarla acá.
-	   Deben coincidir con PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY del panel
-	   y PUBLIC_API_URL (backend Express en Render). */
-	const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
-	const SUPABASE_ANON_KEY = 'tu-anon-key-publica';
-	const API_URL = 'http://localhost:3000';
+	   La config pública (Supabase URL + anon key + URL del backend) se toma en
+	   RUNTIME del mismo origen, vía el endpoint /auth-config de la app. Así usa
+	   exactamente la misma que el panel /admin (misma tabla de usuarios) y no hay
+	   nada hardcodeado que se pueda desincronizar. */
+	let API_URL = '';
+	let supabase = null;
+	try {
+		const cfg = await (await fetch('/auth-config')).json();
+		API_URL = cfg.apiUrl || '';
+		if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+			supabase = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+		}
+	} catch (e) {
+		/* Sin config el flujo de acceso redirige al panel (ver más abajo). */
+	}
 	/* ─────────────────────────────────────────────────────────────────────── */
-
-	const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 	const $ = (sel, root) => (root || document).querySelector(sel);
 	const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
@@ -3353,25 +3339,17 @@
 	);
 	syncThemeIcon();
 
-	/* ---- Autenticación real (Supabase Auth, como el panel admin) ---- */
+	/* ---- Acceso: sesión compartida con /admin (el login vive allá) ----
+	   El Startup OS ya no tiene su propio formulario: usa la MISMA sesión de
+	   Supabase que el panel (mismo origen + mismo proyecto => misma cookie/
+	   localStorage). Si no hay sesión, se redirige a /admin a iniciar sesión. */
 	const gate = $('#gate');
 	const app = $('#app');
-	const gateForm = $('#gate-form');
-	const gateEmail = $('#gate-email');
-	const gatePass = $('#gate-pass');
-	const gateError = $('#gate-error');
-	const gateSubmit = $('#gate-submit');
-	const gateForgot = $('#gate-forgot');
-	const gateNote = $('#gate-note');
-	const gateTitle = $('#gate-title');
 	const gateSub = $('#gate-sub');
-	const recoverForm = $('#gate-recover-form');
-	const gateNewPass = $('#gate-newpass');
-	const recoverError = $('#gate-recover-error');
-	const recoverSubmit = $('#gate-recover-submit');
+	const gateNote = $('#gate-note');
+	const gateLoginLink = $('#gate-login-link');
 
 	let ME = null; // { id, email, full_name, role } del usuario logueado
-	let recovering = false; // true mientras se fija una contraseña nueva
 	let SOCIOS = []; // socios del Startup OS (de /api/me/partners)
 	const AV_CLASSES = ['av-lau', 'av-ian', 'av-ago'];
 
@@ -3399,34 +3377,16 @@
 		app.hidden = false;
 	}
 
-	function showGate() {
-		app.hidden = true;
-		gate.hidden = false;
-		recoverForm.hidden = true;
-		gateForm.hidden = false;
-		gateTitle.textContent = 'Validación de acceso';
-		gateSub.textContent = 'Ingresá con tu cuenta del equipo.';
-		gateNote.hidden = true;
-		gatePass.value = '';
-		gateError.classList.remove('show');
-		setTimeout(() => gateEmail.focus(), 60);
+	// Sin sesión: al login unificado del panel, con ?next para volver acá.
+	function goToLogin() {
+		location.replace('/admin?next=' + encodeURIComponent(location.pathname));
 	}
 
-	// Vista "elegí una contraseña nueva" (tras llegar desde el email).
-	function showRecover() {
+	// Deja el splash del gate visible con un mensaje (para casos sin acceso).
+	function showChecking(msg) {
 		app.hidden = true;
 		gate.hidden = false;
-		gateForm.hidden = true;
-		recoverForm.hidden = false;
-		gateTitle.textContent = 'Elegí una contraseña nueva';
-		gateSub.textContent = 'Ingresá tu nueva contraseña para terminar.';
-		recoverError.classList.remove('show');
-		setTimeout(() => gateNewPass.focus(), 60);
-	}
-
-	function gateFail(msg) {
-		gateError.textContent = msg;
-		gateError.classList.add('show');
+		if (msg) gateSub.textContent = msg;
 	}
 
 	// Tras un login válido: carga identidad + lista de socios desde la API.
@@ -3456,129 +3416,48 @@
 		applyUser();
 	}
 
-	gateForm.addEventListener('submit', async (ev) => {
-		ev.preventDefault();
-		const email = gateEmail.value.trim();
-		const password = gatePass.value;
-		if (!email || !password) {
-			gateFail('Completá tu email y contraseña.');
-			return;
-		}
-		gateError.classList.remove('show');
-		gateSubmit.disabled = true;
-		gateSubmit.textContent = 'Verificando…';
-		const { error } = await supabase.auth.signInWithPassword({ email, password });
-		gateSubmit.disabled = false;
-		gateSubmit.textContent = 'Ingresar';
-		if (error) {
-			const m = (error.message || '').toLowerCase();
-			gateFail(m.includes('invalid login') ? 'Email o contraseña incorrectos.' : error.message);
-			gatePass.select();
-		}
-		// Si es correcto, onAuthStateChange se encarga de mostrar la app.
-	});
-
-	// Reacciona a login / logout / refresh de token / recuperación.
-	supabase.auth.onAuthStateChange(async (event, session) => {
-		if (event === 'PASSWORD_RECOVERY') {
-			recovering = true;
-			showRecover();
-			return;
-		}
-		if (recovering) return; // mientras se fija la nueva contraseña, no navegamos
-		if (session) {
+	if (!supabase) {
+		// Falta la config pública (endpoint /auth-config). Redirigir al panel
+		// podría rebotar en loop, así que mostramos un aviso con salida manual.
+		showChecking('No se pudo cargar la configuración de acceso. Reintentá en un momento.');
+		gateLoginLink.hidden = false;
+	} else {
+		// La sesión se comparte con /admin: reaccionamos a login / logout / refresh.
+		supabase.auth.onAuthStateChange(async (_event, session) => {
+			if (!session) {
+				ME = null;
+				SOCIOS = [];
+				goToLogin();
+				return;
+			}
 			const wasHidden = app.hidden;
 			try {
 				await loadSession();
 			} catch (e) {
-				await supabase.auth.signOut();
-				showGate();
-				gateFail(
-					e.status === 403
-						? 'Tu cuenta no tiene acceso al Startup OS.'
-						: 'No se pudo cargar tu sesión. Reintentá en un momento.'
-				);
+				if (e.status === 403) {
+					// Logueado, pero esa cuenta no tiene acceso al Startup OS.
+					showChecking('Tu cuenta no tiene acceso al Startup OS.');
+					gateLoginLink.textContent = 'Ir al panel';
+					gateLoginLink.setAttribute('href', '/admin');
+					gateLoginLink.hidden = false;
+					return;
+				}
+				showChecking('No se pudo cargar tu sesión. Reintentá en un momento.');
+				gateLoginLink.hidden = false;
 				return;
 			}
 			showApp();
 			if (wasHidden) {
-				// Primer ingreso (o recarga con sesión): pinta la vista actual con
-				// los datos de la sesión. En un refresh de token no re-inicializa.
 				route();
 				toast('success', '#i-check-c', 'Hola, ' + firstNameOf(ME.full_name || ME.email) + '.');
 			}
-		} else {
-			ME = null;
-			SOCIOS = [];
-			showGate();
-		}
-	});
+		});
+	}
 
 	$('#logout-btn').addEventListener('click', async () => {
 		setPopover(false);
-		await supabase.auth.signOut();
-		toast('accent', '#i-logout', 'Cerraste sesión.');
-	});
-
-	// Recuperación de contraseña: envía el email (mismo mecanismo que el panel).
-	gateForgot.addEventListener('click', async () => {
-		const email = gateEmail.value.trim();
-		if (!email) {
-			gateEmail.focus();
-			return;
-		}
-		gateForgot.disabled = true;
-		gateForgot.textContent = 'Enviando…';
-		try {
-			await supabase.auth.resetPasswordForEmail(email, {
-				redirectTo: location.origin + location.pathname
-			});
-		} catch (e) {
-			/* mostramos el mismo mensaje pase lo que pase, para no filtrar cuentas */
-		}
-		gateForgot.disabled = false;
-		gateForgot.textContent = '¿Olvidaste tu contraseña?';
-		gateNote.textContent = 'Si ese email tiene una cuenta, te enviamos un enlace para restablecerla.';
-		gateNote.hidden = false;
-	});
-
-	// Guardar la contraseña nueva (tras llegar desde el email de recuperación).
-	recoverForm.addEventListener('submit', async (ev) => {
-		ev.preventDefault();
-		const pass = gateNewPass.value;
-		if (pass.length < 8) {
-			recoverError.textContent = 'La contraseña debe tener al menos 8 caracteres.';
-			recoverError.classList.add('show');
-			return;
-		}
-		recoverError.classList.remove('show');
-		recoverSubmit.disabled = true;
-		recoverSubmit.textContent = 'Guardando…';
-		const { error } = await supabase.auth.updateUser({ password: pass });
-		recoverSubmit.disabled = false;
-		recoverSubmit.textContent = 'Guardar contraseña';
-		if (error) {
-			recoverError.textContent = error.message || 'No se pudo actualizar la contraseña.';
-			recoverError.classList.add('show');
-			return;
-		}
-		recovering = false;
-		gateNewPass.value = '';
-		try {
-			await loadSession();
-		} catch (e) {
-			await supabase.auth.signOut();
-			showGate();
-			gateFail(
-				e.status === 403
-					? 'Tu cuenta no tiene acceso al Startup OS.'
-					: 'No se pudo cargar tu sesión. Reintentá en un momento.'
-			);
-			return;
-		}
-		showApp();
-		route();
-		toast('success', '#i-check-c', 'Contraseña actualizada. ¡Hola, ' + firstNameOf(ME.full_name || ME.email) + '!');
+		if (supabase) await supabase.auth.signOut();
+		goToLogin();
 	});
 
 	/* ---- Grupos colapsables del sidebar ---- */
@@ -4402,6 +4281,10 @@
 			const inp = $('#search-input');
 			if (inp && getComputedStyle(inp.closest('.search')).display !== 'none') inp.focus();
 		}
+	});
+
+	$('#go-admin-btn').addEventListener('click', () => {
+		location.href = '/admin';
 	});
 
 	$('#onboarding-btn').addEventListener('click', () => {
