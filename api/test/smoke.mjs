@@ -158,6 +158,18 @@ async function testRoutes() {
       ['GET', '/api/ads', null, 401],
       ['POST', '/api/ads', {}, 401],
       ['POST', '/api/uploads', null, 401],
+      ['GET', '/api/dashboard', null, 401],
+      ['GET', '/api/subscriptions', null, 401],
+      ['POST', '/api/subscriptions', {}, 401],
+      ['PATCH', '/api/subscriptions/abc', {}, 401],
+      ['DELETE', '/api/subscriptions/abc', null, 401],
+      ['GET', '/api/okrs', null, 401],
+      ['POST', '/api/okrs', {}, 401],
+      ['PATCH', '/api/okrs/abc', {}, 401],
+      ['DELETE', '/api/okrs/abc', null, 401],
+      ['POST', '/api/okrs/abc/key-results', {}, 401],
+      ['PATCH', '/api/okrs/key-results/abc', {}, 401],
+      ['DELETE', '/api/okrs/key-results/abc', null, 401],
       ['GET', '/nope', null, 404],
     ];
     for (const [m, p, b, exp] of cases) {

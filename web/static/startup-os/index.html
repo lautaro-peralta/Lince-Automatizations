@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Startup OS — Lince</title>
-<meta name="description" content="Prototipo de ERP unificado (Startup OS) con la identidad visual de Lince Automate. Datos simulados." />
+<meta name="description" content="Startup OS — el ERP interno de Lince Automate: gastos y aprobaciones entre socios, suscripciones SaaS, rendimiento de anuncios y OKRs." />
 
 <!-- Tema antes del primer pintado (mismo mecanismo y clave que el sitio: lince-theme). -->
 <script>
@@ -195,17 +195,6 @@
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--color-rust-deep);
-	}
-
-	/* Motivo de líneas diagonales de la marca. */
-	.hatch {
-		background-image: repeating-linear-gradient(
-			-45deg,
-			rgba(61, 90, 69, 0.08) 0px,
-			rgba(61, 90, 69, 0.08) 1px,
-			transparent 1px,
-			transparent 9px
-		);
 	}
 
 	/* ==========================================================================
@@ -623,89 +612,6 @@
 		color: var(--color-sage);
 	}
 
-	.onboarding {
-		margin: 4px 6px 8px;
-		padding: 12px;
-		border: 1px solid color-mix(in srgb, var(--color-warning) 25%, transparent);
-		background: color-mix(in srgb, var(--color-warning) 9%, transparent);
-		border-radius: var(--radius-md);
-	}
-
-	.onboarding-tag {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		font-family: var(--font-mono);
-		font-size: 10.5px;
-		font-weight: 500;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--color-rust-deep);
-	}
-
-	:root[data-theme='dark'] .onboarding-tag {
-		color: var(--color-warning);
-	}
-
-	.onboarding-tag .icon {
-		width: 13px;
-		height: 13px;
-	}
-
-	.onboarding .bar {
-		height: 5px;
-		margin: 10px 0 12px;
-		border-radius: 999px;
-		background: color-mix(in srgb, var(--color-warning) 16%, transparent);
-		overflow: hidden;
-	}
-
-	.onboarding .bar i {
-		display: block;
-		height: 100%;
-		width: 60%;
-		border-radius: 999px;
-		background: var(--color-warning);
-	}
-
-	.onboarding ul {
-		list-style: none;
-		margin: 0 0 12px;
-		padding: 0;
-		display: grid;
-		gap: 6px;
-	}
-
-	.onboarding li {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 13px;
-	}
-
-	.onboarding li .icon {
-		width: 15px;
-		height: 15px;
-	}
-
-	.onboarding li.done {
-		color: var(--color-sage);
-		text-decoration: line-through;
-		text-decoration-color: var(--color-line-strong);
-	}
-
-	.onboarding li.done .icon {
-		color: var(--color-success);
-	}
-
-	.onboarding li.todo .icon {
-		color: var(--color-rust-deep);
-	}
-
-	:root[data-theme='dark'] .onboarding li.todo .icon {
-		color: var(--color-warning);
-	}
-
 	.pop-menu {
 		display: flex;
 		flex-direction: column;
@@ -1053,27 +959,6 @@
 	:root[data-theme='dark'] .sema-success { color: var(--color-success); }
 	:root[data-theme='dark'] .sema-warning { color: var(--color-warning); }
 
-	.thresholds {
-		display: flex;
-		gap: 14px;
-		flex-wrap: wrap;
-		width: 100%;
-		font-size: 11.5px;
-		color: var(--color-sage);
-	}
-
-	.thresholds span {
-		display: inline-flex;
-		align-items: center;
-		gap: 5px;
-	}
-
-	.thresholds i {
-		width: 8px;
-		height: 8px;
-		border-radius: 999px;
-	}
-
 	/* ---- Gauge de presupuesto cloud ---- */
 	.gauge-panel {
 		border-left: 1px solid var(--color-line);
@@ -1173,21 +1058,6 @@
 
 	.appr-item + .appr-item {
 		border-top: 1px solid var(--color-line);
-	}
-
-	.appr-item.leaving {
-		overflow: hidden;
-		animation: leave 0.4s var(--ease-out-expo) forwards;
-	}
-
-	@keyframes leave {
-		to {
-			opacity: 0;
-			transform: translateX(24px);
-			max-height: 0;
-			padding-top: 0;
-			padding-bottom: 0;
-		}
 	}
 
 	.appr-ico {
@@ -1393,41 +1263,6 @@
 
 	.view.active {
 		display: block;
-	}
-
-	.placeholder-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 12px;
-		padding: 64px 24px;
-		text-align: center;
-	}
-
-	.placeholder-card .ph-ico {
-		display: grid;
-		place-items: center;
-		width: 52px;
-		height: 52px;
-		border-radius: 14px;
-		background: var(--color-rust-soft);
-		color: var(--color-rust-deep);
-	}
-
-	:root[data-theme='dark'] .placeholder-card .ph-ico {
-		color: var(--color-rust);
-	}
-
-	.placeholder-card .ph-ico .icon {
-		width: 24px;
-		height: 24px;
-	}
-
-	.placeholder-card p {
-		max-width: 46ch;
-		margin: 0;
-		color: var(--color-sage);
-		font-size: 14px;
 	}
 
 	/* ---- Toasts ---- */
@@ -2191,61 +2026,6 @@
 		color: var(--color-sage);
 	}
 
-	.gate-card label {
-		display: block;
-		font-size: 13px;
-		font-weight: 600;
-		color: var(--color-moss);
-		margin-bottom: 6px;
-	}
-
-	.gate-card input {
-		width: 100%;
-		border: 1px solid var(--color-line-strong);
-		background: var(--color-bg);
-		color: var(--color-ink);
-		border-radius: 8px;
-		padding: 9px 12px;
-		font: inherit;
-		font-size: 14.5px;
-		outline: none;
-		margin-bottom: 14px;
-		transition: border-color 0.15s ease, box-shadow 0.15s ease;
-	}
-
-	.gate-card input:focus {
-		border-color: var(--color-rust);
-		box-shadow: var(--shadow-glow);
-	}
-
-	.gate-error {
-		display: none;
-		margin: 0 0 14px;
-		padding: 9px 12px;
-		border: 1px solid color-mix(in srgb, var(--color-danger) 25%, transparent);
-		background: color-mix(in srgb, var(--color-danger) 6%, transparent);
-		border-radius: 8px;
-		color: var(--color-danger);
-		font-size: 13px;
-	}
-
-	.gate-error.show {
-		display: block;
-	}
-
-	.btn-primary {
-		background: var(--color-ink);
-		border-color: var(--color-ink);
-		color: var(--color-bg);
-		width: 100%;
-		padding: 10px 16px;
-		font-size: 14px;
-	}
-
-	.btn-primary:hover {
-		opacity: 0.9;
-	}
-
 	.gate-link {
 		display: inline-block;
 		margin-top: 12px;
@@ -2277,6 +2057,228 @@
 		background: rgba(20, 33, 26, 0.4);
 		backdrop-filter: blur(2px);
 		z-index: 45;
+	}
+
+	/* ==========================================================================
+	   NOTIFICACIONES, SKELETONS, ESTADOS DE ERROR, SAAS Y OKRs
+	   ========================================================================== */
+	.notif-wrap {
+		position: relative;
+	}
+
+	.popover.notif {
+		width: 336px;
+	}
+
+	.notif-list {
+		list-style: none;
+		margin: 0;
+		padding: 4px;
+		display: flex;
+		flex-direction: column;
+		gap: 1px;
+	}
+
+	.notif-item {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		width: 100%;
+		text-align: left;
+		padding: 9px 10px;
+		border-radius: 8px;
+		font-size: 13px;
+		color: var(--color-ink);
+	}
+
+	.notif-item:hover {
+		background: var(--color-surface-2);
+	}
+
+	.notif-item .n-ico {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 30px;
+		height: 30px;
+		border-radius: 8px;
+		background: var(--color-rust-soft);
+		color: var(--color-rust-deep);
+	}
+
+	:root[data-theme='dark'] .notif-item .n-ico {
+		color: var(--color-rust);
+	}
+
+	.notif-item .n-ico .icon {
+		width: 15px;
+		height: 15px;
+	}
+
+	.notif-item strong {
+		display: block;
+		font-weight: 600;
+	}
+
+	.notif-item small {
+		display: block;
+		font-size: 12px;
+		color: var(--color-sage);
+		margin-top: 1px;
+	}
+
+	.notif-empty {
+		padding: 20px 14px 22px;
+		text-align: center;
+		color: var(--color-sage);
+		font-size: 13px;
+	}
+
+	/* Los .link-btn también se usan como <a> */
+	.link-btn {
+		text-decoration: none;
+	}
+
+	/* Skeletons de carga */
+	.skel {
+		border-radius: var(--radius-md);
+		background: linear-gradient(
+			100deg,
+			var(--color-surface) 40%,
+			var(--color-surface-2) 50%,
+			var(--color-surface) 60%
+		);
+		background-size: 200% 100%;
+		animation: skel-shimmer 1.4s linear infinite;
+	}
+
+	@keyframes skel-shimmer {
+		to {
+			background-position: -200% 0;
+		}
+	}
+
+	/* Estado de error con reintento */
+	.load-error {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		padding: 36px 20px 40px;
+		text-align: center;
+		color: var(--color-sage);
+		font-size: 13.5px;
+	}
+
+	.load-error .icon {
+		width: 28px;
+		height: 28px;
+		color: var(--color-danger);
+	}
+
+	.load-error strong {
+		color: var(--color-ink);
+	}
+
+	/* Inputs sueltos (check-in de KRs, motivo de rechazo, altas rápidas) */
+	.inline-input {
+		font: inherit;
+		font-size: 13px;
+		padding: 6px 10px;
+		border: 1px solid var(--color-line-strong);
+		border-radius: 8px;
+		background: var(--color-bg);
+		color: var(--color-ink);
+		outline: none;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	}
+
+	.inline-input:focus {
+		border-color: var(--color-rust);
+		box-shadow: var(--shadow-glow);
+	}
+
+	/* OKRs: cards de objetivo con sus key results */
+	.okr-cards {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.okr-head-progress {
+		font-style: normal;
+		font-size: 16px;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+
+	.okr-obj-track {
+		margin: 12px 18px 2px;
+	}
+
+	.kr-list {
+		list-style: none;
+		margin: 8px 0 0;
+		padding: 0 18px 4px;
+	}
+
+	.kr-item {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: 4px 14px;
+		padding: 10px 0;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.kr-item .kr-title {
+		font-size: 13.5px;
+		font-weight: 500;
+	}
+
+	.kr-item .kr-meta {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: var(--color-sage);
+		margin-top: 2px;
+	}
+
+	.kr-checkin {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.kr-checkin input {
+		width: 96px;
+	}
+
+	.kr-add {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 18px 16px;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.kr-add input {
+		flex: 1;
+		min-width: 120px;
+	}
+
+	.okr-foot {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 8px 18px 14px;
+	}
+
+	@media (max-width: 600px) {
+		.kr-item {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	/* ==========================================================================
@@ -2533,59 +2535,37 @@
 
 			<div class="nav-group">
 				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-fin">
-					Finanzas &amp; Cloud
+					Finanzas
 					<svg class="icon"><use href="#i-chev"/></svg>
 				</button>
 				<div class="nav-group-list" id="grp-fin">
 					<div>
 						<a class="nav-item" href="#/gastos" data-route="gastos"><svg class="icon"><use href="#i-wallet"/></svg>Gastos y aprobaciones</a>
-						<a class="nav-item" href="#/cloud" data-route="cloud"><svg class="icon"><use href="#i-cloud"/></svg>Presupuesto cloud</a>
 						<a class="nav-item" href="#/saas" data-route="saas"><svg class="icon"><use href="#i-blocks"/></svg>Suscripciones SaaS</a>
-						<a class="nav-item" href="#/facturacion" data-route="facturacion"><svg class="icon"><use href="#i-card"/></svg>Facturación</a>
 					</div>
 				</div>
 			</div>
 
 			<div class="nav-group">
 				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-mkt">
-					Marketing &amp; Ads
+					Marketing
 					<svg class="icon"><use href="#i-chev"/></svg>
 				</button>
 				<div class="nav-group-list" id="grp-mkt">
 					<div>
 						<a class="nav-item" href="#/anuncios" data-route="anuncios"><svg class="icon"><use href="#i-megaphone"/></svg>Rendimiento de anuncios</a>
-						<a class="nav-item" href="#/campanas" data-route="campanas"><svg class="icon"><use href="#i-bars"/></svg>Campañas</a>
-						<a class="nav-item" href="#/canales" data-route="canales"><svg class="icon"><use href="#i-split"/></svg>Canales y atribución</a>
 					</div>
 				</div>
 			</div>
 
 			<div class="nav-group">
 				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-est">
-					Estrategia &amp; Equipo
+					Estrategia
 					<svg class="icon"><use href="#i-chev"/></svg>
 				</button>
 				<div class="nav-group-list" id="grp-est">
 					<div>
 						<a class="nav-item" href="#/okrs" data-route="okrs"><svg class="icon"><use href="#i-target"/></svg>OKRs y metas</a>
-						<a class="nav-item" href="#/roadmap" data-route="roadmap"><svg class="icon"><use href="#i-map"/></svg>Roadmap</a>
-						<a class="nav-item" href="#/equipo" data-route="equipo"><svg class="icon"><use href="#i-users"/></svg>Equipo y nómina</a>
-						<a class="nav-item" href="#/hiring" data-route="hiring"><svg class="icon"><use href="#i-user-plus"/></svg>Contrataciones</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="nav-group">
-				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-cli">
-					Clientes
-					<svg class="icon"><use href="#i-chev"/></svg>
-				</button>
-				<div class="nav-group-list" id="grp-cli">
-					<div>
-						<a class="nav-item" href="#/crm" data-route="crm"><svg class="icon"><use href="#i-heart"/></svg>Cartera / CRM</a>
-						<a class="nav-item" href="#/churn" data-route="churn"><svg class="icon"><use href="#i-down"/></svg>Salud y churn</a>
-						<a class="nav-item" href="#/soporte" data-route="soporte"><svg class="icon"><use href="#i-headset"/></svg>Soporte</a>
-						<a class="nav-item" href="#/onboarding" data-route="onboarding"><svg class="icon"><use href="#i-rocket"/></svg>Onboarding</a>
 					</div>
 				</div>
 			</div>
@@ -2593,13 +2573,14 @@
 
 		<div class="side-foot">
 			<div class="mini-label">
-				<span>Presupuesto cloud</span>
-				<strong>28% rest.</strong>
+				<span>Pendientes de aprobación</span>
+				<strong id="side-pending">—</strong>
 			</div>
-			<div class="mini-track" role="img" aria-label="Presupuesto cloud restante: 28 por ciento">
-				<div class="mini-fill"></div>
+			<div class="mini-label">
+				<span>SaaS mensual</span>
+				<strong id="side-saas">—</strong>
 			</div>
-			<p class="ver">OS v0.1 · prototipo · datos simulados</p>
+			<p class="ver">OS v1.0 · datos en vivo</p>
 		</div>
 	</aside>
 
@@ -2617,9 +2598,9 @@
 				<span id="crumb-cat">Management</span>
 			</div>
 
-			<label class="search">
+			<label class="search" id="search-box">
 				<svg class="icon" style="width:15px;height:15px"><use href="#i-search"/></svg>
-				<input id="search-input" type="search" placeholder="Buscar en el OS…" aria-label="Buscar en el OS" />
+				<input id="search-input" type="search" placeholder="Filtrar…" aria-label="Filtrar la vista actual" />
 				<kbd>/</kbd>
 			</label>
 
@@ -2627,49 +2608,35 @@
 				<svg class="icon" style="width:17px;height:17px"><use class="theme-ico" href="#i-moon"/></svg>
 			</button>
 
-			<button class="icon-btn" id="bell-btn" aria-label="Notificaciones">
-				<svg class="icon" style="width:17px;height:17px"><use href="#i-bell"/></svg>
-				<span class="dot" aria-hidden="true"></span>
-			</button>
+			<div class="notif-wrap">
+				<button class="icon-btn" id="bell-btn" aria-label="Notificaciones" aria-expanded="false" aria-haspopup="dialog">
+					<svg class="icon" style="width:17px;height:17px"><use href="#i-bell"/></svg>
+					<span class="dot" id="bell-dot" hidden aria-hidden="true"></span>
+				</button>
+				<div class="popover notif" id="notif-pop" role="dialog" aria-label="Notificaciones">
+					<div class="audit-title" style="margin:10px 12px 4px">Notificaciones</div>
+					<ul class="notif-list" id="notif-list"></ul>
+				</div>
+			</div>
 
 			<div class="profile-wrap">
 				<button class="profile-btn" id="profile-btn" aria-expanded="false" aria-haspopup="dialog">
-					<span class="avatar js-avatar">LP<span class="dot" aria-hidden="true"></span></span>
-					<span class="name" id="user-name">Lautaro</span>
+					<span class="avatar js-avatar">··</span>
+					<span class="name" id="user-name">—</span>
 					<svg class="icon"><use href="#i-chev"/></svg>
 				</button>
 
-				<div class="popover" id="popover" role="dialog" aria-label="Perfil y onboarding">
+				<div class="popover" id="popover" role="dialog" aria-label="Perfil">
 					<div class="pop-head">
-						<span class="avatar js-avatar">LP</span>
+						<span class="avatar js-avatar">··</span>
 						<div class="who">
-							<strong id="pop-name">Lautaro Peralta</strong>
-							<span id="pop-email">founder · lautaro@lince-automate.com</span>
+							<strong id="pop-name">—</strong>
+							<span id="pop-email">—</span>
 						</div>
-					</div>
-
-					<div class="onboarding">
-						<span class="onboarding-tag">
-							<svg class="icon"><use href="#i-alert"/></svg>
-							Onboarding pendiente · 2 pasos
-						</span>
-						<div class="bar" role="img" aria-label="Onboarding: 3 de 5 pasos completados"><i></i></div>
-						<ul>
-							<li class="done"><svg class="icon"><use href="#i-check-c"/></svg>Crear el workspace</li>
-							<li class="done"><svg class="icon"><use href="#i-check-c"/></svg>Conectar facturación</li>
-							<li class="done"><svg class="icon"><use href="#i-check-c"/></svg>Importar clientes</li>
-							<li class="todo"><svg class="icon"><use href="#i-circle"/></svg>Conectar tu nube (AWS / GCP)</li>
-							<li class="todo"><svg class="icon"><use href="#i-circle"/></svg>Invitá a tu equipo</li>
-						</ul>
-						<button class="btn btn-accent btn-sm" id="onboarding-btn">
-							Completar onboarding
-						</button>
 					</div>
 
 					<div class="pop-menu">
 						<button id="go-admin-btn"><svg class="icon"><use href="#i-blocks"/></svg>Ir al panel de admin</button>
-						<button><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
-						<button><svg class="icon"><use href="#i-sliders"/></svg>Configuración</button>
 						<button class="danger" id="logout-btn"><svg class="icon"><use href="#i-logout"/></svg>Cerrar sesión</button>
 					</div>
 				</div>
@@ -2677,280 +2644,133 @@
 		</header>
 
 		<main class="content">
-			<!-- ============ VISTA: DASHBOARD ============ -->
+			<!-- ============ VISTA: DASHBOARD (datos reales de /api/dashboard) ============ -->
 			<section class="view active" id="view-dashboard">
 				<div class="page-head">
 					<div>
-						<span class="kicker">Management · Q3 2026</span>
+						<span class="kicker">Management</span>
 						<h1>Dashboard General</h1>
 					</div>
-					<div class="meta">
-						datos simulados<br />
-						act. hoy 09:41
-					</div>
+					<div class="meta" id="dash-meta">cargando…</div>
 				</div>
 
-				<div class="grid">
-					<!-- ░░ Widget financiero ░░ -->
+				<div id="dash-loading" aria-hidden="true">
+					<div class="skel" style="height:190px;margin-bottom:18px"></div>
+					<div class="skel" style="height:260px"></div>
+				</div>
+
+				<div class="load-error" id="dash-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudo cargar el dashboard</strong>
+					<span id="dash-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="dash-retry">Reintentar</button>
+				</div>
+
+				<div class="grid" id="dash-grid" hidden>
+					<!-- ░░ Salud financiera (real: gastos + suscripciones + anuncios) ░░ -->
 					<article class="card span-12">
 						<div class="card-head">
 							<h2>
 								<svg class="icon"><use href="#i-wallet"/></svg>
 								Salud financiera
-								<span class="sub" style="display:none"></span>
 							</h2>
-							<span class="badge badge-neutral">mensual · USD</span>
+							<span class="badge badge-neutral" id="fin-period">—</span>
 						</div>
 
 						<div class="fin-body">
-							<div class="fin-kpis">
-								<!-- LTV:CAC con semaforización (color + ícono + etiqueta) -->
-								<div class="tile tile-featured">
-									<div>
-										<span class="label">Ratio LTV : CAC</span>
-										<div class="value">4,2×</div>
-										<span class="delta good">
-											<svg class="icon"><use href="#i-up"/></svg>
-											+0,4 vs Q2
-										</span>
-									</div>
-									<span class="sema sema-success">
-										<svg class="icon"><use href="#i-check-c"/></svg>
-										Saludable
-									</span>
-									<div class="thresholds" aria-label="Umbrales de semaforización">
-										<span><i style="background:var(--color-danger)"></i>&lt; 1,5 crítico</span>
-										<span><i style="background:var(--color-warning)"></i>1,5 – 3 ajustado</span>
-										<span><i style="background:var(--color-success)"></i>≥ 3 saludable</span>
-									</div>
-								</div>
+							<div class="fin-kpis" id="fin-kpis"></div>
 
-								<div class="tile">
-									<span class="label">MRR</span>
-									<div class="value">US$ 48.900</div>
-									<span class="delta good">
-										<svg class="icon"><use href="#i-up"/></svg>
-										+8,2% vs jun
-									</span>
-								</div>
-
-								<div class="tile">
-									<span class="label">Burn mensual</span>
-									<div class="value">US$ 31.400</div>
-									<span class="delta good">
-										<svg class="icon"><use href="#i-down"/></svg>
-										−4,1% vs jun
-									</span>
-								</div>
-
-								<div class="tile" style="grid-column: span 2">
-									<span class="label">Runway</span>
-									<div class="value">17 meses</div>
-									<span class="delta muted">a burn actual · hasta ≈ dic 2027</span>
-								</div>
-							</div>
-
-							<!-- Gauge: presupuesto cloud restante -->
+							<!-- Gauge: ROAS combinado del último mes vs objetivo -->
 							<div class="gauge-panel">
 								<h3>
-									<svg class="icon"><use href="#i-cloud"/></svg>
-									Presupuesto cloud restante
+									<svg class="icon"><use href="#i-megaphone"/></svg>
+									ROAS vs objetivo
 								</h3>
 
 								<div class="gauge-wrap">
-									<svg viewBox="0 0 200 118" role="img" aria-label="Presupuesto cloud restante: 28 por ciento, 4.230 dólares de 15.000">
+									<svg viewBox="0 0 200 118" role="img" aria-label="ROAS del último mes frente al objetivo" id="gauge-svg">
 										<path class="gauge-track" d="M 16 106 A 84 84 0 0 1 184 106" fill="none" stroke-width="14" stroke-linecap="round"/>
 										<path class="gauge-fill" id="gauge-fill" d="M 16 106 A 84 84 0 0 1 184 106" fill="none" stroke-width="14" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
 									</svg>
 									<div class="gauge-center">
-										<strong id="gauge-num">0%</strong>
-										<span>restante en julio</span>
+										<strong id="gauge-num">—</strong>
+										<span id="gauge-sub">sin datos</span>
 									</div>
 								</div>
 
-								<p class="gauge-meta"><strong>US$ 4.230</strong> de US$ 15.000 · proyección: se agota ≈ 24 jul</p>
+								<p class="gauge-meta" id="gauge-meta">Cargá métricas de anuncios para ver el ROAS.</p>
 
-								<span class="badge badge-warning gauge-alert">
-									<svg class="icon"><use href="#i-alert"/></svg>
-									Alerta de presupuesto
-								</span>
+								<span class="badge gauge-alert" id="gauge-badge" hidden></span>
 							</div>
 						</div>
 					</article>
 
-					<!-- ░░ Aprobaciones pendientes ░░ -->
+					<!-- ░░ Aprobaciones pendientes (reales, accionables) ░░ -->
 					<article class="card span-7">
 						<div class="card-head">
 							<h2>
 								<svg class="icon"><use href="#i-check-c"/></svg>
 								Aprobaciones pendientes
 							</h2>
-							<span class="badge badge-warning" id="appr-count">4 pendientes</span>
+							<span class="badge badge-warning" id="appr-count">—</span>
 						</div>
 
-						<ul class="appr-list" id="appr-list">
-							<li class="appr-item" data-name="Figma Organization × 8 asientos" data-kind="Licencia SaaS">
-								<span class="appr-ico"><svg class="icon"><use href="#i-blocks"/></svg></span>
-								<div class="appr-main">
-									<strong>Figma Organization × 8 asientos</strong>
-									<small><span class="badge badge-neutral">Licencia SaaS</span><span class="who">Ian Kasperczak · hace 2 h</span></small>
-								</div>
-								<span class="appr-amount">US$ 360 <small>/mes</small></span>
-								<div class="appr-actions">
-									<button class="btn btn-success btn-sm" data-action="approve"><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>
-									<button class="btn btn-danger btn-sm" data-action="reject"><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>
-								</div>
-							</li>
-
-							<li class="appr-item" data-name="Notebooks onboarding ingeniería" data-kind="Gasto">
-								<span class="appr-ico"><svg class="icon"><use href="#i-receipt"/></svg></span>
-								<div class="appr-main">
-									<strong>Notebooks onboarding ingeniería</strong>
-									<small><span class="badge badge-neutral">Gasto</span><span class="who">Agustín Fabbri · hace 5 h</span></small>
-								</div>
-								<span class="appr-amount">US$ 2.840</span>
-								<div class="appr-actions">
-									<button class="btn btn-success btn-sm" data-action="approve"><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>
-									<button class="btn btn-danger btn-sm" data-action="reject"><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>
-								</div>
-							</li>
-
-							<li class="appr-item" data-name="Viáticos — visita a Andes Pack (Córdoba)" data-kind="Viáticos">
-								<span class="appr-ico"><svg class="icon"><use href="#i-plane"/></svg></span>
-								<div class="appr-main">
-									<strong>Viáticos — visita a Andes Pack (Córdoba)</strong>
-									<small><span class="badge badge-neutral">Viáticos</span><span class="who">Carla Ríos · ayer</span></small>
-								</div>
-								<span class="appr-amount">US$ 182</span>
-								<div class="appr-actions">
-									<button class="btn btn-success btn-sm" data-action="approve"><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>
-									<button class="btn btn-danger btn-sm" data-action="reject"><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>
-								</div>
-							</li>
-
-							<li class="appr-item" data-name="Datadog APM — upgrade de plan" data-kind="Licencia SaaS">
-								<span class="appr-ico"><svg class="icon"><use href="#i-blocks"/></svg></span>
-								<div class="appr-main">
-									<strong>Datadog APM — upgrade de plan</strong>
-									<small><span class="badge badge-neutral">Licencia SaaS</span><span class="who">Martín Vega · ayer</span></small>
-								</div>
-								<span class="appr-amount">US$ 540 <small>/mes</small></span>
-								<div class="appr-actions">
-									<button class="btn btn-success btn-sm" data-action="approve"><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>
-									<button class="btn btn-danger btn-sm" data-action="reject"><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>
-								</div>
-							</li>
-						</ul>
+						<ul class="appr-list" id="appr-list"></ul>
 
 						<div class="empty" id="appr-empty">
 							<svg class="icon"><use href="#i-check-c"/></svg>
 							<strong style="color:var(--color-ink)">Todo al día</strong>
 							No quedan aprobaciones pendientes.
 						</div>
+
+						<div style="padding:0 18px 14px">
+							<a class="link-btn" href="#/gastos"><svg class="icon"><use href="#i-wallet"/></svg>Ver todos los gastos</a>
+						</div>
 					</article>
 
-					<!-- ░░ Riesgo de churn ░░ -->
+					<!-- ░░ Próximas renovaciones SaaS ░░ -->
 					<article class="card span-5">
 						<div class="card-head">
 							<h2>
-								<svg class="icon"><use href="#i-down"/></svg>
-								Riesgo de churn
+								<svg class="icon"><use href="#i-blocks"/></svg>
+								Próximas renovaciones
 							</h2>
-							<span class="badge badge-neutral">top 3</span>
+							<span class="badge badge-neutral" id="renew-count">—</span>
 						</div>
 
 						<div class="table-scroll">
 							<table>
 								<thead>
 									<tr>
-										<th scope="col">Cliente</th>
-										<th scope="col">MRR</th>
-										<th scope="col">Riesgo</th>
-										<th scope="col"><span style="position:absolute;clip:rect(0 0 0 0)">Acción</span></th>
+										<th scope="col">Suscripción</th>
+										<th scope="col">Costo</th>
+										<th scope="col">Renueva</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td>
-											<div class="client">
-												<strong>Andes Pack</strong>
-												<span>Plan Scale · sin login hace 21 días</span>
-											</div>
-										</td>
-										<td class="num">US$ 1.900</td>
-										<td><span class="badge badge-danger"><svg class="icon"><use href="#i-alert"/></svg>87%</span></td>
-										<td><button class="btn btn-accent btn-sm" data-retain="Andes Pack"><svg class="icon"><use href="#i-zap"/></svg>Retener</button></td>
-									</tr>
-									<tr>
-										<td>
-											<div class="client">
-												<strong>Vitalia Salud</strong>
-												<span>Plan Growth · 3 tickets sin resolver</span>
-											</div>
-										</td>
-										<td class="num">US$ 1.150</td>
-										<td><span class="badge badge-danger"><svg class="icon"><use href="#i-alert"/></svg>74%</span></td>
-										<td><button class="btn btn-accent btn-sm" data-retain="Vitalia Salud"><svg class="icon"><use href="#i-zap"/></svg>Retener</button></td>
-									</tr>
-									<tr>
-										<td>
-											<div class="client">
-												<strong>Rumbo Logística</strong>
-												<span>Plan Growth · uso −40% este mes</span>
-											</div>
-										</td>
-										<td class="num">US$ 890</td>
-										<td><span class="badge badge-warning"><svg class="icon"><use href="#i-alert"/></svg>58%</span></td>
-										<td><button class="btn btn-accent btn-sm" data-retain="Rumbo Logística"><svg class="icon"><use href="#i-zap"/></svg>Retener</button></td>
-									</tr>
-								</tbody>
+								<tbody id="renew-tbody"></tbody>
 							</table>
+						</div>
+						<div class="empty" id="renew-empty">
+							<svg class="icon"><use href="#i-check-c"/></svg>
+							Sin renovaciones en los próximos 30 días.
 						</div>
 					</article>
 
-					<!-- ░░ Progreso de OKRs ░░ -->
+					<!-- ░░ Progreso de OKRs (reales) ░░ -->
 					<article class="card span-12">
 						<div class="card-head">
 							<h2>
 								<svg class="icon"><use href="#i-target"/></svg>
 								Progreso de OKRs
-								<span class="sub">Q3 2026 · el avance define la intensidad del acento</span>
+								<span class="sub" id="dash-okr-sub"></span>
 							</h2>
-							<span class="badge badge-neutral">4 objetivos</span>
+							<a class="btn btn-ghost btn-sm" href="#/okrs" style="text-decoration:none">Gestionar</a>
 						</div>
 
-						<div class="okr-grid">
-							<div class="okr">
-								<div class="okr-top"><strong>Llevar el ARR a US$ 720K</strong><em>72%</em></div>
-								<div class="okr-track" role="img" aria-label="Avance 72 por ciento">
-									<div class="okr-fill" data-progress="72"></div>
-								</div>
-								<small>Lautaro · 3/4 KRs en camino</small>
-							</div>
-
-							<div class="okr">
-								<div class="okr-top"><strong>Reducir el churn mensual a &lt; 2%</strong><em>55%</em></div>
-								<div class="okr-track" role="img" aria-label="Avance 55 por ciento">
-									<div class="okr-fill" data-progress="55"></div>
-								</div>
-								<small>Carla · 2/3 KRs en camino</small>
-							</div>
-
-							<div class="okr">
-								<div class="okr-top"><strong>Lanzar facturación v2</strong><em>38%</em></div>
-								<div class="okr-track" role="img" aria-label="Avance 38 por ciento">
-									<div class="okr-fill" data-progress="38"></div>
-								</div>
-								<small>Agustín · beta con 5 clientes</small>
-							</div>
-
-							<div class="okr">
-								<div class="okr-top"><strong>NPS ≥ 60 en clientes activos</strong><em>21%</em></div>
-								<div class="okr-track" role="img" aria-label="Avance 21 por ciento">
-									<div class="okr-fill" data-progress="21"></div>
-								</div>
-								<small>Ian · primera medición en curso</small>
-							</div>
+						<div class="okr-grid" id="dash-okrs"></div>
+						<div class="empty" id="dash-okrs-empty">
+							<svg class="icon" style="color:var(--color-sage)"><use href="#i-target"/></svg>
+							Todavía no hay objetivos activos. Creá el primero en «OKRs y metas».
 						</div>
 					</article>
 				</div>
@@ -2960,7 +2780,7 @@
 			<section class="view" id="view-ads">
 				<div class="page-head">
 					<div>
-						<span class="kicker">Marketing &amp; Ads · carga manual</span>
+						<span class="kicker">Marketing · carga manual</span>
 						<h1>Rendimiento de anuncios</h1>
 					</div>
 					<div class="meta" id="ads-period">—</div>
@@ -2969,7 +2789,7 @@
 				<!-- Barra de acción: cargar métricas del mes -->
 				<div class="acting-bar">
 					<div class="acting">
-						<span class="lbl">Métricas por canal y mes · ROAS y CAC calculados</span>
+						<span class="lbl" style="padding-right:6px">Métricas por canal y mes · ROAS y CAC calculados</span>
 					</div>
 					<button class="btn btn-accent" id="ads-load-btn">
 						<svg class="icon"><use href="#i-plus"/></svg>
@@ -3001,11 +2821,11 @@
 								</div>
 								<div class="field">
 									<label for="a-spend">Inversión (US$)</label>
-									<input id="a-spend" type="number" min="0" step="1" placeholder="0" required />
+									<input id="a-spend" type="number" min="0" step="0.01" placeholder="0" required />
 								</div>
 								<div class="field">
 									<label for="a-revenue">Retorno atribuido (US$)</label>
-									<input id="a-revenue" type="number" min="0" step="1" placeholder="0" required />
+									<input id="a-revenue" type="number" min="0" step="0.01" placeholder="0" required />
 								</div>
 								<div class="field">
 									<label for="a-conversions">Clientes / conversiones</label>
@@ -3024,62 +2844,76 @@
 					</div>
 				</div>
 
-				<div class="kpi-row" id="ads-kpis"></div>
+				<div id="ads-loading" aria-hidden="true">
+					<div class="skel" style="height:96px;margin-bottom:18px"></div>
+					<div class="skel" style="height:240px"></div>
+				</div>
 
-				<div class="section-grid">
-					<article class="card span-8">
-						<div class="card-head">
-							<h2>
-								<svg class="icon"><use href="#i-up"/></svg>
-								Inversión y retorno por mes
-							</h2>
-							<span class="badge badge-neutral">USD</span>
-						</div>
-						<div class="chart-legend">
-							<span><i class="lg-a"></i>Inversión</span>
-							<span><i class="dot lg-b"></i>Retorno atribuido</span>
-						</div>
-						<div class="chart-wrap" id="chart-trend"></div>
-					</article>
+				<div class="load-error" id="ads-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudieron cargar las métricas</strong>
+					<span id="ads-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="ads-retry">Reintentar</button>
+				</div>
 
-					<article class="card span-4">
-						<div class="card-head">
-							<h2>
-								<svg class="icon"><use href="#i-zap"/></svg>
-								Lectura rápida
-							</h2>
-						</div>
-						<div id="ads-reading" style="padding:14px 18px 18px; display:flex; flex-direction:column; gap:14px"></div>
-					</article>
+				<div id="ads-body" hidden>
+					<div class="kpi-row" id="ads-kpis"></div>
 
-					<article class="card span-12">
-						<div class="card-head">
-							<h2>
-								<svg class="icon"><use href="#i-bars"/></svg>
-								Desglose por canal
-							</h2>
-							<span class="badge badge-neutral" id="ads-channel-count">—</span>
-						</div>
-						<div class="table-scroll">
-							<table>
-								<thead>
-									<tr>
-										<th scope="col">Canal</th>
-										<th scope="col">Inversión</th>
-										<th scope="col">Clientes</th>
-										<th scope="col">CAC</th>
-										<th scope="col">ROAS</th>
-										<th scope="col">Acción sugerida</th>
-									</tr>
-								</thead>
-								<tbody id="ads-tbody"></tbody>
-							</table>
-						</div>
-						<div class="empty" id="ads-empty">
-							<svg class="icon" style="color:var(--color-sage)"><use href="#i-bars"/></svg>
-							Todavía no cargaste métricas. Usá “Cargar métricas” para empezar.
-						</div>
-					</article>
+					<div class="section-grid">
+						<article class="card span-8">
+							<div class="card-head">
+								<h2>
+									<svg class="icon"><use href="#i-up"/></svg>
+									Inversión y retorno por mes
+								</h2>
+								<span class="badge badge-neutral">USD</span>
+							</div>
+							<div class="chart-legend">
+								<span><i class="lg-a"></i>Inversión</span>
+								<span><i class="dot lg-b"></i>Retorno atribuido</span>
+							</div>
+							<div class="chart-wrap" id="chart-trend"></div>
+						</article>
+
+						<article class="card span-4">
+							<div class="card-head">
+								<h2>
+									<svg class="icon"><use href="#i-zap"/></svg>
+									Lectura rápida
+								</h2>
+							</div>
+							<div id="ads-reading" style="padding:14px 18px 18px; display:flex; flex-direction:column; gap:14px"></div>
+						</article>
+
+						<article class="card span-12">
+							<div class="card-head">
+								<h2>
+									<svg class="icon"><use href="#i-bars"/></svg>
+									Desglose por canal
+								</h2>
+								<span class="badge badge-neutral" id="ads-channel-count">—</span>
+							</div>
+							<div class="table-scroll">
+								<table>
+									<thead>
+										<tr>
+											<th scope="col">Canal</th>
+											<th scope="col">Inversión</th>
+											<th scope="col">Clientes</th>
+											<th scope="col">CAC</th>
+											<th scope="col">ROAS</th>
+											<th scope="col">Acción sugerida</th>
+										</tr>
+									</thead>
+									<tbody id="ads-tbody"></tbody>
+								</table>
+							</div>
+							<div class="empty" id="ads-empty">
+								<svg class="icon" style="color:var(--color-sage)"><use href="#i-bars"/></svg>
+								Todavía no cargaste métricas. Usá “Cargar métricas” para empezar.
+							</div>
+						</article>
+					</div>
 				</div>
 			</section>
 
@@ -3087,13 +2921,13 @@
 			<section class="view" id="view-gastos">
 				<div class="page-head">
 					<div>
-						<span class="kicker">Finanzas &amp; Cloud · control entre socios</span>
+						<span class="kicker">Finanzas · control entre socios</span>
 						<h1>Gastos y aprobaciones</h1>
 					</div>
-					<div class="meta">datos simulados<br />julio 2026</div>
+					<div class="meta" id="gastos-meta">—</div>
 				</div>
 
-				<!-- Reglas de control anti-fraude -->
+				<!-- Reglas de control anti-fraude (se aplican en el servidor) -->
 				<article class="card" style="margin-bottom:18px">
 					<div class="card-head">
 						<h2>
@@ -3114,7 +2948,7 @@
 							<span class="r-ico"><svg class="icon"><use href="#i-check-c"/></svg></span>
 							<div>
 								<strong>Doble control por monto</strong>
-								<p>Menos de US$ 1.000 → 1 aprobación de otro socio. US$ 1.000 o más → 2 socios distintos.</p>
+								<p>Menos de 1.000 (en la moneda del gasto) → 1 aprobación de otro socio. 1.000 o más → 2 socios distintos.</p>
 							</div>
 						</div>
 						<div class="rule">
@@ -3128,7 +2962,7 @@
 							<span class="r-ico"><svg class="icon"><use href="#i-eye"/></svg></span>
 							<div>
 								<strong>Transparencia total</strong>
-								<p>Los tres socios ven todos los movimientos y el historial completo de cada uno.</p>
+								<p>Todos los socios ven todos los movimientos y el historial completo de cada uno.</p>
 							</div>
 						</div>
 					</div>
@@ -3145,7 +2979,7 @@
 						<span class="sav sm" id="acting-av">··</span>
 						<span id="acting-name" style="font-size:13.5px;font-weight:600">—</span>
 					</div>
-					<button class="btn btn-accent" id="registrar-btn">
+					<button class="btn btn-accent" id="registrar-btn" aria-expanded="false">
 						<svg class="icon"><use href="#i-plus"/></svg>
 						Registrar compra
 					</button>
@@ -3161,11 +2995,17 @@
 							<form class="gasto-form" id="gasto-form" novalidate>
 								<div class="field wide">
 									<label for="f-concepto">Concepto</label>
-									<input id="f-concepto" type="text" placeholder="Ej: Campaña Meta Ads — agosto" required />
+									<input id="f-concepto" type="text" placeholder="Ej: Campaña Meta Ads — agosto" maxlength="500" required />
 								</div>
 								<div class="field">
-									<label for="f-monto">Monto (US$)</label>
-									<input id="f-monto" type="number" min="1" step="1" placeholder="0" required />
+									<label for="f-monto">Monto</label>
+									<div style="display:flex; gap:8px">
+										<select id="f-moneda" aria-label="Moneda" style="font:inherit;font-size:14px;color:var(--color-ink);background:var(--color-bg);border:1px solid var(--color-line-strong);border-radius:8px;padding:8px 6px">
+											<option value="USD">US$</option>
+											<option value="ARS">AR$</option>
+										</select>
+										<input id="f-monto" type="number" min="0.01" step="0.01" placeholder="0" required style="flex:1;min-width:0" />
+									</div>
 								</div>
 								<div class="field">
 									<label for="f-categoria">Categoría</label>
@@ -3178,9 +3018,9 @@
 										<option>Otros</option>
 									</select>
 								</div>
-								<div class="field">
+								<div class="field wide">
 									<label for="f-proveedor">Proveedor</label>
-									<input id="f-proveedor" type="text" placeholder="Ej: Meta Platforms" />
+									<input id="f-proveedor" type="text" placeholder="Ej: Meta Platforms" maxlength="160" />
 								</div>
 								<div class="field wide">
 									<label>Comprobante</label>
@@ -3193,7 +3033,7 @@
 										<span class="file-name" id="f-receipt-status">o pegá un link / N.º de factura abajo</span>
 									</div>
 									<input id="f-receipt-ref" type="hidden" />
-									<input id="f-receipt" type="text" placeholder="drive.google.com/… o Factura A-0001-00003391" style="margin-top:8px" />
+									<input id="f-receipt" type="text" placeholder="drive.google.com/… o Factura A-0001-00003391" maxlength="2000" style="margin-top:8px" />
 								</div>
 								<div class="actions">
 									<span class="rule-hint" id="form-rule-hint">Requiere <strong>1 aprobación</strong> de otro socio.</span>
@@ -3208,34 +3048,240 @@
 					</div>
 				</div>
 
-				<!-- KPIs (render por JS) -->
-				<div class="kpi-row" id="gasto-kpis"></div>
+				<div id="gasto-loading" aria-hidden="true">
+					<div class="skel" style="height:96px;margin-bottom:18px"></div>
+					<div class="skel" style="height:120px;margin-bottom:12px"></div>
+					<div class="skel" style="height:120px"></div>
+				</div>
 
-				<!-- Lista de gastos (render por JS) -->
-				<div class="gasto-list" id="gasto-list"></div>
-				<div class="gasto-empty" id="gasto-empty" hidden>
-					<svg class="icon"><use href="#i-check-c"/></svg>
-					<strong style="color:var(--color-ink)">Sin gastos registrados</strong>
-					Registrá la primera compra para arrancar el circuito de aprobación.
+				<div class="load-error" id="gasto-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudieron cargar los gastos</strong>
+					<span id="gasto-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="gasto-retry">Reintentar</button>
+				</div>
+
+				<div id="gasto-body" hidden>
+					<!-- KPIs (render por JS) -->
+					<div class="kpi-row" id="gasto-kpis"></div>
+
+					<!-- Lista de gastos (render por JS) -->
+					<div class="gasto-list" id="gasto-list"></div>
+					<div class="gasto-empty" id="gasto-empty" hidden>
+						<svg class="icon"><use href="#i-check-c"/></svg>
+						<strong style="color:var(--color-ink)">Sin gastos registrados</strong>
+						Registrá la primera compra para arrancar el circuito de aprobación.
+					</div>
 				</div>
 			</section>
 
-			<!-- ============ VISTA: PLACEHOLDER (módulos) ============ -->
-			<section class="view" id="view-module">
+			<!-- ============ VISTA: SUSCRIPCIONES SAAS ============ -->
+			<section class="view" id="view-saas">
 				<div class="page-head">
 					<div>
-						<span class="kicker" id="ph-kicker">Módulo</span>
-						<h1 id="ph-title">Módulo</h1>
+						<span class="kicker">Finanzas · gasto recurrente</span>
+						<h1>Suscripciones SaaS</h1>
 					</div>
-					<div class="meta">datos simulados</div>
+					<div class="meta" id="saas-meta">—</div>
 				</div>
 
-				<article class="card hatch placeholder-card">
-					<span class="ph-ico"><svg class="icon" id="ph-icon"><use href="#i-dash"/></svg></span>
-					<h2 id="ph-name" style="font-size:20px">Módulo</h2>
-					<p id="ph-desc">Este módulo forma parte del prototipo.</p>
-					<a class="btn btn-ghost" href="#/dashboard" style="text-decoration:none">Volver al dashboard</a>
-				</article>
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl" style="padding-right:6px">Inventario de licencias · costo mensual normalizado (anual ÷ 12)</span>
+					</div>
+					<button class="btn btn-accent" id="saas-add-btn" aria-expanded="false">
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Agregar suscripción
+					</button>
+				</div>
+
+				<!-- Formulario alta/edición (colapsable) -->
+				<div class="form-collapse" id="saas-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-blocks"/></svg><span id="saas-form-title">Agregar una suscripción</span></h2>
+							</div>
+							<form class="gasto-form" id="saas-form" novalidate>
+								<input id="s-edit-id" type="hidden" />
+								<div class="field">
+									<label for="s-name">Nombre</label>
+									<input id="s-name" type="text" placeholder="Ej: Figma Organization" maxlength="160" required />
+								</div>
+								<div class="field">
+									<label for="s-vendor">Proveedor</label>
+									<input id="s-vendor" type="text" placeholder="Ej: Figma Inc." maxlength="160" />
+								</div>
+								<div class="field">
+									<label for="s-amount">Costo por ciclo</label>
+									<div style="display:flex; gap:8px">
+										<select id="s-currency" aria-label="Moneda" style="font:inherit;font-size:14px;color:var(--color-ink);background:var(--color-bg);border:1px solid var(--color-line-strong);border-radius:8px;padding:8px 6px">
+											<option value="USD">US$</option>
+											<option value="ARS">AR$</option>
+										</select>
+										<input id="s-amount" type="number" min="0" step="0.01" placeholder="0" required style="flex:1;min-width:0" />
+									</div>
+								</div>
+								<div class="field">
+									<label for="s-cycle">Ciclo de facturación</label>
+									<select id="s-cycle">
+										<option value="mensual">Mensual</option>
+										<option value="anual">Anual</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="s-seats">Asientos</label>
+									<input id="s-seats" type="number" min="1" step="1" value="1" />
+								</div>
+								<div class="field">
+									<label for="s-renews">Próxima renovación</label>
+									<input id="s-renews" type="date" />
+								</div>
+								<div class="field">
+									<label for="s-status">Estado</label>
+									<select id="s-status">
+										<option value="activa">Activa</option>
+										<option value="pausada">Pausada</option>
+										<option value="cancelada">Cancelada</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="s-notes">Notas</label>
+									<input id="s-notes" type="text" placeholder="Ej: renegociar antes de renovar" maxlength="500" />
+								</div>
+								<div class="actions">
+									<span class="rule-hint" id="saas-form-hint">El costo mensual de una suscripción anual se prorratea ÷ 12.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="saas-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm">
+										<svg class="icon"><use href="#i-check"/></svg>
+										Guardar
+									</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<div id="saas-loading" aria-hidden="true">
+					<div class="skel" style="height:96px;margin-bottom:18px"></div>
+					<div class="skel" style="height:240px"></div>
+				</div>
+
+				<div class="load-error" id="saas-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudieron cargar las suscripciones</strong>
+					<span id="saas-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="saas-retry">Reintentar</button>
+				</div>
+
+				<div id="saas-body" hidden>
+					<div class="kpi-row" id="saas-kpis"></div>
+
+					<article class="card">
+						<div class="card-head">
+							<h2><svg class="icon"><use href="#i-blocks"/></svg>Inventario</h2>
+							<span class="badge badge-neutral" id="saas-count">—</span>
+						</div>
+						<div class="table-scroll">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Suscripción</th>
+										<th scope="col">Costo/mes</th>
+										<th scope="col">Ciclo</th>
+										<th scope="col">Asientos</th>
+										<th scope="col">Renueva</th>
+										<th scope="col">Estado</th>
+										<th scope="col"><span style="position:absolute;clip:rect(0 0 0 0)">Acciones</span></th>
+									</tr>
+								</thead>
+								<tbody id="saas-tbody"></tbody>
+							</table>
+						</div>
+						<div class="empty" id="saas-empty">
+							<svg class="icon" style="color:var(--color-sage)"><use href="#i-blocks"/></svg>
+							Sin suscripciones cargadas. Agregá la primera para controlar el gasto recurrente.
+						</div>
+					</article>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: OKRs Y METAS ============ -->
+			<section class="view" id="view-okrs">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Estrategia · objetivos por trimestre</span>
+						<h1>OKRs y metas</h1>
+					</div>
+					<div class="meta" id="okrs-meta">—</div>
+				</div>
+
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl" style="padding-right:6px">El avance de un objetivo = promedio del avance de sus key results</span>
+					</div>
+					<div style="display:flex; gap:10px; flex-wrap:wrap">
+						<button class="btn btn-ghost" id="okr-show-arch" aria-pressed="false">Ver archivados</button>
+						<button class="btn btn-accent" id="okr-add-btn" aria-expanded="false">
+							<svg class="icon"><use href="#i-plus"/></svg>
+							Nuevo objetivo
+						</button>
+					</div>
+				</div>
+
+				<!-- Formulario de objetivo (colapsable) -->
+				<div class="form-collapse" id="okr-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-target"/></svg>Nuevo objetivo</h2>
+							</div>
+							<form class="gasto-form" id="okr-form" novalidate>
+								<div class="field wide">
+									<label for="o-title">Objetivo</label>
+									<input id="o-title" type="text" placeholder="Ej: Llevar el MRR a US$ 5.000" maxlength="200" required />
+								</div>
+								<div class="field">
+									<label for="o-quarter">Trimestre</label>
+									<select id="o-quarter"></select>
+								</div>
+								<div class="field">
+									<label for="o-owner">Responsable</label>
+									<select id="o-owner"></select>
+								</div>
+								<div class="actions">
+									<span class="rule-hint">Los key results se agregan después, desde la tarjeta del objetivo.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="okr-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm">
+										<svg class="icon"><use href="#i-plus"/></svg>
+										Crear objetivo
+									</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<div id="okr-loading" aria-hidden="true">
+					<div class="skel" style="height:150px;margin-bottom:14px"></div>
+					<div class="skel" style="height:150px"></div>
+				</div>
+
+				<div class="load-error" id="okr-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudieron cargar los OKRs</strong>
+					<span id="okr-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="okr-retry">Reintentar</button>
+				</div>
+
+				<div id="okr-body" hidden>
+					<div class="okr-cards" id="okr-list"></div>
+					<div class="gasto-empty" id="okr-empty" hidden>
+						<svg class="icon"><use href="#i-target"/></svg>
+						<strong style="color:var(--color-ink)">Sin objetivos</strong>
+						Creá el primer objetivo del trimestre para empezar a medir el avance.
+					</div>
+				</div>
 			</section>
 		</main>
 	</div>
@@ -3243,1058 +3289,1971 @@
 
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
+<!-- supabase-js vendoreado (mismo origen): sin CDN de terceros en producción.
+     Versión fija 2.108.2 — actualizar = reemplazar el archivo de vendor/. -->
+<script src="/startup-os/vendor/supabase-js-2.108.2.js"></script>
+
 <script type="module">
-	/* =========================================================================
-	   Startup OS — interacciones (módulo ES). Auth real con Supabase + API.
-	   ========================================================================= */
-	import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+/* =========================================================================
+   Startup OS — aplicación (módulo ES). Auth real con Supabase + API propia.
+   Todo lo que se ve sale de la API: no hay datos simulados.
+   ========================================================================= */
+const { createClient } = window.supabase || {};
 
-	/* ─── CONFIGURACIÓN ───────────────────────────────────────────────────────
-	   La config pública (Supabase URL + anon key + URL del backend) se toma en
-	   RUNTIME del mismo origen, vía el endpoint /auth-config de la app. Así usa
-	   exactamente la misma que el panel /admin (misma tabla de usuarios) y no hay
-	   nada hardcodeado que se pueda desincronizar. */
-	let API_URL = '';
-	let supabase = null;
-	try {
-		const cfg = await (await fetch('/auth-config')).json();
-		API_URL = cfg.apiUrl || '';
-		if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
-			supabase = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
-		}
-	} catch (e) {
-		/* Sin config el flujo de acceso redirige al panel (ver más abajo). */
+/* ─── CONFIGURACIÓN ───────────────────────────────────────────────────────
+   La config pública (Supabase URL + anon key + URL del backend) se toma en
+   RUNTIME del mismo origen, vía el endpoint /auth-config de la app. Así usa
+   exactamente la misma que el panel /admin (misma tabla de usuarios) y no hay
+   nada hardcodeado que se pueda desincronizar. */
+let API_URL = '';
+let supabase = null;
+try {
+	const cfg = await (await fetch('/auth-config')).json();
+	API_URL = cfg.apiUrl || '';
+	if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+		supabase = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
 	}
-	/* ─────────────────────────────────────────────────────────────────────── */
+} catch (e) {
+	/* Sin config el flujo de acceso muestra el aviso del gate (ver abajo). */
+}
+/* ─────────────────────────────────────────────────────────────────────── */
 
-	const $ = (sel, root) => (root || document).querySelector(sel);
-	const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+const $ = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
 
-	/* ---- Cliente HTTP mínimo hacia el backend (adjunta el JWT de la sesión). ---- */
-	async function api(path, { method = 'GET', body } = {}) {
-		const { data: { session } } = await supabase.auth.getSession();
-		const headers = { 'Content-Type': 'application/json' };
-		if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
-		const res = await fetch(`${API_URL}${path}`, {
-			method,
-			headers,
-			body: body ? JSON.stringify(body) : undefined
-		});
-		const text = await res.text();
-		let data = null;
-		try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
-		if (!res.ok) {
-			const err = new Error((data && data.message) || `Error ${res.status}`);
-			err.status = res.status;
-			err.data = data;
-			throw err;
-		}
-		return data;
-	}
-	const apiGet = (p) => api(p).then((r) => (r && r.data !== undefined ? r.data : r));
-	const apiSend = (p, body, method = 'POST') =>
-		api(p, { method, body }).then((r) => (r && r.data !== undefined ? r.data : r));
-
-	// Subida de archivos (multipart). No lleva Content-Type: el navegador arma el
-	// boundary. Solo adjunta el JWT de la sesión.
-	async function apiUpload(path, file) {
-		const { data: { session } } = await supabase.auth.getSession();
-		const fd = new FormData();
-		fd.append('file', file);
-		const headers = {};
-		if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
-		const res = await fetch(`${API_URL}${path}`, { method: 'POST', headers, body: fd });
-		const text = await res.text();
-		let data = null;
-		try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
-		if (!res.ok) {
-			const err = new Error((data && data.message) || `Error ${res.status}`);
-			err.status = res.status;
-			throw err;
-		}
-		return data && data.data !== undefined ? data.data : data;
-	}
-
-	/* ---- Tema (mismo mecanismo que el sitio: data-theme + lince-theme) ---- */
-	const themeToggles = $$('.theme-toggle');
-
-	function syncThemeIcon() {
-		const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-		$$('.theme-ico').forEach((u) => u.setAttribute('href', dark ? '#i-sun' : '#i-moon'));
-		themeToggles.forEach((b) =>
-			b.setAttribute('aria-label', dark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro')
-		);
-	}
-
-	themeToggles.forEach((btn) =>
-		btn.addEventListener('click', () => {
-			const next =
-				document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-			document.documentElement.setAttribute('data-theme', next);
-			try {
-				localStorage.setItem('lince-theme', next);
-			} catch (e) {}
-			syncThemeIcon();
-		})
+/* ---- Seguridad: TODO contenido que venga de la base pasa por esc() antes
+        de entrar a un innerHTML. Evita XSS almacenado entre socios. ---- */
+const esc = (s) =>
+	String(s ?? '').replace(
+		/[&<>"']/g,
+		(c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
 	);
-	syncThemeIcon();
 
-	/* ---- Acceso: sesión compartida con /admin (el login vive allá) ----
-	   El Startup OS ya no tiene su propio formulario: usa la MISMA sesión de
-	   Supabase que el panel (mismo origen + mismo proyecto => misma cookie/
-	   localStorage). Si no hay sesión, se redirige a /admin a iniciar sesión. */
-	const gate = $('#gate');
-	const app = $('#app');
-	const gateSub = $('#gate-sub');
-	const gateNote = $('#gate-note');
-	const gateLoginLink = $('#gate-login-link');
-
-	let ME = null; // { id, email, full_name, role } del usuario logueado
-	let SOCIOS = []; // socios del Startup OS (de /api/me/partners)
-	const AV_CLASSES = ['av-lau', 'av-ian', 'av-ago'];
-
-	const firstNameOf = (full) => (full || '').trim().split(/\s+/)[0] || 'Socio';
-	function initialsOf(full) {
-		const p = (full || '').trim().split(/\s+/).filter(Boolean);
-		return (p.length > 1 ? p[0][0] + p[1][0] : (p[0] || '·').slice(0, 2)).toUpperCase();
+/* ---- Cliente HTTP mínimo hacia el backend (adjunta el JWT de la sesión). ---- */
+async function api(path, { method = 'GET', body } = {}) {
+	const { data: { session } } = await supabase.auth.getSession();
+	const headers = { 'Content-Type': 'application/json' };
+	if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
+	const res = await fetch(`${API_URL}${path}`, {
+		method,
+		headers,
+		body: body ? JSON.stringify(body) : undefined
+	});
+	const text = await res.text();
+	let data = null;
+	try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
+	if (!res.ok) {
+		const err = new Error((data && data.message) || `Error ${res.status}`);
+		err.status = res.status;
+		err.data = data;
+		throw err;
 	}
+	return data;
+}
+const apiGet = (p) => api(p).then((r) => (r && r.data !== undefined ? r.data : r));
+const apiSend = (p, body, method = 'POST') =>
+	api(p, { method, body }).then((r) => (r && r.data !== undefined ? r.data : r));
 
-	// El nombre sale del perfil (full_name), NO se deduce cortando el email.
-	function applyUser() {
-		if (!ME) return;
-		const name = ME.full_name || ME.email;
-		const ini = initialsOf(name);
-		$('#user-name').textContent = firstNameOf(name);
-		$('#pop-name').textContent = name;
-		$('#pop-email').textContent = (ME.role === 'admin' ? 'admin' : 'socio') + ' · ' + ME.email;
-		$$('.js-avatar').forEach((el) => {
-			el.firstChild.nodeValue = ini;
+// Subida de archivos (multipart). No lleva Content-Type: el navegador arma el
+// boundary. Solo adjunta el JWT de la sesión.
+async function apiUpload(path, file) {
+	const { data: { session } } = await supabase.auth.getSession();
+	const fd = new FormData();
+	fd.append('file', file);
+	const headers = {};
+	if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
+	const res = await fetch(`${API_URL}${path}`, { method: 'POST', headers, body: fd });
+	const text = await res.text();
+	let data = null;
+	try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
+	if (!res.ok) {
+		const err = new Error((data && data.message) || `Error ${res.status}`);
+		err.status = res.status;
+		throw err;
+	}
+	return data && data.data !== undefined ? data.data : data;
+}
+
+/* ---- Formato ---- */
+const SYM = { USD: 'US$', ARS: 'AR$' };
+const money = (n, cur = 'USD') =>
+	(SYM[cur] || cur) + ' ' + Math.round(Number(n) || 0).toLocaleString('es-AR');
+const moneyPair = (m) => {
+	const parts = [];
+	if (m && m.USD) parts.push(money(m.USD, 'USD'));
+	if (m && m.ARS) parts.push(money(m.ARS, 'ARS'));
+	return parts.length ? parts.join(' + ') : money(0, 'USD');
+};
+const num = (n) => Number(n).toLocaleString('es-AR');
+
+const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const MONTHS_LONG = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const monthShort = (p) => (p ? MONTHS_ES[Number(p.slice(5, 7)) - 1] + " '" + p.slice(2, 4) : '');
+const monthLong = (p) => (p ? MONTHS_LONG[Number(p.slice(5, 7)) - 1] + ' ' + p.slice(0, 4) : '—');
+const monthKeyNow = () => new Date().toISOString().slice(0, 7);
+
+// Fecha corta y legible a partir de un timestamp ISO del backend.
+function whenLabel(iso) {
+	if (!iso) return '';
+	const d = new Date(iso);
+	const hh = String(d.getHours()).padStart(2, '0');
+	const mm = String(d.getMinutes()).padStart(2, '0');
+	if (d.toDateString() === new Date().toDateString()) return 'hoy ' + hh + ':' + mm;
+	return d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }) + ' ' + hh + ':' + mm;
+}
+
+// 'YYYY-MM-DD' -> días desde hoy (negativo = vencida) y etiqueta legible.
+function daysUntil(dateStr) {
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	const d = new Date(dateStr + 'T00:00:00');
+	return Math.round((d - today) / 86400000);
+}
+const dateLabel = (dateStr) =>
+	new Date(dateStr + 'T00:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+
+/* ---- Tema (mismo mecanismo que el sitio: data-theme + lince-theme) ---- */
+const themeToggles = $$('.theme-toggle');
+
+function syncThemeIcon() {
+	const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+	$$('.theme-ico').forEach((u) => u.setAttribute('href', dark ? '#i-sun' : '#i-moon'));
+	themeToggles.forEach((b) =>
+		b.setAttribute('aria-label', dark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro')
+	);
+}
+
+themeToggles.forEach((btn) =>
+	btn.addEventListener('click', () => {
+		const next =
+			document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+		document.documentElement.setAttribute('data-theme', next);
+		try {
+			localStorage.setItem('lince-theme', next);
+		} catch (e) {}
+		syncThemeIcon();
+	})
+);
+syncThemeIcon();
+
+/* ---- Toasts (el mensaje va por textContent: nunca interpreta HTML) ---- */
+const toasts = $('#toasts');
+
+function toast(kind, icon, msg) {
+	const el = document.createElement('div');
+	el.className = 'toast t-' + kind;
+	el.innerHTML = '<svg class="icon"><use href="' + icon + '"/></svg>';
+	const span = document.createElement('span');
+	span.textContent = msg;
+	el.appendChild(span);
+	toasts.appendChild(el);
+	setTimeout(() => {
+		el.classList.add('out');
+		el.addEventListener('animationend', () => el.remove(), { once: true });
+	}, 3800);
+}
+
+/* ---- Acceso: sesión compartida con /admin (el login vive allá) ----
+   El Startup OS no tiene formulario propio: usa la MISMA sesión de Supabase
+   que el panel (mismo origen + mismo proyecto). Si no hay sesión, se
+   redirige a /admin a iniciar sesión y vuelve solo con ?next. */
+const gate = $('#gate');
+const app = $('#app');
+const gateSub = $('#gate-sub');
+const gateLoginLink = $('#gate-login-link');
+
+let ME = null; // { id, email, full_name, role } del usuario logueado
+let SOCIOS = []; // socios del Startup OS (de /api/me/partners)
+let DASH = null; // último payload de /api/dashboard (alimenta panel + campana)
+const AV_CLASSES = ['av-lau', 'av-ian', 'av-ago'];
+const THRESHOLD = 1000; // espejo de APPROVAL_THRESHOLD (el server manda)
+
+const firstNameOf = (full) => (full || '').trim().split(/\s+/)[0] || 'Socio';
+function initialsOf(full) {
+	const p = (full || '').trim().split(/\s+/).filter(Boolean);
+	return (p.length > 1 ? p[0][0] + p[1][0] : (p[0] || '·').slice(0, 2)).toUpperCase();
+}
+
+const socioById = (id) =>
+	SOCIOS.find((s) => s.id === id) || {
+		id,
+		name: 'Socio',
+		first: 'Socio',
+		initials: '··',
+		role: '',
+		cls: 'av-lau'
+	};
+
+// El nombre sale del perfil (full_name), NO se deduce cortando el email.
+function applyUser() {
+	if (!ME) return;
+	const name = ME.full_name || ME.email;
+	const ini = initialsOf(name);
+	$('#user-name').textContent = firstNameOf(name);
+	$('#pop-name').textContent = name;
+	$('#pop-email').textContent = (ME.role === 'admin' ? 'admin' : 'socio') + ' · ' + ME.email;
+	$$('.js-avatar').forEach((el) => {
+		el.textContent = ini;
+	});
+	// El panel /admin exige rol admin: no ofrecer el atajo a quien no entra.
+	$('#go-admin-btn').hidden = ME.role !== 'admin';
+}
+
+function showApp() {
+	gate.hidden = true;
+	app.hidden = false;
+}
+
+// Sin sesión: al login unificado del panel, con ?next para volver acá.
+function goToLogin() {
+	location.replace('/admin?next=' + encodeURIComponent(location.pathname));
+}
+
+// Deja el splash del gate visible con un mensaje (para casos sin acceso).
+function showChecking(msg) {
+	app.hidden = true;
+	gate.hidden = false;
+	if (msg) gateSub.textContent = msg;
+}
+
+// Tras un login válido: carga identidad + lista de socios desde la API.
+async function loadSession() {
+	ME = await apiGet('/api/me');
+	const partners = await apiGet('/api/me/partners');
+	SOCIOS = (partners || []).map((p, i) => ({
+		id: p.id,
+		name: p.full_name || 'Socio',
+		first: firstNameOf(p.full_name),
+		initials: initialsOf(p.full_name),
+		role: p.role === 'admin' ? 'Admin' : 'Socio',
+		cls: AV_CLASSES[i % AV_CLASSES.length]
+	}));
+	// Garantizamos que YO esté en la lista (por si mi rol no es 'socio').
+	if (!SOCIOS.some((s) => s.id === ME.id)) {
+		SOCIOS.unshift({
+			id: ME.id,
+			name: ME.full_name || ME.email,
+			first: firstNameOf(ME.full_name || ME.email),
+			initials: initialsOf(ME.full_name || ME.email),
+			role: 'Socio',
+			cls: AV_CLASSES[0]
 		});
 	}
+	applyUser();
+}
 
-	function showApp() {
-		gate.hidden = true;
-		app.hidden = false;
-	}
-
-	// Sin sesión: al login unificado del panel, con ?next para volver acá.
-	function goToLogin() {
-		location.replace('/admin?next=' + encodeURIComponent(location.pathname));
-	}
-
-	// Deja el splash del gate visible con un mensaje (para casos sin acceso).
-	function showChecking(msg) {
-		app.hidden = true;
-		gate.hidden = false;
-		if (msg) gateSub.textContent = msg;
-	}
-
-	// Tras un login válido: carga identidad + lista de socios desde la API.
-	async function loadSession() {
-		ME = await apiGet('/api/me');
-		const partners = await apiGet('/api/me/partners');
-		SOCIOS = (partners || []).map((p, i) => ({
-			id: p.id,
-			name: p.full_name || 'Socio',
-			first: firstNameOf(p.full_name),
-			initials: initialsOf(p.full_name),
-			role: p.role === 'admin' ? 'Admin' : 'Socio',
-			cls: AV_CLASSES[i % AV_CLASSES.length]
-		}));
-		// Garantizamos que YO esté en la lista (por si mi rol no es 'socio').
-		if (!SOCIOS.some((s) => s.id === ME.id)) {
-			SOCIOS.unshift({
-				id: ME.id,
-				name: ME.full_name || ME.email,
-				first: firstNameOf(ME.full_name || ME.email),
-				initials: initialsOf(ME.full_name || ME.email),
-				role: 'Socio',
-				cls: AV_CLASSES[0]
-			});
+if (!supabase) {
+	// Falta la config pública (endpoint /auth-config). Redirigir al panel
+	// podría rebotar en loop, así que mostramos un aviso con salida manual.
+	showChecking('No se pudo cargar la configuración de acceso. Reintentá en un momento.');
+	gateLoginLink.hidden = false;
+} else {
+	// Maneja un cambio de sesión YA FUERA del callback de supabase (ver abajo).
+	let sessionLoading = false;
+	async function handleAuth(session) {
+		if (!session) {
+			ME = null;
+			SOCIOS = [];
+			goToLogin();
+			return;
 		}
-		activeSocio = ME.id;
-		applyUser();
-	}
-
-	if (!supabase) {
-		// Falta la config pública (endpoint /auth-config). Redirigir al panel
-		// podría rebotar en loop, así que mostramos un aviso con salida manual.
-		showChecking('No se pudo cargar la configuración de acceso. Reintentá en un momento.');
-		gateLoginLink.hidden = false;
-	} else {
-		// La sesión se comparte con /admin: reaccionamos a login / logout / refresh.
-		supabase.auth.onAuthStateChange(async (_event, session) => {
-			if (!session) {
-				ME = null;
-				SOCIOS = [];
-				goToLogin();
-				return;
-			}
-			const wasHidden = app.hidden;
-			try {
-				await loadSession();
-			} catch (e) {
-				if (e.status === 403) {
-					// Logueado, pero esa cuenta no tiene acceso al Startup OS.
-					showChecking('Tu cuenta no tiene acceso al Startup OS.');
-					gateLoginLink.textContent = 'Ir al panel';
-					gateLoginLink.setAttribute('href', '/admin');
-					gateLoginLink.hidden = false;
-					return;
-				}
+		// La sesión ya estaba cargada (refresh de token) o se está cargando.
+		if (!app.hidden || sessionLoading) return;
+		sessionLoading = true;
+		try {
+			await loadSession();
+		} catch (e) {
+			if (e.status === 403) {
+				// Logueado, pero esa cuenta no tiene acceso al Startup OS.
+				showChecking('Tu cuenta no tiene acceso al Startup OS.');
+				gateLoginLink.textContent = 'Ir al panel';
+				gateLoginLink.setAttribute('href', '/admin');
+				gateLoginLink.hidden = false;
+			} else {
 				showChecking('No se pudo cargar tu sesión. Reintentá en un momento.');
 				gateLoginLink.hidden = false;
-				return;
 			}
-			showApp();
-			if (wasHidden) {
-				route();
-				toast('success', '#i-check-c', 'Hola, ' + firstNameOf(ME.full_name || ME.email) + '.');
-			}
-		});
-	}
-
-	$('#logout-btn').addEventListener('click', async () => {
-		setPopover(false);
-		if (supabase) await supabase.auth.signOut();
-		goToLogin();
-	});
-
-	/* ---- Grupos colapsables del sidebar ---- */
-	$$('.nav-group-btn').forEach((btn) => {
-		btn.addEventListener('click', () => {
-			btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
-		});
-	});
-
-	/* ---- Sidebar móvil ---- */
-	const sidebar = $('#sidebar');
-	const backdrop = $('#backdrop');
-	const hamburger = $('#hamburger');
-
-	function setSidebar(open) {
-		sidebar.classList.toggle('open', open);
-		backdrop.classList.toggle('show', open);
-		hamburger.setAttribute('aria-expanded', open);
-	}
-
-	hamburger.addEventListener('click', () => setSidebar(!sidebar.classList.contains('open')));
-	backdrop.addEventListener('click', () => setSidebar(false));
-
-	/* =======================================================================
-	   MÓDULO: Rendimiento de anuncios — métricas reales (carga manual vía API)
-	   ======================================================================= */
-	let _adsInit = false;
-	let adsRows = [];
-
-	const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-	const MONTHS_LONG = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-	const CHANNEL_LABEL = { meta: 'Meta Ads', google: 'Google Ads', linkedin: 'LinkedIn Ads', tiktok: 'TikTok Ads', otros: 'Otros' };
-	const ROAS_TARGET = 3.5;
-
-	const monthShort = (p) => (p ? MONTHS_ES[Number(p.slice(5, 7)) - 1] + " '" + p.slice(2, 4) : '');
-	const monthLong = (p) => (p ? MONTHS_LONG[Number(p.slice(5, 7)) - 1] + ' ' + p.slice(0, 4) : '—');
-	const usd = (n) => 'US$ ' + Math.round(Number(n)).toLocaleString('es-AR');
-	const roasStr = (r) => (r == null ? '—' : r.toFixed(1).replace('.', ',') + '×');
-
-	function adsAction(roas) {
-		if (roas == null) return { cls: 'badge-neutral', ico: '#i-alert', txt: 'Sin datos' };
-		if (roas >= ROAS_TARGET) return { cls: 'badge-success', ico: '#i-up', txt: 'Escalar' };
-		if (roas >= 2.5) return { cls: 'badge-success', ico: '#i-check-c', txt: 'Mantener' };
-		if (roas >= 1.5) return { cls: 'badge-warning', ico: '#i-alert', txt: 'Vigilar' };
-		return { cls: 'badge-danger', ico: '#i-x', txt: 'Pausar' };
-	}
-
-	function initAds() {
-		if (!ME) return; // requiere sesión
-		if (!_adsInit) {
-			_adsInit = true;
-			$('#ads-load-btn').addEventListener('click', () =>
-				$('#ads-form-wrap').classList.toggle('open')
-			);
-			$('#ads-cancel').addEventListener('click', () => $('#ads-form-wrap').classList.remove('open'));
-			$('#ads-form').addEventListener('submit', onAdsSubmit);
-		}
-		loadAds();
-	}
-
-	async function loadAds() {
-		try {
-			adsRows = (await apiGet('/api/ads')) || [];
-		} catch (e) {
-			adsRows = [];
-		}
-		renderAds();
-	}
-
-	async function onAdsSubmit(ev) {
-		ev.preventDefault();
-		const period = $('#a-period').value; // 'YYYY-MM'
-		if (!period) return $('#a-period').focus();
-		const btn = $('#ads-form button[type="submit"]');
-		btn.disabled = true;
-		try {
-			await apiSend('/api/ads', {
-				period,
-				channel: $('#a-channel').value,
-				spend: Number($('#a-spend').value) || 0,
-				revenue: Number($('#a-revenue').value) || 0,
-				conversions: Math.round(Number($('#a-conversions').value) || 0)
-			});
-			$('#ads-form').reset();
-			$('#ads-form-wrap').classList.remove('open');
-			await loadAds();
-			toast('accent', '#i-bars', 'Métricas guardadas.');
-		} catch (e) {
-			toast('danger', '#i-x', e.message || 'No se pudieron guardar las métricas.');
+			return;
 		} finally {
-			btn.disabled = false;
+			sessionLoading = false;
 		}
+		showApp();
+		route();
+		// La campana y el pie del sidebar salen del dashboard: si se entró
+		// directo a otra vista, lo traemos en segundo plano.
+		if (currentRoute() !== 'dashboard') refreshDash(true);
+		toast('success', '#i-check-c', 'Hola, ' + firstNameOf(ME.full_name || ME.email) + '.');
 	}
 
-	function renderAds() {
-		const periods = [...new Set(adsRows.map((r) => r.period))].sort();
-		const latest = periods[periods.length - 1] || null;
-		$('#ads-period').innerHTML = latest ? 'Datos cargados<br>' + monthLong(latest) : 'sin datos';
+	// La sesión se comparte con /admin: reaccionamos a login / logout / refresh.
+	// OJO: el trabajo se difiere con setTimeout — supabase-js espera los
+	// callbacks de onAuthStateChange y llamar a la API acá dentro (que usa
+	// getSession) bloquearía la inicialización del cliente (deadlock).
+	supabase.auth.onAuthStateChange((_event, session) => {
+		setTimeout(() => handleAuth(session), 0);
+	});
+}
 
-		// KPIs y tabla del período más reciente.
-		const rows = adsRows.filter((r) => r.period === latest);
-		const spend = rows.reduce((a, r) => a + Number(r.spend), 0);
-		const revenue = rows.reduce((a, r) => a + Number(r.revenue), 0);
-		const conv = rows.reduce((a, r) => a + Number(r.conversions), 0);
-		const roas = spend > 0 ? revenue / spend : null;
-		const cac = conv > 0 ? spend / conv : null;
-		const okRoas = roas != null && roas >= ROAS_TARGET;
+$('#logout-btn').addEventListener('click', async () => {
+	setPopover(false);
+	if (supabase) await supabase.auth.signOut();
+	goToLogin();
+});
 
-		$('#ads-kpis').innerHTML =
-			`<div class="tile"><span class="label">Inversión (mes)</span><div class="value">${usd(spend)}</div><span class="delta muted">${latest ? monthLong(latest) : '—'}</span></div>` +
-			`<div class="tile"><span class="label">ROAS combinado</span><div class="value">${roasStr(roas)}</div>` +
-			(roas == null
-				? `<span class="delta muted">cargá métricas</span>`
-				: `<span class="sema ${okRoas ? 'sema-success' : 'sema-warning'}" style="margin-top:4px"><svg class="icon"><use href="${okRoas ? '#i-check-c' : '#i-alert'}"/></svg>${okRoas ? 'Sobre objetivo' : 'Bajo objetivo'} (${roasStr(ROAS_TARGET)})</span>`) +
-			`</div>` +
-			`<div class="tile"><span class="label">CAC combinado</span><div class="value">${cac == null ? '—' : usd(cac)}</div><span class="delta muted">costo por cliente</span></div>` +
-			`<div class="tile"><span class="label">Clientes nuevos</span><div class="value">${conv}</div><span class="delta muted">en el mes</span></div>`;
+$('#go-admin-btn').addEventListener('click', () => {
+	location.href = '/admin';
+});
 
-		// Tabla por canal + estado vacío.
-		const empty = $('#ads-empty');
-		const tbody = $('#ads-tbody');
-		$('#ads-channel-count').textContent = rows.length ? rows.length + (rows.length === 1 ? ' canal' : ' canales') : '—';
-		if (!rows.length) {
-			tbody.innerHTML = '';
-			empty.classList.add('show');
+/* ---- Grupos colapsables del sidebar ---- */
+$$('.nav-group-btn').forEach((btn) => {
+	btn.addEventListener('click', () => {
+		btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+	});
+});
+
+/* ---- Sidebar móvil ---- */
+const sidebar = $('#sidebar');
+const backdrop = $('#backdrop');
+const hamburger = $('#hamburger');
+
+function setSidebar(open) {
+	sidebar.classList.toggle('open', open);
+	backdrop.classList.toggle('show', open);
+	hamburger.setAttribute('aria-expanded', open);
+}
+
+hamburger.addEventListener('click', () => setSidebar(!sidebar.classList.contains('open')));
+backdrop.addEventListener('click', () => setSidebar(false));
+
+/* ---- Popovers (perfil + notificaciones): abrir uno cierra el otro ---- */
+const profileBtn = $('#profile-btn');
+const popover = $('#popover');
+const bellBtn = $('#bell-btn');
+const notifPop = $('#notif-pop');
+
+function setPopover(open) {
+	popover.classList.toggle('open', open);
+	profileBtn.setAttribute('aria-expanded', open);
+	if (open) setNotif(false);
+}
+
+function setNotif(open) {
+	notifPop.classList.toggle('open', open);
+	bellBtn.setAttribute('aria-expanded', open);
+	if (open) popover.classList.remove('open');
+}
+
+profileBtn.addEventListener('click', (ev) => {
+	ev.stopPropagation();
+	setPopover(!popover.classList.contains('open'));
+});
+
+bellBtn.addEventListener('click', (ev) => {
+	ev.stopPropagation();
+	setNotif(!notifPop.classList.contains('open'));
+});
+
+document.addEventListener('click', (ev) => {
+	if (popover.classList.contains('open') && !popover.contains(ev.target)) setPopover(false);
+	if (notifPop.classList.contains('open') && !notifPop.contains(ev.target)) setNotif(false);
+});
+
+/* ---- Íconos por categoría de gasto ---- */
+const CAT_ICON = {
+	Publicidad: '#i-megaphone',
+	'Software/SaaS': '#i-blocks',
+	Hardware: '#i-card',
+	Viáticos: '#i-plane',
+	'Servicios profesionales': '#i-users',
+	Otros: '#i-receipt'
+};
+
+/* =======================================================================
+   DASHBOARD — todo real, desde /api/dashboard
+   ======================================================================= */
+const ROAS_TARGET = 3.5;
+const roasStr = (r) => (r == null ? '—' : Number(r).toFixed(1).replace('.', ',') + '×');
+
+let dashLoading = false;
+let _dashInit = false;
+
+// ¿Puedo aprobar este gasto (forma cruda de la API)?
+const canApproveRaw = (e) =>
+	!!ME &&
+	e.status === 'pendiente' &&
+	e.registered_by !== ME.id &&
+	!(e.events || []).some((ev) => ev.action === 'aprobado' && ev.actor === ME.id);
+
+function initDashboard() {
+	if (!ME) return;
+	if (!_dashInit) {
+		_dashInit = true;
+		$('#dash-retry').addEventListener('click', () => refreshDash(false));
+		$('#appr-list').addEventListener('click', onApprListClick);
+	}
+	if (DASH) renderDashboard();
+	refreshDash(!!DASH);
+}
+
+async function refreshDash(background) {
+	if (dashLoading) return;
+	dashLoading = true;
+	if (!background && !DASH) {
+		$('#dash-loading').hidden = false;
+		$('#dash-error').hidden = true;
+		$('#dash-grid').hidden = true;
+	}
+	try {
+		DASH = await apiGet('/api/dashboard');
+		renderDashboard();
+		updateGlobalBits();
+	} catch (e) {
+		if (!DASH) {
+			$('#dash-loading').hidden = true;
+			$('#dash-grid').hidden = true;
+			$('#dash-error').hidden = false;
+			$('#dash-error-msg').textContent = e.message || 'Error de conexión.';
 		} else {
-			empty.classList.remove('show');
-			const maxSpend = Math.max(...rows.map((r) => Number(r.spend)), 1);
-			tbody.innerHTML = rows
-				.slice()
-				.sort((a, b) => Number(b.spend) - Number(a.spend))
-				.map((r) => {
-					const a = adsAction(r.roas);
-					const w = Math.round((Number(r.spend) / maxSpend) * 100);
-					return (
-						`<tr><td><strong>${CHANNEL_LABEL[r.channel] || r.channel}</strong></td>` +
-						`<td><div style="display:flex; align-items:center; gap:9px"><span class="cbar"><i style="width:${w}%"></i></span><span class="num" style="font-weight:600">${usd(r.spend)}</span></div></td>` +
-						`<td class="num">${r.conversions}</td>` +
-						`<td class="num">${r.cac == null ? '—' : usd(r.cac)}</td>` +
-						`<td class="num roas-tag">${roasStr(r.roas)}</td>` +
-						`<td><span class="badge ${a.cls}"><svg class="icon"><use href="${a.ico}"/></svg>${a.txt}</span></td></tr>`
-					);
-				})
-				.join('');
+			toast('danger', '#i-x', e.message || 'No se pudo actualizar el dashboard.');
 		}
-
-		// Lectura rápida: mejor y peor canal por ROAS + objetivo.
-		renderAdsReading(rows, roas);
-
-		// Tendencia: inversión vs retorno por mes (sumando canales).
-		const series = periods.map((p) => {
-			const rr = adsRows.filter((x) => x.period === p);
-			return {
-				label: monthShort(p),
-				inv: rr.reduce((a, r) => a + Number(r.spend), 0),
-				rev: rr.reduce((a, r) => a + Number(r.revenue), 0)
-			};
-		});
-		renderTrend($('#chart-trend'), series);
+	} finally {
+		dashLoading = false;
 	}
+}
 
-	function renderAdsReading(rows, combinedRoas) {
-		const host = $('#ads-reading');
-		if (!host) return;
-		const rated = rows.filter((r) => r.roas != null);
-		if (!rated.length) {
-			host.innerHTML =
-				'<div class="rule"><span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span><div><strong>Sin lectura todavía</strong><p>Cargá inversión y retorno por canal para ver qué escalar y qué pausar.</p></div></div>';
-			return;
-		}
-		const best = rated.reduce((a, b) => (b.roas > a.roas ? b : a));
-		const worst = rated.reduce((a, b) => (b.roas < a.roas ? b : a));
-		let html =
-			`<div class="rule"><span class="r-ico" style="background:color-mix(in srgb, var(--color-success) 14%, transparent); color:var(--color-moss-deep)"><svg class="icon"><use href="#i-up"/></svg></span><div><strong>Escalar: ${CHANNEL_LABEL[best.channel] || best.channel}</strong><p>El mejor ROAS (${roasStr(best.roas)})${best.cac != null ? ' · CAC ' + usd(best.cac) : ''}. Tiene margen para más presupuesto.</p></div></div>`;
-		if (worst.channel !== best.channel) {
-			html +=
-				`<div class="rule"><span class="r-ico" style="background:color-mix(in srgb, var(--color-danger) 12%, transparent); color:var(--color-danger)"><svg class="icon"><use href="#i-down"/></svg></span><div><strong>Revisar: ${CHANNEL_LABEL[worst.channel] || worst.channel}</strong><p>El ROAS más bajo (${roasStr(worst.roas)}). ${worst.roas < 1 ? 'Está por debajo del punto de equilibrio.' : 'Vigilá de cerca su rendimiento.'}</p></div></div>`;
-		}
-		const okRoas = combinedRoas != null && combinedRoas >= ROAS_TARGET;
-		html +=
-			`<div class="rule"><span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span><div><strong>Objetivo</strong><p>ROAS ≥ ${roasStr(ROAS_TARGET)}. Vas en <strong style="color:var(--color-ink)">${roasStr(combinedRoas)}</strong> combinado — ${okRoas ? 'por encima.' : 'por debajo.'}</p></div></div>`;
-		host.innerHTML = html;
+function renderDashboard() {
+	if (!DASH) return;
+	$('#dash-loading').hidden = true;
+	$('#dash-error').hidden = true;
+	$('#dash-grid').hidden = false;
+
+	const t = new Date(DASH.generated_at);
+	$('#dash-meta').innerHTML =
+		'datos en vivo<br />act. ' +
+		String(t.getHours()).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0');
+
+	renderFinKpis();
+	renderGauge();
+	renderApprovals();
+	renderRenewals();
+	renderDashOkrs();
+}
+
+function renderFinKpis() {
+	const ex = DASH.expenses;
+	const m = ex.month;
+	$('#fin-period').textContent = monthLong(m.period + '-01');
+
+	// Delta vs mes anterior: se compara por moneda dominante para no mezclar.
+	const cur = m.approved.USD || m.prev_approved.USD ? 'USD' : 'ARS';
+	const diff = m.approved[cur] - m.prev_approved[cur];
+	const deltaHtml =
+		m.prev_approved[cur] || m.approved[cur]
+			? `<span class="delta ${diff > 0 ? 'bad' : 'good'}">
+					<svg class="icon"><use href="${diff > 0 ? '#i-up' : '#i-down'}"/></svg>
+					${diff >= 0 ? '+' : '−'}${money(Math.abs(diff), cur)} vs mes anterior
+				</span>`
+			: '<span class="delta muted">sin movimientos el mes anterior</span>';
+
+	const mine = ex.pending.filter(canApproveRaw).length;
+	const sema = ex.pending_count
+		? `<span class="sema sema-warning"><svg class="icon"><use href="#i-alert"/></svg>${ex.pending_count} por aprobar</span>`
+		: `<span class="sema sema-success"><svg class="icon"><use href="#i-check-c"/></svg>Al día</span>`;
+
+	const ads = DASH.ads;
+	const subs = DASH.subscriptions;
+
+	$('#fin-kpis').innerHTML =
+		`<div class="tile tile-featured">
+			<div>
+				<span class="label">Gasto aprobado · ${esc(monthLong(m.period + '-01'))}</span>
+				<div class="value">${esc(moneyPair(m.approved))}</div>
+				${deltaHtml}
+			</div>
+			${sema}
+		</div>` +
+		`<div class="tile">
+			<span class="label">Pendientes de aprobación</span>
+			<div class="value">${ex.pending_count}</div>
+			${
+				mine
+					? `<span class="delta" style="color:var(--color-warning)"><svg class="icon"><use href="#i-alert"/></svg>${mine} esperan tu OK</span>`
+					: `<span class="delta muted">${ex.pending_count ? esc(moneyPair(ex.pending_total)) + ' en juego' : 'nada en espera'}</span>`
+			}
+		</div>` +
+		`<div class="tile">
+			<span class="label">Inversión en anuncios</span>
+			<div class="value">${ads ? esc(money(ads.spend)) : '—'}</div>
+			<span class="delta muted">${ads ? esc(monthLong(ads.period)) : 'sin métricas cargadas'}</span>
+		</div>` +
+		`<div class="tile">
+			<span class="label">SaaS mensual</span>
+			<div class="value">${esc(moneyPair(subs.monthly_cost))}</div>
+			<span class="delta muted">${subs.active_count} suscripciones activas</span>
+		</div>` +
+		`<div class="tile">
+			<span class="label">Renovaciones ≤ 30 días</span>
+			<div class="value">${subs.renewing_soon.length}</div>
+			<span class="delta muted">suscripciones por renovar</span>
+		</div>`;
+}
+
+function renderGauge() {
+	const ads = DASH.ads;
+	const fill = $('#gauge-fill');
+	const badge = $('#gauge-badge');
+	if (!ads || ads.roas == null) {
+		fill.style.strokeDashoffset = 100;
+		$('#gauge-num').textContent = '—';
+		$('#gauge-sub').textContent = 'sin datos';
+		$('#gauge-meta').textContent = 'Cargá métricas de anuncios para ver el ROAS.';
+		badge.hidden = true;
+		return;
 	}
+	const pct = Math.round(Math.min(ads.roas / ROAS_TARGET, 1) * 100);
+	const ok = ads.roas >= ROAS_TARGET;
+	// Doble refuerzo del estado: color del arco + badge con ícono y texto.
+	fill.style.stroke = ok ? 'var(--color-success)' : 'var(--color-warning)';
+	requestAnimationFrame(() => {
+		fill.style.strokeDashoffset = 100 - pct;
+	});
+	$('#gauge-num').textContent = roasStr(ads.roas);
+	$('#gauge-sub').textContent = 'ROAS · ' + monthLong(ads.period);
+	$('#gauge-meta').innerHTML =
+		`objetivo ≥ ${roasStr(ROAS_TARGET)} · retorno <strong>${esc(money(ads.revenue))}</strong> sobre ${esc(money(ads.spend))} invertidos`;
+	badge.hidden = false;
+	badge.className = 'badge gauge-alert ' + (ok ? 'badge-success' : 'badge-warning');
+	badge.innerHTML =
+		`<svg class="icon"><use href="${ok ? '#i-check-c' : '#i-alert'}"/></svg>` +
+		(ok ? 'Sobre objetivo' : 'Bajo objetivo');
+}
 
-	function renderTrend(host, series) {
-		if (!host) return;
-		series = series || [];
-		if (!series.length) {
-			host.innerHTML =
-				'<p style="padding:24px 4px; color:var(--color-sage); font-size:13.5px">Cargá métricas de al menos un mes para ver la tendencia de inversión y retorno.</p>';
-			return;
-		}
-		const n = series.length;
-		const W = 760,
-			H = 232;
-		const pad = { l: 52, r: 20, t: 14, b: 30 };
-		const iw = W - pad.l - pad.r;
-		const ih = H - pad.t - pad.b;
-		const rawMax = Math.max(...series.map((s) => Math.max(s.inv, s.rev)), 1);
-		const step = Math.pow(10, Math.floor(Math.log10(rawMax)));
-		const max = Math.ceil(rawMax / step) * step;
-		const x = (i) => (n > 1 ? pad.l + (iw * i) / (n - 1) : pad.l + iw / 2);
-		const y = (v) => pad.t + ih - (ih * v) / max;
+function renderApprovals() {
+	const pending = DASH.expenses.pending;
+	const list = $('#appr-list');
+	const count = $('#appr-count');
+	const empty = $('#appr-empty');
 
-		let grid = '';
-		for (let g = 0; g <= 4; g++) {
-			const v = (max / 4) * g;
-			const gy = y(v);
-			grid += `<line class="ch-grid" x1="${pad.l}" y1="${gy}" x2="${W - pad.r}" y2="${gy}"/>`;
-			grid += `<text class="ch-tick" x="${pad.l - 8}" y="${gy + 4}" text-anchor="end">${v >= 1000 ? Math.round(v / 1000) + 'K' : Math.round(v)}</text>`;
-		}
-
-		let xl = '';
-		for (let i = 0; i < n; i++) {
-			xl += `<text class="ch-tick" x="${x(i)}" y="${H - 9}" text-anchor="middle">${series[i].label}</text>`;
-		}
-
-		const inv = series.map((s) => s.inv);
-		const rev = series.map((s) => s.rev);
-		const line = (arr) => arr.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
-		const dots = (arr, cls) =>
-			arr.map((v, i) => `<circle class="${cls}" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="4.5"/>`).join('');
-		const path = n > 1 ? `<path class="ch-line-b" d="${line(rev)}"/><path class="ch-line-a" d="${line(inv)}"/>` : '';
-		const area = n > 1 ? `<path class="ch-area" d="${line(inv)} L${x(n - 1).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z"/>` : '';
-
-		host.innerHTML =
-			`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inversión y retorno atribuido por mes.">` +
-			grid +
-			area +
-			path +
-			dots(rev, 'ch-dot-b') +
-			dots(inv, 'ch-dot-a') +
-			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(inv[n - 1]) + 19).toFixed(1)}" text-anchor="end">${usd(inv[n - 1])}</text>` +
-			`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(rev[n - 1]) - 10).toFixed(1)}" text-anchor="end">${usd(rev[n - 1])}</text>` +
-			xl +
-			`</svg>`;
+	if (!pending.length) {
+		list.innerHTML = '';
+		count.className = 'badge badge-success';
+		count.textContent = 'al día';
+		empty.classList.add('show');
+		return;
 	}
+	empty.classList.remove('show');
+	count.className = 'badge badge-warning';
+	count.textContent = pending.length + ' pendiente' + (pending.length === 1 ? '' : 's');
 
-	/* =======================================================================
-	   MÓDULO: Gastos y aprobaciones — control multi-socio (demo anti-fraude)
-	   ======================================================================= */
-	// SOCIOS se carga de /api/me/partners en loadSession(). Fallback defensivo:
-	const socioById = (id) =>
-		SOCIOS.find((s) => s.id === id) || {
-			id,
-			name: 'Socio',
-			first: 'Socio',
-			initials: '··',
-			role: '',
-			cls: 'av-lau'
-		};
-	const THRESHOLD = 1000;
-	const requiredFor = (amount) => (amount >= THRESHOLD ? 2 : 1);
-	const CAT_ICON = {
-		Publicidad: '#i-megaphone',
-		'Software/SaaS': '#i-blocks',
-		Hardware: '#i-card',
-		Viáticos: '#i-plane',
-		'Servicios profesionales': '#i-users',
-		Otros: '#i-receipt'
-	};
-	let activeSocio = null; // = ME.id tras el login
-
-	// Fecha corta y legible a partir de un timestamp ISO del backend.
-	function whenLabel(iso) {
-		if (!iso) return '';
-		const d = new Date(iso);
-		const hh = String(d.getHours()).padStart(2, '0');
-		const mm = String(d.getMinutes()).padStart(2, '0');
-		if (d.toDateString() === new Date().toDateString()) return 'hoy ' + hh + ':' + mm;
-		return d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }) + ' ' + hh + ':' + mm;
-	}
-
-	const ACT_ES = { registrado: 'registro', aprobado: 'aprobo', rechazado: 'rechazo' };
-
-	// Adapta un gasto de la API a la forma que consumen las funciones de render.
-	function mapExpense(e) {
-		const evs = e.events || [];
-		const rejected = evs.find((ev) => ev.action === 'rechazado');
-		const registered = evs.find((ev) => ev.action === 'registrado');
-		return {
-			id: e.id,
-			concepto: e.description,
-			monto: Number(e.amount),
-			categoria: e.category,
-			proveedor: e.provider || '—',
-			receipt: e.receipt_url || null,
-			registeredBy: e.registered_by,
-			when: whenLabel((registered || {}).created_at) || whenLabel(e.created_at),
-			required: e.required_approvals,
-			approvals: evs.filter((ev) => ev.action === 'aprobado').map((ev) => ev.actor),
-			status: e.status,
-			rejectedBy: rejected ? rejected.actor : undefined,
-			rejectedReason: rejected ? rejected.note : undefined,
-			audit: evs.map((ev) => ({
-				who: ev.actor,
-				action: ACT_ES[ev.action] || ev.action,
-				ts: whenLabel(ev.created_at),
-				reason: ev.note || undefined
-			}))
-		};
-	}
-
-	async function loadGastos() {
-		const rows = await apiGet('/api/expenses');
-		gastos = (rows || []).map(mapExpense);
-		renderGastos();
-	}
-
-	let gastos = [];
-
-	function fmtMonto(n) {
-		return 'US$ ' + Number(n).toLocaleString('es-AR');
-	}
-
-	function canApprove(g) {
-		return (
-			g.status === 'pendiente' &&
-			g.registeredBy !== activeSocio &&
-			g.approvals.indexOf(activeSocio) === -1
-		);
-	}
-
-	// Solo lectura: registrás como vos mismo (el usuario logueado). No se elige
-	// socio — poder actuar como otro rompería la segregación de funciones.
-	function renderActing() {
-		const s = socioById(activeSocio);
-		const av = $('#acting-av');
-		av.className = 'sav sm ' + s.cls;
-		av.textContent = s.initials;
-		$('#acting-name').textContent = s.name;
-	}
-
-	function renderGastoKPIs() {
-		const pend = gastos.filter((g) => g.status === 'pendiente');
-		const pendMonto = pend.reduce((a, g) => a + g.monto, 0);
-		const aprob = gastos.filter((g) => g.status === 'aprobado').reduce((a, g) => a + g.monto, 0);
-		const rech = gastos.filter((g) => g.status === 'rechazado').reduce((a, g) => a + g.monto, 0);
-		const total = gastos.reduce((a, g) => a + g.monto, 0);
-		const mine = pend.filter(canApprove).length;
-		$('#gasto-kpis').innerHTML =
-			`<div class="tile"><span class="label">Pendientes de aprobación</span><div class="value">${pend.length}</div>` +
-			(mine
-				? `<span class="delta" style="color:var(--color-warning)"><svg class="icon"><use href="#i-alert"/></svg>${mine} esperan tu OK</span>`
-				: `<span class="delta muted">${fmtMonto(pendMonto)} en juego</span>`) +
-			`</div>` +
-			`<div class="tile"><span class="label">Aprobado</span><div class="value">${fmtMonto(aprob)}</div><span class="delta muted">este mes</span></div>` +
-			`<div class="tile"><span class="label">Rechazado</span><div class="value">${fmtMonto(rech)}</div><span class="delta muted">frenado a tiempo</span></div>` +
-			`<div class="tile"><span class="label">Gasto total</span><div class="value">${fmtMonto(total)}</div><span class="delta muted">${gastos.length} movimientos</span></div>`;
-	}
-
-	function gastoCard(g) {
-		const reg = socioById(g.registeredBy);
-		const catIcon = CAT_ICON[g.categoria] || '#i-receipt';
-		const statusBadge = {
-			pendiente: '<span class="badge badge-warning"><svg class="icon"><use href="#i-alert"/></svg>Pendiente</span>',
-			aprobado: '<span class="badge badge-success"><svg class="icon"><use href="#i-check-c"/></svg>Aprobado</span>',
-			rechazado: '<span class="badge badge-danger"><svg class="icon"><use href="#i-x"/></svg>Rechazado</span>'
-		}[g.status];
-
-		let dots = '';
-		for (let i = 0; i < g.required; i++) dots += `<i class="${i < g.approvals.length ? 'on' : ''}"></i>`;
-		const whoAvatars = g.approvals
-			.map((id) => {
-				const s = socioById(id);
-				return `<span class="sav sm ${s.cls}" title="${s.name}">${s.initials}</span>`;
-			})
-			.join('');
-
-		const receipt = g.receipt
-			? /^https?:\/\//i.test(g.receipt)
-				? `<a class="rcpt" href="${g.receipt}" target="_blank" rel="noopener"><svg class="icon"><use href="#i-paperclip"/></svg>Ver comprobante</a>`
-				: `<span class="rcpt"><svg class="icon"><use href="#i-paperclip"/></svg>${g.receipt}</span>`
-			: `<span class="rcpt none"><svg class="icon"><use href="#i-alert"/></svg>Sin comprobante</span>`;
-
-		let foot = '';
-		if (g.status === 'pendiente' && g._rejecting) {
-			foot =
-				`<div class="gasto-actions" style="flex:1; gap:8px; width:100%">` +
-				`<input class="reject-reason" type="text" placeholder="Motivo del rechazo (queda en el historial)" style="flex:1; min-width:150px; font:inherit; font-size:13px; padding:7px 11px; border:1px solid var(--color-line-strong); border-radius:8px; background:var(--color-bg); color:var(--color-ink)" />` +
-				`<button class="btn btn-danger btn-sm" data-reject-confirm><svg class="icon"><use href="#i-x"/></svg>Confirmar rechazo</button>` +
-				`<button class="btn btn-ghost btn-sm" data-reject-cancel>Cancelar</button>` +
-				`</div>`;
-		} else if (g.status === 'pendiente') {
-			const approvable = canApprove(g);
+	list.innerHTML = pending
+		.slice(0, 6)
+		.map((e) => {
+			const can = canApproveRaw(e);
 			const why =
-				g.registeredBy === activeSocio
+				e.registered_by === ME.id
 					? 'No podés aprobar tu propio gasto (segregación de funciones)'
-					: g.approvals.indexOf(activeSocio) !== -1
+					: !can
 						? 'Ya aprobaste este gasto'
 						: '';
-			foot =
-				`<div class="appr-progress"><span class="appr-dots">${dots}</span><span>${g.approvals.length}/${g.required} aprobaciones</span><span class="appr-who">${whoAvatars}</span></div>` +
-				`<div class="gasto-actions">` +
-				`<button class="btn btn-success btn-sm" data-approve ${approvable ? '' : 'disabled'}${why ? ` title="${why}"` : ''}><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>` +
-				`<button class="btn btn-danger btn-sm" data-reject><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>` +
-				`<button class="link-btn" data-audit aria-expanded="false"><svg class="icon"><use href="#i-history"/></svg>Historial</button>` +
-				`</div>`;
-		} else {
-			const summary =
-				g.status === 'aprobado'
-					? `<div class="appr-progress"><span class="appr-dots">${dots}</span><span>Aprobado por ${g.approvals.map((id) => socioById(id).first).join(' y ')}</span><span class="appr-who">${whoAvatars}</span></div>`
-					: `<div class="appr-progress"><svg class="icon" style="width:15px;height:15px;color:var(--color-danger)"><use href="#i-x"/></svg><span>Rechazado por ${socioById(g.rejectedBy).first}</span></div>`;
-			foot = summary + `<div class="gasto-actions"><button class="link-btn" data-audit aria-expanded="false"><svg class="icon"><use href="#i-history"/></svg>Historial</button></div>`;
-		}
+			const approvals = (e.events || []).filter((ev) => ev.action === 'aprobado').length;
+			return `<li class="appr-item" data-id="${esc(e.id)}">
+				<span class="appr-ico"><svg class="icon"><use href="${CAT_ICON[e.category] || '#i-receipt'}"/></svg></span>
+				<div class="appr-main">
+					<strong>${esc(e.description)}</strong>
+					<small><span class="badge badge-neutral">${esc(e.category)}</span><span class="who">${esc(e.registered_by_name || 'Socio')} · ${esc(whenLabel(e.created_at))} · ${approvals}/${e.required_approvals} OK</span></small>
+				</div>
+				<span class="appr-amount">${esc(money(e.amount, e.currency))}</span>
+				<div class="appr-actions">
+					<button class="btn btn-success btn-sm" data-approve ${can ? '' : `disabled title="${esc(why)}"`}><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>
+					<button class="btn btn-danger btn-sm" data-goreject><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>
+				</div>
+			</li>`;
+		})
+		.join('');
+}
 
-		let approvedCount = 0;
-		const audit = g.audit
-			.map((e) => {
-				const s = socioById(e.who);
-				let ico = '#i-receipt',
-					cls = '',
-					txt = '';
-				if (e.action === 'registro') {
-					ico = '#i-plus';
-					txt = `<strong>${s.name}</strong> registró el gasto`;
-				} else if (e.action === 'aprobo') {
-					approvedCount++;
-					ico = '#i-check-c';
-					cls = 'ok';
-					txt = `<strong>${s.name}</strong> aprobó (${approvedCount}/${g.required})`;
-				} else if (e.action === 'rechazo') {
-					ico = '#i-x';
-					cls = 'no';
-					txt = `<strong>${s.name}</strong> rechazó el gasto`;
-				}
-				const reason = e.reason ? `<div class="a-reason">“${e.reason}”</div>` : '';
-				return `<li><span class="a-ico ${cls}"><svg class="icon"><use href="${ico}"/></svg></span><div class="a-body">${txt}<time>${e.ts}</time>${reason}</div></li>`;
+async function onApprListClick(ev) {
+	const btn = ev.target.closest('button');
+	if (!btn) return;
+	const item = ev.target.closest('[data-id]');
+	if (!item) return;
+	const id = item.dataset.id;
+
+	if (btn.hasAttribute('data-approve')) {
+		btn.disabled = true;
+		try {
+			const updated = await apiSend('/api/expenses/' + id + '/approve', {});
+			toast(
+				'success',
+				'#i-check-c',
+				updated.status === 'aprobado'
+					? `Gasto aprobado: "${updated.description}".`
+					: `Aprobaste. Falta la aprobación de otro socio.`
+			);
+		} catch (e) {
+			toast('danger', '#i-x', e.message || 'No se pudo aprobar.');
+		}
+		refreshDash(true);
+	} else if (btn.hasAttribute('data-goreject')) {
+		// El rechazo pide motivo: se resuelve en la vista de gastos.
+		pendingRejectId = id;
+		location.hash = '#/gastos';
+	}
+}
+
+function renderRenewals() {
+	const rows = DASH.subscriptions.renewing_soon;
+	const tbody = $('#renew-tbody');
+	const empty = $('#renew-empty');
+	$('#renew-count').textContent = rows.length ? 'próximos 30 días' : '—';
+	if (!rows.length) {
+		tbody.innerHTML = '';
+		empty.classList.add('show');
+		return;
+	}
+	empty.classList.remove('show');
+	tbody.innerHTML = rows
+		.map((r) => {
+			const d = daysUntil(r.renews_on);
+			const cls = d <= 3 ? 'badge-danger' : d <= 7 ? 'badge-warning' : 'badge-neutral';
+			const label = d < 0 ? `venció hace ${-d} d` : d === 0 ? 'hoy' : `en ${d} d`;
+			return `<tr>
+				<td><div class="client"><strong>${esc(r.name)}</strong><span>${esc(r.vendor || '')}</span></div></td>
+				<td class="num">${esc(money(r.amount, r.currency))}<small style="color:var(--color-sage)"> /${r.billing_cycle === 'anual' ? 'año' : 'mes'}</small></td>
+				<td><span class="badge ${cls}">${esc(dateLabel(r.renews_on))} · ${esc(label)}</span></td>
+			</tr>`;
+		})
+		.join('');
+}
+
+function renderDashOkrs() {
+	const okrs = DASH.okrs;
+	const grid = $('#dash-okrs');
+	const empty = $('#dash-okrs-empty');
+	$('#dash-okr-sub').textContent = okrs.length
+		? okrs[0].quarter + ' · el avance define la intensidad del acento'
+		: '';
+	if (!okrs.length) {
+		grid.innerHTML = '';
+		empty.classList.add('show');
+		return;
+	}
+	empty.classList.remove('show');
+	grid.innerHTML = okrs
+		.map(
+			(o) => `<div class="okr">
+				<div class="okr-top"><strong>${esc(o.title)}</strong><em>${o.progress}%</em></div>
+				<div class="okr-track" role="img" aria-label="Avance ${o.progress} por ciento">
+					<div class="okr-fill" style="width:${o.progress}%; opacity:${(0.35 + 0.65 * (o.progress / 100)).toFixed(2)}"></div>
+				</div>
+				<small>${esc(o.owner_name || 'sin responsable')} · ${o.kr_count} KR${o.kr_count === 1 ? '' : 's'} · ${esc(o.quarter)}</small>
+			</div>`
+		)
+		.join('');
+}
+
+/* ---- Pie del sidebar + campana: derivados del dashboard ---- */
+function updateGlobalBits() {
+	if (!DASH) return;
+	$('#side-pending').textContent = String(DASH.expenses.pending_count);
+	$('#side-saas').textContent = moneyPair(DASH.subscriptions.monthly_cost);
+	buildNotifs();
+}
+
+function buildNotifs() {
+	const items = [];
+	const mine = DASH.expenses.pending.filter(canApproveRaw).length;
+	if (mine) {
+		items.push({
+			ico: '#i-check-c',
+			title: `${mine} gasto${mine === 1 ? ' espera' : 's esperan'} tu aprobación`,
+			sub: 'Gastos y aprobaciones',
+			href: '#/gastos'
+		});
+	}
+	for (const r of DASH.subscriptions.renewing_soon) {
+		const d = daysUntil(r.renews_on);
+		if (d <= 7) {
+			items.push({
+				ico: '#i-blocks',
+				title: `${r.name} renueva ${d < 0 ? 'vencida' : d === 0 ? 'hoy' : 'en ' + d + ' días'}`,
+				sub: money(r.amount, r.currency) + (r.billing_cycle === 'anual' ? ' /año' : ' /mes'),
+				href: '#/saas'
+			});
+		}
+	}
+	if (!DASH.ads || DASH.ads.period.slice(0, 7) < monthKeyNow()) {
+		items.push({
+			ico: '#i-megaphone',
+			title: 'Faltan las métricas de anuncios de este mes',
+			sub: 'Rendimiento de anuncios',
+			href: '#/anuncios'
+		});
+	}
+
+	$('#bell-dot').hidden = items.length === 0;
+	bellBtn.setAttribute(
+		'aria-label',
+		items.length ? `Notificaciones (${items.length})` : 'Notificaciones'
+	);
+	$('#notif-list').innerHTML = items.length
+		? items
+				.map(
+					(n) => `<li><button class="notif-item" data-href="${esc(n.href)}">
+						<span class="n-ico"><svg class="icon"><use href="${n.ico}"/></svg></span>
+						<span><strong>${esc(n.title)}</strong><small>${esc(n.sub)}</small></span>
+					</button></li>`
+				)
+				.join('')
+		: '<li class="notif-empty">Todo al día. Nada requiere tu atención.</li>';
+}
+
+$('#notif-list').addEventListener('click', (ev) => {
+	const btn = ev.target.closest('button[data-href]');
+	if (!btn) return;
+	setNotif(false);
+	location.hash = btn.dataset.href;
+});
+
+/* =======================================================================
+   MÓDULO: Rendimiento de anuncios — métricas reales (carga manual vía API)
+   ======================================================================= */
+let _adsInit = false;
+let adsLoaded = false;
+let adsRows = [];
+
+const CHANNEL_LABEL = { meta: 'Meta Ads', google: 'Google Ads', linkedin: 'LinkedIn Ads', tiktok: 'TikTok Ads', otros: 'Otros' };
+const usd = (n) => money(n, 'USD');
+
+function adsAction(roas) {
+	if (roas == null) return { cls: 'badge-neutral', ico: '#i-alert', txt: 'Sin datos' };
+	if (roas >= ROAS_TARGET) return { cls: 'badge-success', ico: '#i-up', txt: 'Escalar' };
+	if (roas >= 2.5) return { cls: 'badge-success', ico: '#i-check-c', txt: 'Mantener' };
+	if (roas >= 1.5) return { cls: 'badge-warning', ico: '#i-alert', txt: 'Vigilar' };
+	return { cls: 'badge-danger', ico: '#i-x', txt: 'Pausar' };
+}
+
+function initAds() {
+	if (!ME) return; // requiere sesión
+	if (!_adsInit) {
+		_adsInit = true;
+		$('#ads-load-btn').addEventListener('click', () =>
+			$('#ads-form-wrap').classList.toggle('open')
+		);
+		$('#ads-cancel').addEventListener('click', () => $('#ads-form-wrap').classList.remove('open'));
+		$('#ads-form').addEventListener('submit', onAdsSubmit);
+		$('#ads-retry').addEventListener('click', loadAds);
+		// Mes por defecto: el actual.
+		$('#a-period').value = monthKeyNow();
+	}
+	loadAds();
+}
+
+async function loadAds() {
+	if (!adsLoaded) {
+		$('#ads-loading').hidden = false;
+		$('#ads-error').hidden = true;
+		$('#ads-body').hidden = true;
+	}
+	try {
+		adsRows = (await apiGet('/api/ads')) || [];
+		adsLoaded = true;
+		$('#ads-loading').hidden = true;
+		$('#ads-error').hidden = true;
+		$('#ads-body').hidden = false;
+		renderAds();
+	} catch (e) {
+		if (!adsLoaded) {
+			$('#ads-loading').hidden = true;
+			$('#ads-error').hidden = false;
+			$('#ads-error-msg').textContent = e.message || 'Error de conexión.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron actualizar las métricas.');
+		}
+	}
+}
+
+async function onAdsSubmit(ev) {
+	ev.preventDefault();
+	const period = $('#a-period').value; // 'YYYY-MM'
+	if (!period) return $('#a-period').focus();
+	const btn = $('#ads-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		await apiSend('/api/ads', {
+			period,
+			channel: $('#a-channel').value,
+			spend: Number($('#a-spend').value) || 0,
+			revenue: Number($('#a-revenue').value) || 0,
+			conversions: Math.round(Number($('#a-conversions').value) || 0)
+		});
+		$('#ads-form').reset();
+		$('#a-period').value = monthKeyNow();
+		$('#ads-form-wrap').classList.remove('open');
+		await loadAds();
+		refreshDash(true);
+		toast('accent', '#i-bars', 'Métricas guardadas.');
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudieron guardar las métricas.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+function renderAds() {
+	const periods = [...new Set(adsRows.map((r) => r.period))].sort();
+	const latest = periods[periods.length - 1] || null;
+	$('#ads-period').innerHTML = latest ? 'último mes cargado<br>' + esc(monthLong(latest)) : 'sin datos';
+
+	// KPIs y tabla del período más reciente.
+	const rows = adsRows.filter((r) => r.period === latest);
+	const spend = rows.reduce((a, r) => a + Number(r.spend), 0);
+	const revenue = rows.reduce((a, r) => a + Number(r.revenue), 0);
+	const conv = rows.reduce((a, r) => a + Number(r.conversions), 0);
+	const roas = spend > 0 ? revenue / spend : null;
+	const cac = conv > 0 ? spend / conv : null;
+	const okRoas = roas != null && roas >= ROAS_TARGET;
+
+	$('#ads-kpis').innerHTML =
+		`<div class="tile"><span class="label">Inversión (mes)</span><div class="value">${usd(spend)}</div><span class="delta muted">${latest ? esc(monthLong(latest)) : '—'}</span></div>` +
+		`<div class="tile"><span class="label">ROAS combinado</span><div class="value">${roasStr(roas)}</div>` +
+		(roas == null
+			? `<span class="delta muted">cargá métricas</span>`
+			: `<span class="sema ${okRoas ? 'sema-success' : 'sema-warning'}" style="margin-top:4px"><svg class="icon"><use href="${okRoas ? '#i-check-c' : '#i-alert'}"/></svg>${okRoas ? 'Sobre objetivo' : 'Bajo objetivo'} (${roasStr(ROAS_TARGET)})</span>`) +
+		`</div>` +
+		`<div class="tile"><span class="label">CAC combinado</span><div class="value">${cac == null ? '—' : usd(cac)}</div><span class="delta muted">costo por cliente</span></div>` +
+		`<div class="tile"><span class="label">Clientes nuevos</span><div class="value">${conv}</div><span class="delta muted">en el mes</span></div>`;
+
+	// Tabla por canal + estado vacío.
+	const empty = $('#ads-empty');
+	const tbody = $('#ads-tbody');
+	$('#ads-channel-count').textContent = rows.length ? rows.length + (rows.length === 1 ? ' canal' : ' canales') : '—';
+	if (!rows.length) {
+		tbody.innerHTML = '';
+		empty.classList.add('show');
+	} else {
+		empty.classList.remove('show');
+		const maxSpend = Math.max(...rows.map((r) => Number(r.spend)), 1);
+		tbody.innerHTML = rows
+			.slice()
+			.sort((a, b) => Number(b.spend) - Number(a.spend))
+			.map((r) => {
+				const a = adsAction(r.roas);
+				const w = Math.round((Number(r.spend) / maxSpend) * 100);
+				return (
+					`<tr><td><strong>${esc(CHANNEL_LABEL[r.channel] || r.channel)}</strong></td>` +
+					`<td><div style="display:flex; align-items:center; gap:9px"><span class="cbar"><i style="width:${w}%"></i></span><span class="num" style="font-weight:600">${usd(r.spend)}</span></div></td>` +
+					`<td class="num">${Number(r.conversions)}</td>` +
+					`<td class="num">${r.cac == null ? '—' : usd(r.cac)}</td>` +
+					`<td class="num roas-tag">${roasStr(r.roas)}</td>` +
+					`<td><span class="badge ${a.cls}"><svg class="icon"><use href="${a.ico}"/></svg>${a.txt}</span></td></tr>`
+				);
 			})
 			.join('');
-
-		return (
-			`<article class="gasto-item is-${g.status}" data-id="${g.id}">` +
-			`<div class="gasto-top">` +
-			`<div class="gasto-title"><span class="badge badge-neutral g-cat"><svg class="icon"><use href="${catIcon}"/></svg>${g.categoria}</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.concepto}</span></div>` +
-			`<div class="gasto-amount">${fmtMonto(g.monto)}</div>` +
-			`<div class="gasto-sub"><span class="by"><span class="sav sm ${reg.cls}">${reg.initials}</span>${reg.first} registró · ${g.when}</span><span>·</span><span>${g.proveedor}</span><span>·</span>${receipt}<span style="margin-left:auto">${statusBadge}</span></div>` +
-			`</div>` +
-			`<div class="gasto-foot">${foot}</div>` +
-			`<div class="audit"><div class="audit-title">Historial · registro auditable</div><ol>${audit}</ol></div>` +
-			`</article>`
-		);
 	}
 
-	function renderGastoList() {
-		const list = $('#gasto-list');
-		if (!list) return;
-		$('#gasto-empty').hidden = gastos.length > 0;
-		list.innerHTML = gastos.map(gastoCard).join('');
+	// Lectura rápida: mejor y peor canal por ROAS + objetivo.
+	renderAdsReading(rows, roas);
+
+	// Tendencia: inversión vs retorno por mes (sumando canales).
+	const series = periods.map((p) => {
+		const rr = adsRows.filter((x) => x.period === p);
+		return {
+			label: monthShort(p),
+			inv: rr.reduce((a, r) => a + Number(r.spend), 0),
+			rev: rr.reduce((a, r) => a + Number(r.revenue), 0)
+		};
+	});
+	renderTrend($('#chart-trend'), series);
+}
+
+function renderAdsReading(rows, combinedRoas) {
+	const host = $('#ads-reading');
+	if (!host) return;
+	const rated = rows.filter((r) => r.roas != null);
+	if (!rated.length) {
+		host.innerHTML =
+			'<div class="rule"><span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span><div><strong>Sin lectura todavía</strong><p>Cargá inversión y retorno por canal para ver qué escalar y qué pausar.</p></div></div>';
+		return;
+	}
+	const best = rated.reduce((a, b) => (b.roas > a.roas ? b : a));
+	const worst = rated.reduce((a, b) => (b.roas < a.roas ? b : a));
+	let html =
+		`<div class="rule"><span class="r-ico" style="background:color-mix(in srgb, var(--color-success) 14%, transparent); color:var(--color-moss-deep)"><svg class="icon"><use href="#i-up"/></svg></span><div><strong>Escalar: ${esc(CHANNEL_LABEL[best.channel] || best.channel)}</strong><p>El mejor ROAS (${roasStr(best.roas)})${best.cac != null ? ' · CAC ' + usd(best.cac) : ''}. Tiene margen para más presupuesto.</p></div></div>`;
+	if (worst.channel !== best.channel) {
+		html +=
+			`<div class="rule"><span class="r-ico" style="background:color-mix(in srgb, var(--color-danger) 12%, transparent); color:var(--color-danger)"><svg class="icon"><use href="#i-down"/></svg></span><div><strong>Revisar: ${esc(CHANNEL_LABEL[worst.channel] || worst.channel)}</strong><p>El ROAS más bajo (${roasStr(worst.roas)}). ${worst.roas < 1 ? 'Está por debajo del punto de equilibrio.' : 'Vigilá de cerca su rendimiento.'}</p></div></div>`;
+	}
+	const okRoas = combinedRoas != null && combinedRoas >= ROAS_TARGET;
+	html +=
+		`<div class="rule"><span class="r-ico"><svg class="icon"><use href="#i-target"/></svg></span><div><strong>Objetivo</strong><p>ROAS ≥ ${roasStr(ROAS_TARGET)}. Vas en <strong style="color:var(--color-ink)">${roasStr(combinedRoas)}</strong> combinado — ${okRoas ? 'por encima.' : 'por debajo.'}</p></div></div>`;
+	host.innerHTML = html;
+}
+
+function renderTrend(host, series) {
+	if (!host) return;
+	series = series || [];
+	if (!series.length) {
+		host.innerHTML =
+			'<p style="padding:24px 4px; color:var(--color-sage); font-size:13.5px">Cargá métricas de al menos un mes para ver la tendencia de inversión y retorno.</p>';
+		return;
+	}
+	const n = series.length;
+	const W = 760,
+		H = 232;
+	const pad = { l: 52, r: 20, t: 14, b: 30 };
+	const iw = W - pad.l - pad.r;
+	const ih = H - pad.t - pad.b;
+	const rawMax = Math.max(...series.map((s) => Math.max(s.inv, s.rev)), 1);
+	const step = Math.pow(10, Math.floor(Math.log10(rawMax)));
+	const max = Math.ceil(rawMax / step) * step;
+	const x = (i) => (n > 1 ? pad.l + (iw * i) / (n - 1) : pad.l + iw / 2);
+	const y = (v) => pad.t + ih - (ih * v) / max;
+
+	let grid = '';
+	for (let g = 0; g <= 4; g++) {
+		const v = (max / 4) * g;
+		const gy = y(v);
+		grid += `<line class="ch-grid" x1="${pad.l}" y1="${gy}" x2="${W - pad.r}" y2="${gy}"/>`;
+		grid += `<text class="ch-tick" x="${pad.l - 8}" y="${gy + 4}" text-anchor="end">${v >= 1000 ? Math.round(v / 1000) + 'K' : Math.round(v)}</text>`;
 	}
 
-	function renderGastos() {
-		renderGastoKPIs();
-		renderGastoList();
+	let xl = '';
+	for (let i = 0; i < n; i++) {
+		xl += `<text class="ch-tick" x="${x(i)}" y="${H - 9}" text-anchor="middle">${series[i].label}</text>`;
 	}
 
-	async function approveGasto(id) {
-		const g = gastos.find((x) => x.id === id);
-		if (!g || !canApprove(g)) return;
-		try {
-			const updated = mapExpense(await apiSend('/api/expenses/' + id + '/approve', {}));
-			const i = gastos.findIndex((x) => x.id === id);
-			if (i !== -1) gastos[i] = updated;
-			renderGastos();
-			if (updated.status === 'aprobado')
-				toast('success', '#i-check-c', `Gasto aprobado: "${updated.concepto}" (${updated.approvals.length}/${updated.required}).`);
-			else
-				toast('success', '#i-check', `Aprobaste (${updated.approvals.length}/${updated.required}). Falta otro socio.`);
-		} catch (e) {
-			// El servidor es la fuente de verdad: si rechaza, avisamos y resincronizamos.
-			toast('danger', '#i-x', e.message || 'No se pudo aprobar.');
-			loadGastos();
-		}
+	const inv = series.map((s) => s.inv);
+	const rev = series.map((s) => s.rev);
+	const line = (arr) => arr.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+	const dots = (arr, cls) =>
+		arr.map((v, i) => `<circle class="${cls}" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="4.5"/>`).join('');
+	const path = n > 1 ? `<path class="ch-line-b" d="${line(rev)}"/><path class="ch-line-a" d="${line(inv)}"/>` : '';
+	const area = n > 1 ? `<path class="ch-area" d="${line(inv)} L${x(n - 1).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z"/>` : '';
+
+	host.innerHTML =
+		`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inversión y retorno atribuido por mes.">` +
+		grid +
+		area +
+		path +
+		dots(rev, 'ch-dot-b') +
+		dots(inv, 'ch-dot-a') +
+		`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(inv[n - 1]) + 19).toFixed(1)}" text-anchor="end">${usd(inv[n - 1])}</text>` +
+		`<text class="ch-val" x="${x(n - 1).toFixed(1)}" y="${(y(rev[n - 1]) - 10).toFixed(1)}" text-anchor="end">${usd(rev[n - 1])}</text>` +
+		xl +
+		`</svg>`;
+}
+
+/* =======================================================================
+   MÓDULO: Gastos y aprobaciones — control multi-socio (API real)
+   ======================================================================= */
+let gastos = [];
+let gastosLoaded = false;
+let gastosFilter = '';
+let pendingRejectId = null; // rechazo iniciado desde el dashboard
+
+const requiredFor = (amount) => (amount >= THRESHOLD ? 2 : 1);
+
+const ACT_ES = { registrado: 'registro', aprobado: 'aprobo', rechazado: 'rechazo' };
+
+// Adapta un gasto de la API a la forma que consumen las funciones de render.
+function mapExpense(e) {
+	const evs = e.events || [];
+	const rejected = evs.find((ev) => ev.action === 'rechazado');
+	const registered = evs.find((ev) => ev.action === 'registrado');
+	return {
+		id: e.id,
+		concepto: e.description,
+		monto: Number(e.amount),
+		currency: e.currency === 'ARS' ? 'ARS' : 'USD',
+		categoria: e.category,
+		proveedor: e.provider || '—',
+		receipt: e.receipt_url || null,
+		registeredBy: e.registered_by,
+		createdAt: e.created_at,
+		when: whenLabel((registered || {}).created_at) || whenLabel(e.created_at),
+		required: e.required_approvals,
+		approvals: evs.filter((ev) => ev.action === 'aprobado').map((ev) => ev.actor),
+		status: e.status,
+		rejectedBy: rejected ? rejected.actor : undefined,
+		rejectedReason: rejected ? rejected.note : undefined,
+		audit: evs.map((ev) => ({
+			who: ev.actor,
+			action: ACT_ES[ev.action] || ev.action,
+			ts: whenLabel(ev.created_at),
+			reason: ev.note || undefined
+		}))
+	};
+}
+
+async function loadGastos() {
+	if (!gastosLoaded) {
+		$('#gasto-loading').hidden = false;
+		$('#gasto-error').hidden = true;
+		$('#gasto-body').hidden = true;
 	}
-
-	function startReject(id) {
-		const g = gastos.find((x) => x.id === id);
-		if (!g || g.status !== 'pendiente') return;
-		gastos.forEach((x) => delete x._rejecting);
-		g._rejecting = true;
-		renderGastoList();
-		const inp = document.querySelector(`[data-id="${id}"] .reject-reason`);
-		if (inp) inp.focus();
-	}
-
-	async function rejectGasto(id, reason) {
-		const g = gastos.find((x) => x.id === id);
-		if (!g || g.status !== 'pendiente') return;
-		delete g._rejecting;
-		try {
-			const updated = mapExpense(
-				await apiSend('/api/expenses/' + id + '/reject', { note: reason || undefined })
-			);
-			const i = gastos.findIndex((x) => x.id === id);
-			if (i !== -1) gastos[i] = updated;
-			renderGastos();
-			toast('danger', '#i-x', `Gasto rechazado: "${updated.concepto}".`);
-		} catch (e) {
-			toast('danger', '#i-x', e.message || 'No se pudo rechazar.');
-			loadGastos();
-		}
-	}
-
-	function toggleAudit(id, btn) {
-		const card = document.querySelector(`[data-id="${id}"]`);
-		if (!card) return;
-		const a = card.querySelector('.audit');
-		const open = a.classList.toggle('show');
-		btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-	}
-
-	function onListClick(ev) {
-		const btn = ev.target.closest('button');
-		if (!btn) return;
-		const card = ev.target.closest('[data-id]');
-		if (!card) return;
-		const id = card.dataset.id;
-		if (btn.hasAttribute('data-approve')) approveGasto(id);
-		else if (btn.hasAttribute('data-reject')) startReject(id);
-		else if (btn.hasAttribute('data-reject-confirm')) {
-			const inp = card.querySelector('.reject-reason');
-			rejectGasto(id, inp ? inp.value.trim() : '');
-		} else if (btn.hasAttribute('data-reject-cancel')) {
-			const g = gastos.find((x) => x.id === id);
-			if (g) delete g._rejecting;
-			renderGastoList();
-		} else if (btn.hasAttribute('data-audit')) toggleAudit(id, btn);
-	}
-
-	function setForm(open) {
-		$('#gasto-form-wrap').classList.toggle('open', open);
-		$('#registrar-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
-		if (open) setTimeout(() => $('#f-concepto').focus(), 60);
-	}
-
-	function updateRuleHint() {
-		const m = Number($('#f-monto').value) || 0;
-		$('#form-rule-hint').innerHTML =
-			m >= THRESHOLD
-				? 'Monto alto: requiere <strong>2 aprobaciones</strong> de socios distintos.'
-				: 'Requiere <strong>1 aprobación</strong> de otro socio.';
-	}
-
-	// Al elegir un archivo, se sube al toque. La referencia (interna, no una URL
-	// legible: el bucket es privado) va a un campo oculto; el campo de texto
-	// visible queda libre para pegar un link/N.º a mano si el socio prefiere eso.
-	async function onReceiptFile(e) {
-		const file = e.target.files && e.target.files[0];
-		if (!file) return;
-		const status = $('#f-receipt-status');
-		status.textContent = 'Subiendo ' + file.name + '…';
-		try {
-			const up = await apiUpload('/api/uploads', file);
-			$('#f-receipt-ref').value = up.ref;
-			$('#f-receipt').value = '';
-			$('#f-receipt').placeholder = file.name + ' (subido ✓)';
-			status.textContent = '✓ ' + file.name + ' subido';
-		} catch (err) {
-			$('#f-receipt-ref').value = '';
-			status.textContent = 'No se pudo subir: ' + (err.message || 'error');
-			e.target.value = '';
-		}
-	}
-
-	async function onRegister(ev) {
-		ev.preventDefault();
-		const concepto = $('#f-concepto').value.trim();
-		const monto = Math.round(Number($('#f-monto').value) || 0);
-		if (!concepto) return $('#f-concepto').focus();
-		if (monto <= 0) return $('#f-monto').focus();
-		const submitBtn = $('#gasto-form button[type="submit"]');
-		submitBtn.disabled = true;
-		try {
-			const created = mapExpense(
-				await apiSend('/api/expenses', {
-					amount: monto,
-					currency: 'USD',
-					category: $('#f-categoria').value,
-					description: concepto,
-					provider: $('#f-proveedor').value.trim() || undefined,
-					// El archivo subido manda sobre el texto manual si hay ambos.
-					receipt_url: $('#f-receipt-ref').value.trim() || $('#f-receipt').value.trim() || undefined
-				})
-			);
-			gastos.unshift(created);
-			renderGastos();
-			$('#gasto-form').reset();
-			$('#f-receipt-ref').value = '';
-			$('#f-receipt').placeholder = 'drive.google.com/… o Factura A-0001-00003391';
-			$('#f-receipt-status').textContent = 'o pegá un link / N.º de factura abajo';
-			updateRuleHint();
-			setForm(false);
-			toast('accent', '#i-receipt', `Registraste "${created.concepto}". Falta la aprobación de otro socio.`);
-		} catch (e) {
-			toast('danger', '#i-x', e.message || 'No se pudo registrar el gasto.');
-		} finally {
-			submitBtn.disabled = false;
-		}
-	}
-
-	let _gastosInit = false;
-
-	function initGastos() {
-		if (!ME) return; // requiere la sesión cargada (ME + SOCIOS)
-		if (!_gastosInit) {
-			_gastosInit = true;
-			// Identidad y socios ya vienen de loadSession(); registrás como vos.
-			$('#registrar-btn').addEventListener('click', () =>
-				setForm(!$('#gasto-form-wrap').classList.contains('open'))
-			);
-			$('#gasto-cancel').addEventListener('click', () => setForm(false));
-			$('#f-monto').addEventListener('input', updateRuleHint);
-			$('#f-receipt-file').addEventListener('change', onReceiptFile);
-			// Si el socio escribe a mano, el texto manda sobre un archivo ya subido.
-			$('#f-receipt').addEventListener('input', () => {
-				$('#f-receipt-ref').value = '';
-				$('#f-receipt').placeholder = 'drive.google.com/… o Factura A-0001-00003391';
-			});
-			$('#gasto-form').addEventListener('submit', onRegister);
-			$('#gasto-list').addEventListener('click', onListClick);
-		}
-		renderActing();
+	try {
+		const rows = await apiGet('/api/expenses');
+		gastos = (rows || []).map(mapExpense);
+		gastosLoaded = true;
+		$('#gasto-loading').hidden = true;
+		$('#gasto-error').hidden = true;
+		$('#gasto-body').hidden = false;
 		renderGastos();
+		if (pendingRejectId) {
+			const id = pendingRejectId;
+			pendingRejectId = null;
+			startReject(id);
+		}
+	} catch (e) {
+		if (!gastosLoaded) {
+			$('#gasto-loading').hidden = true;
+			$('#gasto-error').hidden = false;
+			$('#gasto-error-msg').textContent = e.message || 'Error de conexión.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron actualizar los gastos.');
+		}
+	}
+}
+
+const fmtMonto = (g) => money(g.monto, g.currency);
+
+function canApprove(g) {
+	return (
+		g.status === 'pendiente' &&
+		g.registeredBy !== ME.id &&
+		g.approvals.indexOf(ME.id) === -1
+	);
+}
+
+// Suma montos por moneda para no mezclar unidades en un mismo número.
+function sumByCurrency(list) {
+	const t = { USD: 0, ARS: 0 };
+	list.forEach((g) => {
+		t[g.currency] += g.monto;
+	});
+	return t;
+}
+
+// Solo lectura: registrás como vos mismo (el usuario logueado). No se elige
+// socio — poder actuar como otro rompería la segregación de funciones.
+function renderActing() {
+	const s = socioById(ME.id);
+	const av = $('#acting-av');
+	av.className = 'sav sm ' + s.cls;
+	av.textContent = s.initials;
+	$('#acting-name').textContent = s.name;
+}
+
+function renderGastoKPIs() {
+	const mesKey = monthKeyNow();
+	const delMes = gastos.filter((g) => (g.createdAt || '').slice(0, 7) === mesKey);
+	const pend = gastos.filter((g) => g.status === 'pendiente');
+	const pendTotal = sumByCurrency(pend);
+	const aprobMes = sumByCurrency(delMes.filter((g) => g.status === 'aprobado'));
+	const rechMes = sumByCurrency(delMes.filter((g) => g.status === 'rechazado'));
+	const mine = pend.filter(canApprove).length;
+	$('#gastos-meta').innerHTML = 'mes en curso<br />' + esc(monthLong(mesKey + '-01'));
+	$('#gasto-kpis').innerHTML =
+		`<div class="tile"><span class="label">Pendientes de aprobación</span><div class="value">${pend.length}</div>` +
+		(mine
+			? `<span class="delta" style="color:var(--color-warning)"><svg class="icon"><use href="#i-alert"/></svg>${mine} esperan tu OK</span>`
+			: `<span class="delta muted">${pend.length ? esc(moneyPair(pendTotal)) + ' en juego' : 'nada en espera'}</span>`) +
+		`</div>` +
+		`<div class="tile"><span class="label">Aprobado (mes)</span><div class="value">${esc(moneyPair(aprobMes))}</div><span class="delta muted">${esc(monthLong(mesKey + '-01'))}</span></div>` +
+		`<div class="tile"><span class="label">Rechazado (mes)</span><div class="value">${esc(moneyPair(rechMes))}</div><span class="delta muted">frenado a tiempo</span></div>` +
+		`<div class="tile"><span class="label">Movimientos (mes)</span><div class="value">${delMes.length}</div><span class="delta muted">${gastos.length} en total</span></div>`;
+}
+
+function gastoCard(g) {
+	const reg = socioById(g.registeredBy);
+	const catIcon = CAT_ICON[g.categoria] || '#i-receipt';
+	const statusBadge = {
+		pendiente: '<span class="badge badge-warning"><svg class="icon"><use href="#i-alert"/></svg>Pendiente</span>',
+		aprobado: '<span class="badge badge-success"><svg class="icon"><use href="#i-check-c"/></svg>Aprobado</span>',
+		rechazado: '<span class="badge badge-danger"><svg class="icon"><use href="#i-x"/></svg>Rechazado</span>'
+	}[g.status];
+
+	let dots = '';
+	for (let i = 0; i < g.required; i++) dots += `<i class="${i < g.approvals.length ? 'on' : ''}"></i>`;
+	const whoAvatars = g.approvals
+		.map((id) => {
+			const s = socioById(id);
+			return `<span class="sav sm ${s.cls}" title="${esc(s.name)}">${esc(s.initials)}</span>`;
+		})
+		.join('');
+
+	const receipt = g.receipt
+		? /^https?:\/\//i.test(g.receipt)
+			? `<a class="rcpt" href="${esc(g.receipt)}" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-paperclip"/></svg>Ver comprobante</a>`
+			: `<span class="rcpt"><svg class="icon"><use href="#i-paperclip"/></svg>${esc(g.receipt)}</span>`
+		: `<span class="rcpt none"><svg class="icon"><use href="#i-alert"/></svg>Sin comprobante</span>`;
+
+	let foot = '';
+	if (g.status === 'pendiente' && g._rejecting) {
+		foot =
+			`<div class="gasto-actions" style="flex:1; gap:8px; width:100%">` +
+			`<input class="reject-reason inline-input" type="text" maxlength="500" placeholder="Motivo del rechazo (queda en el historial)" style="flex:1; min-width:150px" />` +
+			`<button class="btn btn-danger btn-sm" data-reject-confirm><svg class="icon"><use href="#i-x"/></svg>Confirmar rechazo</button>` +
+			`<button class="btn btn-ghost btn-sm" data-reject-cancel>Cancelar</button>` +
+			`</div>`;
+	} else if (g.status === 'pendiente') {
+		const approvable = canApprove(g);
+		const why =
+			g.registeredBy === ME.id
+				? 'No podés aprobar tu propio gasto (segregación de funciones)'
+				: g.approvals.indexOf(ME.id) !== -1
+					? 'Ya aprobaste este gasto'
+					: '';
+		foot =
+			`<div class="appr-progress"><span class="appr-dots">${dots}</span><span>${g.approvals.length}/${g.required} aprobaciones</span><span class="appr-who">${whoAvatars}</span></div>` +
+			`<div class="gasto-actions">` +
+			`<button class="btn btn-success btn-sm" data-approve ${approvable ? '' : 'disabled'}${why ? ` title="${esc(why)}"` : ''}><svg class="icon"><use href="#i-check"/></svg>Aprobar</button>` +
+			`<button class="btn btn-danger btn-sm" data-reject><svg class="icon"><use href="#i-x"/></svg>Rechazar</button>` +
+			`<button class="link-btn" data-audit aria-expanded="false"><svg class="icon"><use href="#i-history"/></svg>Historial</button>` +
+			`</div>`;
+	} else {
+		const summary =
+			g.status === 'aprobado'
+				? `<div class="appr-progress"><span class="appr-dots">${dots}</span><span>Aprobado por ${esc(g.approvals.map((id) => socioById(id).first).join(' y '))}</span><span class="appr-who">${whoAvatars}</span></div>`
+				: `<div class="appr-progress"><svg class="icon" style="width:15px;height:15px;color:var(--color-danger)"><use href="#i-x"/></svg><span>Rechazado por ${esc(socioById(g.rejectedBy).first)}</span></div>`;
+		foot = summary + `<div class="gasto-actions"><button class="link-btn" data-audit aria-expanded="false"><svg class="icon"><use href="#i-history"/></svg>Historial</button></div>`;
+	}
+
+	let approvedCount = 0;
+	const audit = g.audit
+		.map((e) => {
+			const s = socioById(e.who);
+			let ico = '#i-receipt',
+				cls = '',
+				txt = '';
+			if (e.action === 'registro') {
+				ico = '#i-plus';
+				txt = `<strong>${esc(s.name)}</strong> registró el gasto`;
+			} else if (e.action === 'aprobo') {
+				approvedCount++;
+				ico = '#i-check-c';
+				cls = 'ok';
+				txt = `<strong>${esc(s.name)}</strong> aprobó (${approvedCount}/${g.required})`;
+			} else if (e.action === 'rechazo') {
+				ico = '#i-x';
+				cls = 'no';
+				txt = `<strong>${esc(s.name)}</strong> rechazó el gasto`;
+			}
+			const reason = e.reason ? `<div class="a-reason">“${esc(e.reason)}”</div>` : '';
+			return `<li><span class="a-ico ${cls}"><svg class="icon"><use href="${ico}"/></svg></span><div class="a-body">${txt}<time>${esc(e.ts)}</time>${reason}</div></li>`;
+		})
+		.join('');
+
+	return (
+		`<article class="gasto-item is-${g.status}" data-id="${esc(g.id)}">` +
+		`<div class="gasto-top">` +
+		`<div class="gasto-title"><span class="badge badge-neutral g-cat"><svg class="icon"><use href="${catIcon}"/></svg>${esc(g.categoria)}</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.concepto)}</span></div>` +
+		`<div class="gasto-amount">${esc(fmtMonto(g))}</div>` +
+		`<div class="gasto-sub"><span class="by"><span class="sav sm ${reg.cls}">${esc(reg.initials)}</span>${esc(reg.first)} registró · ${esc(g.when)}</span><span>·</span><span>${esc(g.proveedor)}</span><span>·</span>${receipt}<span style="margin-left:auto">${statusBadge}</span></div>` +
+		`</div>` +
+		`<div class="gasto-foot">${foot}</div>` +
+		`<div class="audit"><div class="audit-title">Historial · registro auditable</div><ol>${audit}</ol></div>` +
+		`</article>`
+	);
+}
+
+function filteredGastos() {
+	if (!gastosFilter) return gastos;
+	const q = gastosFilter.toLowerCase();
+	return gastos.filter(
+		(g) =>
+			g.concepto.toLowerCase().includes(q) ||
+			g.proveedor.toLowerCase().includes(q) ||
+			g.categoria.toLowerCase().includes(q) ||
+			socioById(g.registeredBy).name.toLowerCase().includes(q)
+	);
+}
+
+function renderGastoList() {
+	const list = $('#gasto-list');
+	if (!list) return;
+	const rows = filteredGastos();
+	$('#gasto-empty').hidden = gastos.length > 0;
+	if (!rows.length && gastos.length) {
+		list.innerHTML = `<p style="padding:22px 6px; color:var(--color-sage); font-size:13.5px">Sin resultados para «${esc(gastosFilter)}».</p>`;
+		return;
+	}
+	list.innerHTML = rows.map(gastoCard).join('');
+}
+
+function renderGastos() {
+	renderGastoKPIs();
+	renderGastoList();
+}
+
+async function approveGasto(id) {
+	const g = gastos.find((x) => x.id === id);
+	if (!g || !canApprove(g)) return;
+	try {
+		const updated = mapExpense(await apiSend('/api/expenses/' + id + '/approve', {}));
+		const i = gastos.findIndex((x) => x.id === id);
+		if (i !== -1) gastos[i] = updated;
+		renderGastos();
+		refreshDash(true);
+		if (updated.status === 'aprobado')
+			toast('success', '#i-check-c', `Gasto aprobado: "${updated.concepto}" (${updated.approvals.length}/${updated.required}).`);
+		else
+			toast('success', '#i-check', `Aprobaste (${updated.approvals.length}/${updated.required}). Falta otro socio.`);
+	} catch (e) {
+		// El servidor es la fuente de verdad: si rechaza, avisamos y resincronizamos.
+		toast('danger', '#i-x', e.message || 'No se pudo aprobar.');
 		loadGastos();
 	}
+}
 
-	/* ---- Router por hash: dashboard + módulos placeholder ---- */
-	const MODULES = {
-		cloud: { cat: 'Finanzas & Cloud', name: 'Presupuesto cloud', icon: '#i-cloud', desc: 'Consumo por proveedor y por servicio, alertas de presupuesto y recomendaciones de ahorro (rightsizing, reservas).' },
-		campanas: { cat: 'Marketing & Ads', name: 'Campañas', icon: '#i-bars', desc: 'Detalle por campaña y conjunto de anuncios: presupuesto, creatividades, CTR y coste por resultado.' },
-		canales: { cat: 'Marketing & Ads', name: 'Canales y atribución', icon: '#i-split', desc: 'Modelo de atribución entre canales y el recorrido del cliente hasta la conversión.' },
-		saas: { cat: 'Finanzas & Cloud', name: 'Suscripciones SaaS', icon: '#i-blocks', desc: 'Inventario de licencias, asientos sin uso y renovaciones próximas para cortar gasto silencioso.' },
-		facturacion: { cat: 'Finanzas & Cloud', name: 'Facturación', icon: '#i-card', desc: 'Facturas emitidas, cobranzas pendientes y conciliación automática contra el MRR.' },
-		okrs: { cat: 'Estrategia & Equipo', name: 'OKRs y metas', icon: '#i-target', desc: 'Objetivos del trimestre con key results medibles, check-ins semanales y score de confianza.' },
-		roadmap: { cat: 'Estrategia & Equipo', name: 'Roadmap', icon: '#i-map', desc: 'Iniciativas por trimestre conectadas a OKRs, con estado y dependencias entre equipos.' },
-		equipo: { cat: 'Estrategia & Equipo', name: 'Equipo y nómina', icon: '#i-users', desc: 'Organigrama, compensaciones y costo total por equipo, siempre en sintonía con el runway.' },
-		hiring: { cat: 'Estrategia & Equipo', name: 'Contrataciones', icon: '#i-user-plus', desc: 'Búsquedas abiertas, pipeline de candidatos y aprobación de headcount contra presupuesto.' },
-		crm: { cat: 'Clientes', name: 'Cartera / CRM', icon: '#i-heart', desc: 'Cuentas, contactos y oportunidades con el historial completo de cada relación.' },
-		churn: { cat: 'Clientes', name: 'Salud y churn', icon: '#i-down', desc: 'Score de salud por cliente, señales tempranas de abandono y playbooks de retención.' },
-		soporte: { cat: 'Clientes', name: 'Soporte', icon: '#i-headset', desc: 'Tickets por severidad, SLA y satisfacción post-resolución conectada al score de salud.' },
-		onboarding: { cat: 'Clientes', name: 'Onboarding', icon: '#i-rocket', desc: 'Activación de clientes nuevos: hitos, tiempo-a-valor y bloqueos por cuenta.' }
-	};
+function startReject(id) {
+	const g = gastos.find((x) => x.id === id);
+	if (!g || g.status !== 'pendiente') return;
+	gastos.forEach((x) => delete x._rejecting);
+	g._rejecting = true;
+	renderGastoList();
+	const card = document.querySelector(`[data-id="${CSS.escape(id)}"]`);
+	if (card) {
+		card.scrollIntoView({ block: 'center' });
+		const inp = card.querySelector('.reject-reason');
+		if (inp) inp.focus();
+	}
+}
 
-	const viewDash = $('#view-dashboard');
-	const viewModule = $('#view-module');
-
-	// Vistas dedicadas (además del dashboard): renderizan módulos reales.
-	const CUSTOM_VIEWS = {
-		anuncios: { el: '#view-ads', cat: 'Marketing & Ads', name: 'Rendimiento de anuncios', init: () => initAds() },
-		gastos: { el: '#view-gastos', cat: 'Finanzas & Cloud', name: 'Gastos y aprobaciones', init: () => initGastos() }
-	};
-
-	function route() {
-		const key = (location.hash || '#/dashboard').replace('#/', '');
-		const custom = CUSTOM_VIEWS[key];
-		const mod = !custom && MODULES[key];
-
-		viewDash.classList.toggle('active', !custom && !mod);
-		viewModule.classList.toggle('active', !!mod);
-		Object.values(CUSTOM_VIEWS).forEach((v) =>
-			$(v.el).classList.toggle('active', !!custom && v.el === custom.el)
+async function rejectGasto(id, reason) {
+	const g = gastos.find((x) => x.id === id);
+	if (!g || g.status !== 'pendiente') return;
+	delete g._rejecting;
+	try {
+		const updated = mapExpense(
+			await apiSend('/api/expenses/' + id + '/reject', { note: reason || undefined })
 		);
+		const i = gastos.findIndex((x) => x.id === id);
+		if (i !== -1) gastos[i] = updated;
+		renderGastos();
+		refreshDash(true);
+		toast('danger', '#i-x', `Gasto rechazado: "${updated.concepto}".`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo rechazar.');
+		loadGastos();
+	}
+}
 
-		if (custom) {
-			$('#crumb-title').textContent = custom.name;
-			$('#crumb-cat').textContent = custom.cat;
-			custom.init();
-		} else if (mod) {
-			$('#ph-kicker').textContent = mod.cat;
-			$('#ph-title').textContent = mod.name;
-			$('#ph-name').textContent = mod.name;
-			$('#ph-desc').textContent =
-				mod.desc + ' Este prototipo se centra en el Dashboard General, Anuncios y Gastos.';
-			$('#ph-icon > use').setAttribute('href', mod.icon);
-			$('#crumb-title').textContent = mod.name;
-			$('#crumb-cat').textContent = mod.cat;
-		} else {
-			$('#crumb-title').textContent = 'Dashboard General';
-			$('#crumb-cat').textContent = 'Management';
-		}
+function toggleAudit(id, btn) {
+	const card = document.querySelector(`[data-id="${CSS.escape(id)}"]`);
+	if (!card) return;
+	const a = card.querySelector('.audit');
+	const open = a.classList.toggle('show');
+	btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
 
-		const activeKey = custom || mod ? key : 'dashboard';
-		$$('.nav-item').forEach((a) => {
-			const on = a.dataset.route === activeKey;
-			if (on) a.setAttribute('aria-current', 'page');
-			else a.removeAttribute('aria-current');
+function onListClick(ev) {
+	const btn = ev.target.closest('button');
+	if (!btn) return;
+	const card = ev.target.closest('[data-id]');
+	if (!card) return;
+	const id = card.dataset.id;
+	if (btn.hasAttribute('data-approve')) approveGasto(id);
+	else if (btn.hasAttribute('data-reject')) startReject(id);
+	else if (btn.hasAttribute('data-reject-confirm')) {
+		const inp = card.querySelector('.reject-reason');
+		rejectGasto(id, inp ? inp.value.trim() : '');
+	} else if (btn.hasAttribute('data-reject-cancel')) {
+		const g = gastos.find((x) => x.id === id);
+		if (g) delete g._rejecting;
+		renderGastoList();
+	} else if (btn.hasAttribute('data-audit')) toggleAudit(id, btn);
+}
+
+function setGastoForm(open) {
+	$('#gasto-form-wrap').classList.toggle('open', open);
+	$('#registrar-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+	if (open) setTimeout(() => $('#f-concepto').focus(), 60);
+}
+
+function updateRuleHint() {
+	const m = Number($('#f-monto').value) || 0;
+	$('#form-rule-hint').innerHTML =
+		requiredFor(m) === 2
+			? 'Monto alto: requiere <strong>2 aprobaciones</strong> de socios distintos.'
+			: 'Requiere <strong>1 aprobación</strong> de otro socio.';
+}
+
+// Al elegir un archivo, se sube al toque. La referencia (interna, no una URL
+// legible: el bucket es privado) va a un campo oculto; el campo de texto
+// visible queda libre para pegar un link/N.º a mano si el socio prefiere eso.
+async function onReceiptFile(e) {
+	const file = e.target.files && e.target.files[0];
+	if (!file) return;
+	const status = $('#f-receipt-status');
+	status.textContent = 'Subiendo ' + file.name + '…';
+	try {
+		const up = await apiUpload('/api/uploads', file);
+		$('#f-receipt-ref').value = up.ref;
+		$('#f-receipt').value = '';
+		$('#f-receipt').placeholder = file.name + ' (subido ✓)';
+		status.textContent = '✓ ' + file.name + ' subido';
+	} catch (err) {
+		$('#f-receipt-ref').value = '';
+		status.textContent = 'No se pudo subir: ' + (err.message || 'error');
+		e.target.value = '';
+	}
+}
+
+async function onRegister(ev) {
+	ev.preventDefault();
+	const concepto = $('#f-concepto').value.trim();
+	const monto = Number($('#f-monto').value) || 0;
+	if (concepto.length < 2) return $('#f-concepto').focus();
+	if (monto <= 0) return $('#f-monto').focus();
+	const submitBtn = $('#gasto-form button[type="submit"]');
+	submitBtn.disabled = true;
+	try {
+		const created = mapExpense(
+			await apiSend('/api/expenses', {
+				amount: monto,
+				currency: $('#f-moneda').value === 'ARS' ? 'ARS' : 'USD',
+				category: $('#f-categoria').value,
+				description: concepto,
+				provider: $('#f-proveedor').value.trim() || undefined,
+				// El archivo subido manda sobre el texto manual si hay ambos.
+				receipt_url: $('#f-receipt-ref').value.trim() || $('#f-receipt').value.trim() || undefined
+			})
+		);
+		gastos.unshift(created);
+		renderGastos();
+		refreshDash(true);
+		$('#gasto-form').reset();
+		$('#f-receipt-ref').value = '';
+		$('#f-receipt').placeholder = 'drive.google.com/… o Factura A-0001-00003391';
+		$('#f-receipt-status').textContent = 'o pegá un link / N.º de factura abajo';
+		updateRuleHint();
+		setGastoForm(false);
+		toast('accent', '#i-receipt', `Registraste "${created.concepto}". Falta la aprobación de otro socio.`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo registrar el gasto.');
+	} finally {
+		submitBtn.disabled = false;
+	}
+}
+
+let _gastosInit = false;
+
+function initGastos() {
+	if (!ME) return; // requiere la sesión cargada (ME + SOCIOS)
+	if (!_gastosInit) {
+		_gastosInit = true;
+		// Identidad y socios ya vienen de loadSession(); registrás como vos.
+		$('#registrar-btn').addEventListener('click', () =>
+			setGastoForm(!$('#gasto-form-wrap').classList.contains('open'))
+		);
+		$('#gasto-cancel').addEventListener('click', () => setGastoForm(false));
+		$('#f-monto').addEventListener('input', updateRuleHint);
+		$('#f-receipt-file').addEventListener('change', onReceiptFile);
+		// Si el socio escribe a mano, el texto manda sobre un archivo ya subido.
+		$('#f-receipt').addEventListener('input', () => {
+			$('#f-receipt-ref').value = '';
+			$('#f-receipt').placeholder = 'drive.google.com/… o Factura A-0001-00003391';
 		});
-
-		setSidebar(false);
-		window.scrollTo({ top: 0 });
+		$('#gasto-form').addEventListener('submit', onRegister);
+		$('#gasto-list').addEventListener('click', onListClick);
+		$('#gasto-retry').addEventListener('click', loadGastos);
 	}
+	renderActing();
+	if (gastosLoaded) renderGastos();
+	loadGastos();
+}
 
-	window.addEventListener('hashchange', route);
-	route();
+/* =======================================================================
+   MÓDULO: Suscripciones SaaS — inventario recurrente (API real)
+   ======================================================================= */
+let subs = [];
+let subsLoaded = false;
+let subsFilter = '';
+let _saasInit = false;
 
-	/* ---- Toasts ---- */
-	const toasts = $('#toasts');
+const CYCLE_LABEL = { mensual: 'Mensual', anual: 'Anual' };
+const SUB_STATUS_BADGE = {
+	activa: '<span class="badge badge-success">Activa</span>',
+	pausada: '<span class="badge badge-neutral">Pausada</span>',
+	cancelada: '<span class="badge badge-danger">Cancelada</span>'
+};
 
-	function toast(kind, icon, msg) {
-		const el = document.createElement('div');
-		el.className = 'toast t-' + kind;
-		el.innerHTML =
-			'<svg class="icon"><use href="' + icon + '"/></svg><span>' + msg + '</span>';
-		toasts.appendChild(el);
-		setTimeout(() => {
-			el.classList.add('out');
-			el.addEventListener('animationend', () => el.remove(), { once: true });
-		}, 3400);
+function initSaas() {
+	if (!ME) return;
+	if (!_saasInit) {
+		_saasInit = true;
+		$('#saas-add-btn').addEventListener('click', () => {
+			const wrap = $('#saas-form-wrap');
+			if (wrap.classList.contains('open')) return setSaasForm(false);
+			fillSaasForm(null);
+			setSaasForm(true);
+		});
+		$('#saas-cancel').addEventListener('click', () => setSaasForm(false));
+		$('#saas-form').addEventListener('submit', onSaasSubmit);
+		$('#saas-tbody').addEventListener('click', onSaasTableClick);
+		$('#saas-retry').addEventListener('click', loadSubs);
 	}
+	if (subsLoaded) renderSubs();
+	loadSubs();
+}
 
-	/* ---- Aprobaciones: aprobar / rechazar ---- */
-	const apprList = $('#appr-list');
-	const apprCount = $('#appr-count');
-	const apprEmpty = $('#appr-empty');
-	let pending = $$('.appr-item').length;
-
-	function refreshApprCount() {
-		if (pending === 0) {
-			apprCount.className = 'badge badge-success';
-			apprCount.textContent = 'al día';
-			apprEmpty.classList.add('show');
+async function loadSubs() {
+	if (!subsLoaded) {
+		$('#saas-loading').hidden = false;
+		$('#saas-error').hidden = true;
+		$('#saas-body').hidden = true;
+	}
+	try {
+		subs = (await apiGet('/api/subscriptions')) || [];
+		subsLoaded = true;
+		$('#saas-loading').hidden = true;
+		$('#saas-error').hidden = true;
+		$('#saas-body').hidden = false;
+		renderSubs();
+	} catch (e) {
+		if (!subsLoaded) {
+			$('#saas-loading').hidden = true;
+			$('#saas-error').hidden = false;
+			$('#saas-error-msg').textContent = e.message || 'Error de conexión.';
 		} else {
-			apprCount.textContent = pending + ' pendiente' + (pending === 1 ? '' : 's');
+			toast('danger', '#i-x', e.message || 'No se pudieron actualizar las suscripciones.');
 		}
 	}
+}
 
-	apprList.addEventListener('click', (ev) => {
-		const btn = ev.target.closest('button[data-action]');
-		if (!btn) return;
-		const item = btn.closest('.appr-item');
-		const approve = btn.dataset.action === 'approve';
+function setSaasForm(open) {
+	$('#saas-form-wrap').classList.toggle('open', open);
+	$('#saas-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+	if (open) setTimeout(() => $('#s-name').focus(), 60);
+}
 
-		item.style.maxHeight = item.offsetHeight + 'px';
-		requestAnimationFrame(() => item.classList.add('leaving'));
-		item.addEventListener(
-			'animationend',
-			() => {
-				item.remove();
-				pending -= 1;
-				refreshApprCount();
-			},
-			{ once: true }
-		);
+function fillSaasForm(sub) {
+	$('#s-edit-id').value = sub ? sub.id : '';
+	$('#saas-form-title').textContent = sub ? 'Editar suscripción' : 'Agregar una suscripción';
+	$('#s-name').value = sub ? sub.name : '';
+	$('#s-vendor').value = sub ? sub.vendor || '' : '';
+	$('#s-amount').value = sub ? Number(sub.amount) : '';
+	$('#s-currency').value = sub ? sub.currency : 'USD';
+	$('#s-cycle').value = sub ? sub.billing_cycle : 'mensual';
+	$('#s-seats').value = sub ? sub.seats : 1;
+	$('#s-renews').value = sub ? sub.renews_on || '' : '';
+	$('#s-status').value = sub ? sub.status : 'activa';
+	$('#s-notes').value = sub ? sub.notes || '' : '';
+}
 
-		toast(
-			approve ? 'success' : 'danger',
-			approve ? '#i-check-c' : '#i-x',
-			(approve ? 'Aprobado: ' : 'Rechazado: ') +
-				item.dataset.kind.toLowerCase() +
-				' — ' +
-				item.dataset.name
-		);
+async function onSaasSubmit(ev) {
+	ev.preventDefault();
+	const name = $('#s-name').value.trim();
+	if (name.length < 2) return $('#s-name').focus();
+	const amount = Number($('#s-amount').value);
+	if (!(amount >= 0)) return $('#s-amount').focus();
+	const payload = {
+		name,
+		vendor: $('#s-vendor').value.trim() || null,
+		seats: Math.max(1, Math.round(Number($('#s-seats').value) || 1)),
+		amount,
+		currency: $('#s-currency').value === 'ARS' ? 'ARS' : 'USD',
+		billing_cycle: $('#s-cycle').value === 'anual' ? 'anual' : 'mensual',
+		renews_on: $('#s-renews').value || null,
+		status: $('#s-status').value,
+		notes: $('#s-notes').value.trim() || null
+	};
+	const editId = $('#s-edit-id').value;
+	const btn = $('#saas-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		if (editId) {
+			const updated = await apiSend('/api/subscriptions/' + editId, payload, 'PATCH');
+			const i = subs.findIndex((s) => s.id === editId);
+			if (i !== -1) subs[i] = updated;
+			toast('success', '#i-check-c', `Suscripción actualizada: "${updated.name}".`);
+		} else {
+			const created = await apiSend('/api/subscriptions', payload);
+			subs.unshift(created);
+			toast('accent', '#i-blocks', `Suscripción agregada: "${created.name}".`);
+		}
+		renderSubs();
+		refreshDash(true);
+		setSaasForm(false);
+		$('#saas-form').reset();
+		$('#s-edit-id').value = '';
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo guardar la suscripción.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+async function setSubStatus(id, status, verb) {
+	const sub = subs.find((s) => s.id === id);
+	if (!sub) return;
+	if (!confirm(`¿${verb} "${sub.name}"?`)) return;
+	try {
+		const updated = await apiSend('/api/subscriptions/' + id, { status }, 'PATCH');
+		const i = subs.findIndex((s) => s.id === id);
+		if (i !== -1) subs[i] = updated;
+		renderSubs();
+		refreshDash(true);
+		toast('success', '#i-check-c', `"${updated.name}" ahora está ${updated.status}.`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo actualizar.');
+	}
+}
+
+function onSaasTableClick(ev) {
+	const btn = ev.target.closest('button');
+	if (!btn) return;
+	const tr = ev.target.closest('tr[data-id]');
+	if (!tr) return;
+	const id = tr.dataset.id;
+	if (btn.hasAttribute('data-edit')) {
+		const sub = subs.find((s) => s.id === id);
+		if (!sub) return;
+		fillSaasForm(sub);
+		setSaasForm(true);
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	} else if (btn.hasAttribute('data-cancel-sub')) {
+		setSubStatus(id, 'cancelada', 'Cancelar');
+	} else if (btn.hasAttribute('data-activate-sub')) {
+		setSubStatus(id, 'activa', 'Reactivar');
+	}
+}
+
+function renderSubs() {
+	const active = subs.filter((s) => s.status === 'activa');
+	const monthly = { USD: 0, ARS: 0 };
+	active.forEach((s) => {
+		monthly[s.currency === 'ARS' ? 'ARS' : 'USD'] += Number(s.monthly_cost);
+	});
+	const soon = active.filter((s) => {
+		if (!s.renews_on) return false;
+		const d = daysUntil(s.renews_on);
+		return d <= 30;
+	}).length;
+
+	$('#saas-meta').innerHTML = subs.length
+		? subs.length + ' suscripciones<br />' + active.length + ' activas'
+		: '—';
+
+	$('#saas-kpis').innerHTML =
+		`<div class="tile"><span class="label">Costo mensual (activas)</span><div class="value">${esc(moneyPair(monthly))}</div><span class="delta muted">anual prorrateado ÷ 12</span></div>` +
+		`<div class="tile"><span class="label">Activas</span><div class="value">${active.length}</div><span class="delta muted">de ${subs.length} cargadas</span></div>` +
+		`<div class="tile"><span class="label">Renuevan ≤ 30 días</span><div class="value">${soon}</div><span class="delta muted">revisá antes de que cobren</span></div>` +
+		`<div class="tile"><span class="label">Anualizado</span><div class="value">${esc(moneyPair({ USD: monthly.USD * 12, ARS: monthly.ARS * 12 }))}</div><span class="delta muted">costo por año al ritmo actual</span></div>`;
+
+	const q = subsFilter.toLowerCase();
+	const rows = subs.filter(
+		(s) =>
+			!q ||
+			s.name.toLowerCase().includes(q) ||
+			(s.vendor || '').toLowerCase().includes(q) ||
+			(s.notes || '').toLowerCase().includes(q)
+	);
+	const order = { activa: 0, pausada: 1, cancelada: 2 };
+	rows.sort((a, b) => {
+		if (order[a.status] !== order[b.status]) return order[a.status] - order[b.status];
+		if (a.renews_on && b.renews_on && a.renews_on !== b.renews_on)
+			return a.renews_on < b.renews_on ? -1 : 1;
+		if (!!a.renews_on !== !!b.renews_on) return a.renews_on ? -1 : 1;
+		return a.name.localeCompare(b.name);
 	});
 
-	/* ---- Churn: acción de retención ---- */
-	$$('button[data-retain]').forEach((btn) => {
-		btn.addEventListener('click', () => {
+	$('#saas-count').textContent = rows.length
+		? rows.length + (rows.length === 1 ? ' suscripción' : ' suscripciones')
+		: '—';
+
+	const tbody = $('#saas-tbody');
+	const empty = $('#saas-empty');
+	if (!rows.length) {
+		tbody.innerHTML = '';
+		if (subs.length) {
+			empty.classList.remove('show');
+			tbody.innerHTML = `<tr><td colspan="7" style="color:var(--color-sage)">Sin resultados para «${esc(subsFilter)}».</td></tr>`;
+		} else {
+			empty.classList.add('show');
+		}
+		return;
+	}
+	empty.classList.remove('show');
+	tbody.innerHTML = rows
+		.map((s) => {
+			let renew = '—';
+			if (s.renews_on) {
+				const d = daysUntil(s.renews_on);
+				if (s.status === 'activa') {
+					const cls = d <= 3 ? 'badge-danger' : d <= 14 ? 'badge-warning' : 'badge-neutral';
+					const label = d < 0 ? `venció hace ${-d} d` : d === 0 ? 'hoy' : `en ${d} d`;
+					renew = `<span class="badge ${cls}">${esc(dateLabel(s.renews_on))} · ${esc(label)}</span>`;
+				} else {
+					renew = `<span class="signal">${esc(dateLabel(s.renews_on))}</span>`;
+				}
+			}
+			const actions =
+				`<button class="btn btn-ghost btn-sm" data-edit>Editar</button> ` +
+				(s.status === 'activa'
+					? `<button class="btn btn-danger btn-sm" data-cancel-sub>Cancelar</button>`
+					: `<button class="btn btn-success btn-sm" data-activate-sub>Reactivar</button>`);
+			return `<tr data-id="${esc(s.id)}">
+				<td><div class="client"><strong>${esc(s.name)}</strong><span>${esc(s.vendor || '')}${s.notes ? (s.vendor ? ' · ' : '') + esc(s.notes) : ''}</span></div></td>
+				<td class="num">${esc(money(s.monthly_cost, s.currency))}</td>
+				<td>${CYCLE_LABEL[s.billing_cycle] || esc(s.billing_cycle)}${s.billing_cycle === 'anual' ? `<span class="signal"> (${esc(money(s.amount, s.currency))}/año)</span>` : ''}</td>
+				<td class="num">${s.seats}</td>
+				<td>${renew}</td>
+				<td>${SUB_STATUS_BADGE[s.status] || esc(s.status)}</td>
+				<td style="white-space:nowrap; text-align:right">${actions}</td>
+			</tr>`;
+		})
+		.join('');
+}
+
+/* =======================================================================
+   MÓDULO: OKRs y metas — objetivos por trimestre (API real)
+   ======================================================================= */
+let okrList = [];
+let okrsLoaded = false;
+let okrFilter = '';
+let showArchivedOkrs = false;
+let _okrsInit = false;
+
+// Trimestres ofrecidos al crear: el anterior, el actual y los dos siguientes.
+function quarterOptions() {
+	const now = new Date();
+	let y = now.getFullYear();
+	let q = Math.floor(now.getMonth() / 3) + 1;
+	const list = [];
+	// anterior
+	list.push(q === 1 ? `${y - 1}-Q4` : `${y}-Q${q - 1}`);
+	for (let i = 0; i < 3; i++) {
+		list.push(`${y}-Q${q}`);
+		q++;
+		if (q > 4) {
+			q = 1;
+			y++;
+		}
+	}
+	return list;
+}
+
+function initOkrs() {
+	if (!ME) return;
+	if (!_okrsInit) {
+		_okrsInit = true;
+		$('#okr-add-btn').addEventListener('click', () => {
+			const wrap = $('#okr-form-wrap');
+			const open = !wrap.classList.contains('open');
+			wrap.classList.toggle('open', open);
+			$('#okr-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+			if (open) setTimeout(() => $('#o-title').focus(), 60);
+		});
+		$('#okr-cancel').addEventListener('click', () => {
+			$('#okr-form-wrap').classList.remove('open');
+			$('#okr-add-btn').setAttribute('aria-expanded', 'false');
+		});
+		$('#okr-form').addEventListener('submit', onOkrSubmit);
+		$('#okr-list').addEventListener('click', onOkrListClick);
+		$('#okr-retry').addEventListener('click', loadOkrs);
+		$('#okr-show-arch').addEventListener('click', () => {
+			showArchivedOkrs = !showArchivedOkrs;
+			$('#okr-show-arch').setAttribute('aria-pressed', showArchivedOkrs ? 'true' : 'false');
+			$('#okr-show-arch').textContent = showArchivedOkrs ? 'Ocultar archivados' : 'Ver archivados';
+			okrsLoaded = false;
+			loadOkrs();
+		});
+		// Opciones del formulario (trimestres + responsables).
+		$('#o-quarter').innerHTML = quarterOptions()
+			.map((qq, i) => `<option value="${qq}" ${i === 1 ? 'selected' : ''}>${qq}</option>`)
+			.join('');
+	}
+	// Los responsables pueden cambiar entre sesiones: refrescamos siempre.
+	$('#o-owner').innerHTML = SOCIOS.map(
+		(s) => `<option value="${esc(s.id)}" ${s.id === ME.id ? 'selected' : ''}>${esc(s.name)}</option>`
+	).join('');
+	if (okrsLoaded) renderOkrs();
+	loadOkrs();
+}
+
+async function loadOkrs() {
+	if (!okrsLoaded) {
+		$('#okr-loading').hidden = false;
+		$('#okr-error').hidden = true;
+		$('#okr-body').hidden = true;
+	}
+	try {
+		okrList = (await apiGet('/api/okrs' + (showArchivedOkrs ? '' : '?status=activo'))) || [];
+		okrsLoaded = true;
+		$('#okr-loading').hidden = true;
+		$('#okr-error').hidden = true;
+		$('#okr-body').hidden = false;
+		renderOkrs();
+	} catch (e) {
+		if (!okrsLoaded) {
+			$('#okr-loading').hidden = true;
+			$('#okr-error').hidden = false;
+			$('#okr-error-msg').textContent = e.message || 'Error de conexión.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron actualizar los OKRs.');
+		}
+	}
+}
+
+async function onOkrSubmit(ev) {
+	ev.preventDefault();
+	const title = $('#o-title').value.trim();
+	if (title.length < 2) return $('#o-title').focus();
+	const btn = $('#okr-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		const created = await apiSend('/api/okrs', {
+			quarter: $('#o-quarter').value,
+			title,
+			owner: $('#o-owner').value || null,
+			key_results: []
+		});
+		okrList.unshift(created);
+		renderOkrs();
+		refreshDash(true);
+		$('#okr-form').reset();
+		$('#okr-form-wrap').classList.remove('open');
+		$('#okr-add-btn').setAttribute('aria-expanded', 'false');
+		toast('accent', '#i-target', `Objetivo creado: "${created.title}". Agregale key results.`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo crear el objetivo.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+function replaceOkr(updated) {
+	const i = okrList.findIndex((o) => o.id === updated.id);
+	if (i !== -1) okrList[i] = updated;
+	else okrList.unshift(updated);
+	renderOkrs();
+	refreshDash(true);
+}
+
+function krRow(kr) {
+	const p = Math.round(Math.min(Number(kr.current) / Number(kr.target), 1) * 100);
+	return `<li class="kr-item" data-kr="${esc(kr.id)}">
+		<div>
+			<div class="kr-title">${esc(kr.title)}</div>
+			<div class="kr-meta">${num(kr.current)} / ${num(kr.target)}${kr.unit ? ' ' + esc(kr.unit) : ''} · ${p}%</div>
+			<div class="okr-track" style="height:6px; margin-top:7px">
+				<div class="okr-fill" style="width:${p}%; opacity:${(0.35 + 0.65 * (p / 100)).toFixed(2)}"></div>
+			</div>
+		</div>
+		<div class="kr-checkin">
+			<input class="inline-input" type="number" min="0" step="any" value="${Number(kr.current)}" aria-label="Nuevo valor actual" />
+			<button class="btn btn-ghost btn-sm" data-kr-save>Actualizar</button>
+			<button class="icon-btn" data-kr-del aria-label="Eliminar key result" style="width:30px;height:30px"><svg class="icon" style="width:14px;height:14px"><use href="#i-x"/></svg></button>
+		</div>
+	</li>`;
+}
+
+function okrCard(o) {
+	const archived = o.status === 'archivado';
+	const foot = archived
+		? `<button class="link-btn" data-restore><svg class="icon"><use href="#i-history"/></svg>Restaurar</button>
+			<button class="link-btn" style="color:var(--color-danger)" data-obj-del><svg class="icon"><use href="#i-x"/></svg>Eliminar definitivamente</button>`
+		: `<button class="link-btn" data-archive><svg class="icon"><use href="#i-history"/></svg>Archivar objetivo</button>`;
+	return `<article class="card" data-obj="${esc(o.id)}" ${archived ? 'style="opacity:.75"' : ''}>
+		<div class="card-head">
+			<h2 style="font-size:16.5px">${esc(o.title)}
+				<span class="sub">${esc(o.quarter)} · ${esc(o.owner_name || 'sin responsable')} · ${o.key_results.length} KR${o.key_results.length === 1 ? '' : 's'}${archived ? ' · archivado' : ''}</span>
+			</h2>
+			<em class="okr-head-progress">${o.progress}%</em>
+		</div>
+		<div class="okr-track okr-obj-track" role="img" aria-label="Avance ${o.progress} por ciento">
+			<div class="okr-fill" style="width:${o.progress}%; opacity:${(0.35 + 0.65 * (o.progress / 100)).toFixed(2)}"></div>
+		</div>
+		<ul class="kr-list">
+			${o.key_results.map(krRow).join('') || '<li class="kr-item" style="border-top:none"><div class="kr-meta">Sin key results todavía: agregá el primero abajo para poder medir el avance.</div></li>'}
+		</ul>
+		<div class="kr-add">
+			<input class="inline-input" data-nkr-title type="text" placeholder="Nuevo key result (ej: 10 clientes activos)" maxlength="200" />
+			<input class="inline-input" data-nkr-target type="number" min="0" step="any" placeholder="Meta" style="max-width:110px; flex:0 1 110px" />
+			<input class="inline-input" data-nkr-unit type="text" placeholder="Unidad" maxlength="20" style="max-width:110px; flex:0 1 110px" />
+			<button class="btn btn-ghost btn-sm" data-kr-add><svg class="icon"><use href="#i-plus"/></svg>Agregar KR</button>
+		</div>
+		<div class="okr-foot">${foot}</div>
+	</article>`;
+}
+
+function renderOkrs() {
+	const q = okrFilter.toLowerCase();
+	const rows = okrList.filter(
+		(o) =>
+			!q ||
+			o.title.toLowerCase().includes(q) ||
+			(o.owner_name || '').toLowerCase().includes(q) ||
+			o.quarter.toLowerCase().includes(q)
+	);
+	$('#okrs-meta').innerHTML = okrList.length
+		? okrList.length + ' objetivo' + (okrList.length === 1 ? '' : 's') + '<br />' + (showArchivedOkrs ? 'incluye archivados' : 'solo activos')
+		: '—';
+	$('#okr-empty').hidden = rows.length > 0;
+	$('#okr-list').innerHTML = rows.map(okrCard).join('');
+}
+
+async function onOkrListClick(ev) {
+	const btn = ev.target.closest('button');
+	if (!btn) return;
+	const card = ev.target.closest('[data-obj]');
+	if (!card) return;
+	const objId = card.dataset.obj;
+	const obj = okrList.find((o) => o.id === objId);
+	if (!obj) return;
+
+	try {
+		if (btn.hasAttribute('data-kr-save')) {
+			const item = ev.target.closest('[data-kr]');
+			const input = item.querySelector('input');
+			const value = Number(input.value);
+			if (!(value >= 0)) return input.focus();
 			btn.disabled = true;
-			btn.classList.remove('btn-accent');
-			btn.classList.add('btn-ghost');
-			btn.innerHTML = '<svg class="icon"><use href="#i-check"/></svg>En curso';
-			toast('accent', '#i-zap', 'Playbook de retención iniciado para ' + btn.dataset.retain);
-		});
-	});
-
-	/* ---- Gauge + barras OKR: animación de entrada ---- */
-	const GAUGE_REMAINING = 28; // % restante del presupuesto cloud
-
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => {
-			$('#gauge-fill').style.strokeDashoffset = 100 - GAUGE_REMAINING;
-
-			$$('.okr-fill').forEach((bar) => {
-				const p = Number(bar.dataset.progress);
-				bar.style.width = p + '%';
-				// Variación de opacidad del color primario: refuerza el avance.
-				bar.style.opacity = (0.35 + 0.65 * (p / 100)).toFixed(2);
-			});
-		});
-	});
-
-	// Contador del gauge
-	(function () {
-		const el = $('#gauge-num');
-		const start = performance.now();
-		const dur = 1000;
-		function tick(now) {
-			const t = Math.min(1, (now - start) / dur);
-			const eased = 1 - Math.pow(1 - t, 3);
-			el.textContent = Math.round(GAUGE_REMAINING * eased) + '%';
-			if (t < 1) requestAnimationFrame(tick);
+			replaceOkr(await apiSend('/api/okrs/key-results/' + item.dataset.kr, { current: value }, 'PATCH'));
+			toast('success', '#i-check-c', 'Check-in guardado.');
+		} else if (btn.hasAttribute('data-kr-del')) {
+			const item = ev.target.closest('[data-kr]');
+			if (!confirm('¿Eliminar este key result?')) return;
+			replaceOkr(await apiSend('/api/okrs/key-results/' + item.dataset.kr, null, 'DELETE'));
+			toast('success', '#i-check-c', 'Key result eliminado.');
+		} else if (btn.hasAttribute('data-kr-add')) {
+			const title = card.querySelector('[data-nkr-title]').value.trim();
+			const target = Number(card.querySelector('[data-nkr-target]').value);
+			const unit = card.querySelector('[data-nkr-unit]').value.trim();
+			if (title.length < 2) return card.querySelector('[data-nkr-title]').focus();
+			if (!(target > 0)) return card.querySelector('[data-nkr-target]').focus();
+			btn.disabled = true;
+			replaceOkr(
+				await apiSend('/api/okrs/' + objId + '/key-results', {
+					title,
+					target,
+					unit: unit || null,
+					current: 0
+				})
+			);
+			toast('accent', '#i-target', 'Key result agregado.');
+		} else if (btn.hasAttribute('data-archive')) {
+			if (!confirm(`¿Archivar "${obj.title}"? Deja de contar en el dashboard.`)) return;
+			const updated = await apiSend('/api/okrs/' + objId, { status: 'archivado' }, 'PATCH');
+			if (showArchivedOkrs) replaceOkr(updated);
+			else {
+				okrList = okrList.filter((o) => o.id !== objId);
+				renderOkrs();
+				refreshDash(true);
+			}
+			toast('success', '#i-check-c', 'Objetivo archivado.');
+		} else if (btn.hasAttribute('data-restore')) {
+			replaceOkr(await apiSend('/api/okrs/' + objId, { status: 'activo' }, 'PATCH'));
+			toast('success', '#i-check-c', 'Objetivo restaurado.');
+		} else if (btn.hasAttribute('data-obj-del')) {
+			if (!confirm(`Se borra "${obj.title}" y todos sus key results. Esta acción no se puede deshacer. ¿Seguro?`)) return;
+			await apiSend('/api/okrs/' + objId, null, 'DELETE');
+			okrList = okrList.filter((o) => o.id !== objId);
+			renderOkrs();
+			refreshDash(true);
+			toast('danger', '#i-x', 'Objetivo eliminado.');
 		}
-		requestAnimationFrame(tick);
-	})();
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo completar la acción.');
+		loadOkrs();
+	} finally {
+		btn.disabled = false;
+	}
+}
 
-	/* ---- Popover de perfil ---- */
-	const profileBtn = $('#profile-btn');
-	const popover = $('#popover');
+/* =======================================================================
+   Router por hash + búsqueda contextual
+   ======================================================================= */
+const VIEWS = {
+	dashboard: { el: '#view-dashboard', cat: 'Management', name: 'Dashboard General', init: initDashboard, search: null },
+	gastos: {
+		el: '#view-gastos', cat: 'Finanzas', name: 'Gastos y aprobaciones', init: initGastos,
+		search: 'Filtrar gastos…',
+		onSearch(q) { gastosFilter = q; if (gastosLoaded) renderGastoList(); }
+	},
+	saas: {
+		el: '#view-saas', cat: 'Finanzas', name: 'Suscripciones SaaS', init: initSaas,
+		search: 'Filtrar suscripciones…',
+		onSearch(q) { subsFilter = q; if (subsLoaded) renderSubs(); }
+	},
+	anuncios: { el: '#view-ads', cat: 'Marketing', name: 'Rendimiento de anuncios', init: initAds, search: null },
+	okrs: {
+		el: '#view-okrs', cat: 'Estrategia', name: 'OKRs y metas', init: initOkrs,
+		search: 'Filtrar objetivos…',
+		onSearch(q) { okrFilter = q; if (okrsLoaded) renderOkrs(); }
+	}
+};
 
-	function setPopover(open) {
-		popover.classList.toggle('open', open);
-		profileBtn.setAttribute('aria-expanded', open);
+const searchBox = $('#search-box');
+const searchInput = $('#search-input');
+
+const currentRoute = () => {
+	const key = (location.hash || '#/dashboard').replace('#/', '');
+	return VIEWS[key] ? key : 'dashboard';
+};
+
+function route() {
+	const key = currentRoute();
+	const view = VIEWS[key];
+
+	Object.values(VIEWS).forEach((v) => $(v.el).classList.toggle('active', v === view));
+
+	$('#crumb-title').textContent = view.name;
+	$('#crumb-cat').textContent = view.cat;
+
+	// Búsqueda contextual: solo en vistas con listados filtrables.
+	if (view.search) {
+		searchBox.style.display = '';
+		searchInput.placeholder = view.search;
+	} else {
+		searchBox.style.display = 'none';
+	}
+	if (searchInput.value) {
+		searchInput.value = '';
+		gastosFilter = '';
+		subsFilter = '';
+		okrFilter = '';
 	}
 
-	profileBtn.addEventListener('click', (ev) => {
-		ev.stopPropagation();
-		setPopover(!popover.classList.contains('open'));
+	$$('.nav-item').forEach((a) => {
+		const on = a.dataset.route === key;
+		if (on) a.setAttribute('aria-current', 'page');
+		else a.removeAttribute('aria-current');
 	});
 
-	document.addEventListener('click', (ev) => {
-		if (popover.classList.contains('open') && !popover.contains(ev.target)) setPopover(false);
-	});
+	view.init();
+	setSidebar(false);
+	window.scrollTo({ top: 0 });
+}
 
-	document.addEventListener('keydown', (ev) => {
-		if (ev.key === 'Escape') {
-			setPopover(false);
-			setSidebar(false);
-		}
-		if (ev.key === '/' && !app.hidden && document.activeElement !== $('#search-input')) {
-			ev.preventDefault();
-			const inp = $('#search-input');
-			if (inp && getComputedStyle(inp.closest('.search')).display !== 'none') inp.focus();
-		}
-	});
+searchInput.addEventListener('input', () => {
+	const view = VIEWS[currentRoute()];
+	if (view.onSearch) view.onSearch(searchInput.value.trim());
+});
 
-	$('#go-admin-btn').addEventListener('click', () => {
-		location.href = '/admin';
-	});
+window.addEventListener('hashchange', route);
 
-	$('#onboarding-btn').addEventListener('click', () => {
+document.addEventListener('keydown', (ev) => {
+	if (ev.key === 'Escape') {
 		setPopover(false);
-		toast('accent', '#i-rocket', 'Retomando el onboarding: conectá tu nube para ver el gasto real.');
-	});
-
-	$('#bell-btn').addEventListener('click', () => {
-		toast('accent', '#i-bell', '3 notificaciones: 1 alerta de presupuesto · 2 aprobaciones vencen hoy.');
-	});
+		setNotif(false);
+		setSidebar(false);
+	}
+	if (
+		ev.key === '/' &&
+		!app.hidden &&
+		document.activeElement !== searchInput &&
+		!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)
+	) {
+		if (getComputedStyle(searchBox).display !== 'none') {
+			ev.preventDefault();
+			searchInput.focus();
+		}
+	}
+});
 </script>
 </body>
 </html>

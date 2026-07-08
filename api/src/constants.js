@@ -39,3 +39,11 @@ export const EXPENSE_CATEGORIES = [
 export const APPROVAL_THRESHOLD = 1000;
 
 export const AD_CHANNELS = ['meta', 'google', 'linkedin', 'tiktok', 'otros'];
+
+export const CURRENCIES = ['ARS', 'USD'];
+
+export const SUBSCRIPTION_STATUSES = ['activa', 'pausada', 'cancelada'];
+
+export const BILLING_CYCLES = ['mensual', 'anual'];
+
+export const OKR_STATUSES = ['activo', 'archivado'];

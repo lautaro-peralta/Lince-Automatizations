@@ -85,14 +85,16 @@ select cron.schedule(
 > El cron vive en Supabase (no en Render), así el seguimiento funciona aunque
 > el backend esté dormido.
 
-## 5. Startup OS — gastos, aprobaciones y anuncios
+## 5. Startup OS — gastos, aprobaciones, anuncios, suscripciones y OKRs
 
 El Startup OS (`web/static/startup-os/`) usa **el mismo Supabase Auth** que el panel
 admin, con datos y reglas anti-fraude en el servidor.
 
 1. **Aplicar el esquema nuevo:** SQL Editor → pegar `migrations/0002_startup_os.sql`
    → **Run** (agrega `expenses`, `expense_events` append-only y `ad_metrics`, todas
-   con RLS).
+   con RLS). Después pegar `migrations/0003_startup_os_v1.sql` → **Run** (agrega
+   `subscriptions` —inventario SaaS—, `okr_objectives` y `okr_key_results`,
+   también con RLS y sin políticas abiertas).
 
 2. **Cerrar los registros públicos** (clave para que _solo_ entre tu equipo):
    **Authentication → Providers → Email** → desactivar **"Enable Sign Ups"** y
@@ -136,8 +138,20 @@ admin, con datos y reglas anti-fraude en el servidor.
    para que la API acepte las llamadas del Startup OS.
 
 **Reglas que aplica el backend** (no el navegador): quien registra un gasto no puede
-aprobarlo (segregación de funciones); ≥ US$ 1.000 exige 2 socios distintos; la
-bitácora (`expense_events`) es append-only. Ver `api/src/routes/expenses.js`.
+aprobarlo (segregación de funciones); ≥ 1.000 (en la moneda del gasto) exige 2
+socios distintos; la bitácora (`expense_events`) es append-only. Ver
+`api/src/routes/expenses.js`.
+
+**Módulos del Startup OS y sus rutas** (todas con `requireSocio`):
+
+| Módulo                | Ruta API             | Tablas                              |
+| --------------------- | -------------------- | ----------------------------------- |
+| Dashboard (agregado)  | `/api/dashboard`     | lee todas las de abajo              |
+| Gastos y aprobaciones | `/api/expenses`      | `expenses`, `expense_events`        |
+| Comprobantes          | `/api/uploads`       | Supabase Storage (bucket privado)   |
+| Rendimiento anuncios  | `/api/ads`           | `ad_metrics`                        |
+| Suscripciones SaaS    | `/api/subscriptions` | `subscriptions`                     |
+| OKRs y metas          | `/api/okrs`          | `okr_objectives`, `okr_key_results` |
 
 ## 6. Tabla `prospectos` (deprecada)
 

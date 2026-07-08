@@ -39,7 +39,7 @@ const decisionSchema = z.object({
  * Enriquece los gastos con su bitácora, el nombre del registrante/actores y la
  * cantidad de aprobaciones. Una sola pasada de consultas para toda la lista.
  */
-async function attachDetails(expenses) {
+export async function attachDetails(expenses) {
   if (!expenses.length) return [];
   const ids = expenses.map((e) => e.id);
 
