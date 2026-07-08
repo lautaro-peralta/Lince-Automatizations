@@ -103,7 +103,12 @@ async function sendWebhook(url, payload) {
  * o Header Auth (x-lince-secret): mandamos lo que esté configurado en el .env.
  */
 async function sendN8n({ webhookUrl, webhookSecret, webhookUsername, webhookPassword }, payload) {
-  const headers = { 'Content-Type': 'application/json' };
+  const headers = {
+    'Content-Type': 'application/json',
+    // UA explícito: el fetch de Node manda uno genérico y algunos WAF
+    // (ej. Cloudflare delante de n8n cloud) filtran por User-Agent.
+    'User-Agent': 'lince-api/1.0',
+  };
   if (webhookUsername && webhookPassword) {
     headers.Authorization =
       'Basic ' + Buffer.from(`${webhookUsername}:${webhookPassword}`).toString('base64');
@@ -114,7 +119,12 @@ async function sendN8n({ webhookUrl, webhookSecret, webhookUsername, webhookPass
     headers,
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(`n8n webhook respondió ${res.status}`);
+  if (!res.ok) {
+    // Incluimos el cuerpo en el error: distingue un rechazo de auth de n8n
+    // ("Authorization data is wrong!") de un bloqueo del WAF (HTML de Cloudflare).
+    const body = (await res.text().catch(() => '')).slice(0, 200).replace(/\s+/g, ' ');
+    throw new Error(`n8n webhook respondió ${res.status}${body ? `: ${body}` : ''}`);
+  }
 }
 
 /** Envía un email con Resend (API HTTP simple). */
