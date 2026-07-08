@@ -8,13 +8,13 @@
  *   1. Honeypot: si `website` viene con valor, respondemos 200 sin guardar.
  *   2. Rate limit por IP (~5 peticiones/minuto, en memoria).
  *   3. Validación con Zod (nombre obligatorio; email o telefono al menos uno).
- *   4. Insert en Supabase (tabla `prospectos`). Si falla → 500 y no se notifica.
+ *   4. Insert en Supabase (tabla `leads`, la misma que lee el panel admin y
+ *      /api/stats). Si falla → 500 y no se notifica.
  *   5. Webhook n8n fire-and-forget. Si falla → se loguea pero se responde 201.
  */
 import { Router } from 'express';
 import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
-import { config } from '../config.js';
 import { notifyProspect } from '../lib/notify.js';
 
 const router = Router();
@@ -100,28 +100,41 @@ router.post('/', async (req, res, next) => {
     }
     const data = parsed.data;
 
-    // 4. Guardar en Supabase. Si falla, no disparamos el webhook.
+    // 4. Guardar en `leads` (la tabla canónica: la lee /admin/leads y /api/stats).
+    //    `contact` es una sola columna NOT NULL, así que email y teléfono se
+    //    combinan; la validación ya garantizó que al menos uno está presente.
+    const email = data.email && data.email.trim() !== '' ? data.email : null;
+    const telefono = data.telefono && data.telefono.trim() !== '' ? data.telefono : null;
     const { data: inserted, error: dbError } = await supabase
-      .from('prospectos')
+      .from('leads')
       .insert({
-        nombre: data.nombre,
-        email: data.email && data.email.trim() !== '' ? data.email : null,
-        telefono: data.telefono && data.telefono.trim() !== '' ? data.telefono : null,
-        empresa: data.empresa && data.empresa.trim() !== '' ? data.empresa : null,
-        mensaje: data.mensaje || null,
+        name: data.nombre,
+        business: data.empresa && data.empresa.trim() !== '' ? data.empresa : null,
+        contact: [email, telefono].filter(Boolean).join(' · '),
+        message: data.mensaje || '',
+        source: 'landing',
+        status: 'nuevo',
       })
       .select()
       .single();
 
     if (dbError) throw dbError;
 
-    // 5. Webhook n8n — fire-and-forget.
-    if (config.n8n.webhookUrl) {
-      notifyProspect(inserted).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error('[prospects] error notificando prospecto:', e?.message || e);
-      });
-    }
+    // 5. Notificación fire-and-forget (n8n/webhook/email, según .env). El
+    //    payload conserva las claves del prospecto original para no romper el
+    //    mapeo del workflow "Registro de prospectos" en n8n.
+    notifyProspect({
+      id: inserted.id,
+      nombre: data.nombre,
+      email,
+      telefono,
+      empresa: data.empresa && data.empresa.trim() !== '' ? data.empresa : null,
+      mensaje: data.mensaje || '',
+      created_at: inserted.created_at,
+    }).catch((e) => {
+      // eslint-disable-next-line no-console
+      console.error('[prospects] error notificando prospecto:', e?.message || e);
+    });
 
     return res.status(201).json({ ok: true });
   } catch (err) {

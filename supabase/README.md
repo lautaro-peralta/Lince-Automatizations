@@ -136,6 +136,32 @@ admin, con datos y reglas anti-fraude en el servidor.
 aprobarlo (segregación de funciones); ≥ US$ 1.000 exige 2 socios distintos; la
 bitácora (`expense_events`) es append-only. Ver `api/src/routes/expenses.js`.
 
+## 6. Tabla `prospectos` (deprecada)
+
+El formulario de contacto (`POST /api/prospects`) guardaba en una tabla
+`prospectos` creada a mano, que **nadie leía**: el panel admin y `/api/stats`
+usan `leads`. Desde ahora el endpoint escribe directo en `leads` (con
+`source = 'landing'`), así los contactos aparecen en el panel.
+
+Si tu `prospectos` tiene filas que querés conservar, migralas y borrá la tabla
+desde el **SQL Editor** (ajustá los nombres de columna si tu tabla difiere):
+
+```sql
+insert into public.leads (name, business, contact, message, source, created_at)
+select
+  nombre,
+  empresa,
+  concat_ws(' · ', nullif(email, ''), nullif(telefono, '')),
+  coalesce(mensaje, ''),
+  'landing',
+  created_at
+from public.prospectos;
+
+drop table public.prospectos;
+```
+
+Si está vacía, alcanza con el `drop table`.
+
 ### Comprobantes (subida de imágenes / PDF)
 
 La subida pasa por `POST /api/uploads`. El proveedor se elige con

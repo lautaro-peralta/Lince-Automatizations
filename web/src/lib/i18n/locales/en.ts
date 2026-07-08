@@ -253,6 +253,8 @@ export const en: Dictionary = {
 		businessPh: 'Name of the shop or trade',
 		contact: 'Email or WhatsApp',
 		contactPh: 'Where we should reach you',
+		email: 'Your email',
+		emailPh: 'name@email.com',
 		message: 'Which task repeats every day?',
 		messagePh: 'Tell us briefly about your case',
 		phone: 'Phone',
@@ -260,6 +262,7 @@ export const en: Dictionary = {
 		submit: 'Tell us about my case',
 		submitting: 'Sending…',
 		invalid: 'Please review the highlighted fields.',
+		requireEmailOrPhone: 'Leave an email or a phone number so we can get back to you.',
 		sending: 'Sending…',
 		success: "Done! We got your message. We'll get back to you within 24 hrs.",
 		botThanks: "Thanks! We'll be in touch."

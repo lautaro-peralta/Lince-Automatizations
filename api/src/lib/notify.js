@@ -9,7 +9,9 @@
  *
  * Cómo activarla: cargá en el entorno alguna de estas variables
  *   NOTIFY_WEBHOOK_URL   -> POST JSON a esa URL (Make/Zapier/Discord/Slack/...)
- *   N8N_WEBHOOK_URL + N8N_WEBHOOK_SECRET -> POST JSON a n8n con header x-lince-secret
+ *   N8N_WEBHOOK_URL      -> POST JSON a n8n. Autentica con Basic Auth si hay
+ *                           N8N_WEBHOOK_USERNAME + N8N_WEBHOOK_PASSWORD, y/o con
+ *                           el header x-lince-secret si hay N8N_WEBHOOK_SECRET.
  *   RESEND_API_KEY + NOTIFY_EMAIL_TO  -> email vía Resend
  */
 import { config } from '../config.js';
@@ -62,7 +64,7 @@ async function dispatch({ type, subject, text, data }) {
 
   // n8n (N8N_WEBHOOK_URL)
   if (config.n8n.webhookUrl) {
-    tasks.push(sendN8n(config.n8n.webhookUrl, config.n8n.webhookSecret || '', data));
+    tasks.push(sendN8n(config.n8n, data));
   }
 
   // Email vía Resend (https://resend.com).
@@ -96,11 +98,18 @@ async function sendWebhook(url, payload) {
   if (!res.ok) throw new Error(`webhook respondió ${res.status}`);
 }
 
-/** POST JSON a n8n con header secreto. */
-async function sendN8n(url, secret, payload) {
+/**
+ * POST JSON a n8n. El nodo Webhook puede exigir Basic Auth (usuario/contraseña)
+ * o Header Auth (x-lince-secret): mandamos lo que esté configurado en el .env.
+ */
+async function sendN8n({ webhookUrl, webhookSecret, webhookUsername, webhookPassword }, payload) {
   const headers = { 'Content-Type': 'application/json' };
-  if (secret) headers['x-lince-secret'] = secret;
-  const res = await fetch(url, {
+  if (webhookUsername && webhookPassword) {
+    headers.Authorization =
+      'Basic ' + Buffer.from(`${webhookUsername}:${webhookPassword}`).toString('base64');
+  }
+  if (webhookSecret) headers['x-lince-secret'] = webhookSecret;
+  const res = await fetch(webhookUrl, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),
