@@ -34,9 +34,15 @@ export const EXPENSE_CATEGORIES = [
   'Otros',
 ];
 
-// A partir de este monto (en la moneda del gasto) hacen falta 2 aprobaciones
-// de socios distintos. Por debajo, alcanza con 1.
-export const APPROVAL_THRESHOLD = 1000;
+// Un gasto es "crítico" cuando su monto SUPERA el umbral de su moneda: ahí hacen
+// falta 2 aprobaciones de socios distintos. Con un monto igual o menor, alcanza
+// con 1. Los umbrales son por moneda porque 50 USD y 50.000 ARS no son lo mismo.
+export const APPROVAL_THRESHOLDS = { USD: 50, ARS: 50000 };
+
+// Devuelve el umbral crítico para una moneda (USD por defecto).
+export function approvalThreshold(currency) {
+  return APPROVAL_THRESHOLDS[currency] ?? APPROVAL_THRESHOLDS.USD;
+}
 
 export const AD_CHANNELS = ['meta', 'google', 'linkedin', 'tiktok', 'otros'];
 

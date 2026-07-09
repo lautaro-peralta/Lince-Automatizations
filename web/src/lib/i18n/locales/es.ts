@@ -267,7 +267,9 @@ export const es = {
 		requireEmailOrPhone: 'Dejanos un email o un teléfono para poder responderte.',
 		sending: 'Enviando…',
 		success: '¡Listo! Recibimos tu mensaje. Te respondemos dentro de 24 hs.',
-		botThanks: '¡Gracias! Te vamos a contactar.'
+		botThanks: '¡Gracias! Te vamos a contactar.',
+		rateLimited:
+			'Ya nos enviaste varios mensajes desde este dispositivo. Si es urgente, escribinos por WhatsApp.'
 	},
 
 	receipt: {

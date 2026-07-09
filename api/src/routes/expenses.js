@@ -8,7 +8,8 @@
  *
  * Reglas anti-fraude aplicadas ACÁ, en el servidor (no en el navegador):
  *   · Segregación de funciones: nadie aprueba/rechaza su propio gasto.
- *   · Doble aprobación: montos >= APPROVAL_THRESHOLD requieren 2 socios distintos.
+ *   · Doble aprobación: los montos críticos (por encima del umbral de su moneda:
+ *     USD 50 / ARS 50.000) requieren 2 socios distintos.
  *   · Bitácora append-only: cada acción es un evento; NO hay update/delete de la
  *     historia. `status` es un cache que solo mueve el servidor.
  */
@@ -16,7 +17,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
 import { requireSocio } from '../middleware/auth.js';
-import { EXPENSE_CATEGORIES, APPROVAL_THRESHOLD } from '../constants.js';
+import { EXPENSE_CATEGORIES, approvalThreshold } from '../constants.js';
 import { getSignedReceiptUrl } from '../lib/uploads.js';
 
 const router = Router();
@@ -114,7 +115,9 @@ router.post('/', requireSocio, async (req, res, next) => {
         errors: parsed.error.flatten().fieldErrors,
       });
     }
-    const required_approvals = parsed.data.amount >= APPROVAL_THRESHOLD ? 2 : 1;
+    // Crítico = supera el umbral de su moneda → doble aprobación.
+    const required_approvals =
+      parsed.data.amount > approvalThreshold(parsed.data.currency) ? 2 : 1;
 
     const { data: expense, error } = await supabase
       .from('expenses')

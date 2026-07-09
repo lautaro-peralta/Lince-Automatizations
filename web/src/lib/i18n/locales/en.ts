@@ -265,7 +265,9 @@ export const en: Dictionary = {
 		requireEmailOrPhone: 'Leave an email or a phone number so we can get back to you.',
 		sending: 'Sending…',
 		success: "Done! We got your message. We'll get back to you within 24 hrs.",
-		botThanks: "Thanks! We'll be in touch."
+		botThanks: "Thanks! We'll be in touch.",
+		rateLimited:
+			"You've already sent us several messages from this device. If it's urgent, reach us on WhatsApp."
 	},
 
 	receipt: {

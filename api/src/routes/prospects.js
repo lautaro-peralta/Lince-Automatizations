@@ -6,7 +6,9 @@
  *
  * Flujo:
  *   1. Honeypot: si `website` viene con valor, respondemos 200 sin guardar.
- *   2. Rate limit por IP (~5 peticiones/minuto, en memoria).
+ *   2. Rate limit por IP (en memoria): ~5 peticiones/minuto (ráfaga) y un tope
+ *      diario para frenar el abuso sostenido (que una misma máquina no pueda
+ *      inyectar cientos de formularios).
  *   3. Validación con Zod (nombre obligatorio; email o telefono al menos uno).
  *   4. Insert en Supabase (tabla `leads`, la misma que lee el panel admin y
  *      /api/stats). Si falla → 500 y no se notifica.
@@ -19,31 +21,53 @@ import { notifyProspect } from '../lib/notify.js';
 
 const router = Router();
 
-// ─── Rate limiter en memoria ──────────────────────────────────────────────────
+// ─── Rate limiter en memoria (dos capas por IP) ───────────────────────────────
+//   · Ventana corta: frena ráfagas (varios envíos en segundos).
+//   · Tope diario: frena el abuso sostenido. Aunque un bot respete el ritmo por
+//     minuto (5/min = miles/día), nunca superará RATE_MAX_DAY envíos en 24 h, así
+//     que una misma máquina no puede inyectar cientos de formularios.
 const RATE_WINDOW_MS = 60_000; // 1 minuto
-const RATE_MAX = 5; // intentos por ventana
+const RATE_MAX = 5; // intentos por ventana corta
+const RATE_DAY_MS = 24 * 60 * 60 * 1000; // 24 horas
+const RATE_MAX_DAY = 20; // envíos máximos por IP en 24 h
 const _ipMap = new Map();
 
 setInterval(() => {
   const now = Date.now();
   for (const [ip, entry] of _ipMap) {
-    if (now >= entry.resetAt) _ipMap.delete(ip);
+    // Se descarta la entrada cuando venció su ventana diaria (la más larga).
+    if (now >= entry.dayResetAt) _ipMap.delete(ip);
   }
 }, RATE_WINDOW_MS);
 
-function isRateLimited(ip) {
+// Devuelve null si la petición pasa, o el mensaje 429 si excede algún límite.
+function rateLimit(ip) {
   const now = Date.now();
-  const entry = _ipMap.get(ip);
+  let entry = _ipMap.get(ip);
 
-  if (!entry || now >= entry.resetAt) {
-    _ipMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
-    return false;
+  // Entrada nueva o con el día ya vencido → arranca de cero.
+  if (!entry || now >= entry.dayResetAt) {
+    entry = { count: 0, resetAt: now + RATE_WINDOW_MS, dayCount: 0, dayResetAt: now + RATE_DAY_MS };
+    _ipMap.set(ip, entry);
   }
 
-  if (entry.count >= RATE_MAX) return true;
+  // Reinicio de la ventana corta sin tocar el contador diario.
+  if (now >= entry.resetAt) {
+    entry.count = 0;
+    entry.resetAt = now + RATE_WINDOW_MS;
+  }
+
+  // Tope diario primero: es el que corta el abuso masivo.
+  if (entry.dayCount >= RATE_MAX_DAY) {
+    return 'Alcanzaste el límite de envíos por hoy. Escribinos por WhatsApp o probá de nuevo mañana.';
+  }
+  if (entry.count >= RATE_MAX) {
+    return 'Demasiados intentos. Esperá un momento.';
+  }
 
   entry.count += 1;
-  return false;
+  entry.dayCount += 1;
+  return null;
 }
 
 // ─── Esquema de validación: nombre obligatorio. email y telefono opcionales,
@@ -84,10 +108,11 @@ router.post('/', async (req, res, next) => {
       return res.status(200).json({ ok: true });
     }
 
-    // 2. Rate limit por IP.
+    // 2. Rate limit por IP (ráfaga + tope diario).
     const ip = req.ip || req.socket?.remoteAddress || 'unknown';
-    if (isRateLimited(ip)) {
-      return res.status(429).json({ message: 'Demasiados intentos. Esperá un momento.' });
+    const limitMsg = rateLimit(ip);
+    if (limitMsg) {
+      return res.status(429).json({ message: limitMsg });
     }
 
     // 3. Validación.
