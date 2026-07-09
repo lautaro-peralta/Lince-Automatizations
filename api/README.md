@@ -34,6 +34,9 @@ api/
 | POST   | `/api/reviews/:id/suggest`  | admin   | ✅ (IA) |
 | GET    | `/api/stats`                | admin   | ✅     |
 | *      | `/api/chatbot/*`            | público | ✅     |
+| *      | `/api/me`, `/api/me/partners` | socio | ✅ (Startup OS / Teams) |
+| *      | `/api/expenses`, `/api/ads`, `/api/subscriptions`, `/api/okrs`, `/api/clients`, `/api/invoices`, `/api/roadmap`, `/api/dashboard`, `/api/uploads` | socio | ✅ (Startup OS) |
+| *      | `/api/teams/{dashboard,tasks,board}` | socio | ✅ (Lince Teams) |
 
 Detalle completo del contrato en [`../docs/API.md`](../docs/API.md).
 

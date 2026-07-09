@@ -10,12 +10,26 @@ clientes. Pensado para desplegarse en planes **gratuitos**: Cloudflare Pages
 .
 ├── web/                 # Frontend (SvelteKit + Tailwind v4) → Cloudflare Pages
 │   ├── src/routes/+page.svelte  # landing pública (prerenderizada)
-│   └── src/routes/admin/        # panel interno (SPA con auth)
+│   ├── src/routes/admin/        # panel interno (SPA con auth)
+│   └── static/
+│       ├── startup-os/          # ERP interno (finanzas, clientes, estrategia)
+│       └── teams/               # Lince Teams: tablero kanban + pizarra
 ├── api/                 # Backend (Node + Express) → Render
 ├── supabase/            # Esquema SQL (con RLS) + Edge Function del cron
 ├── docs/                # Planeamiento (leer acá primero 👇)
 └── render.yaml          # Blueprint de deploy del backend
 ```
+
+## Herramientas internas (mismo login que el panel)
+
+Dos apps estáticas viven detrás del **mismo login de Supabase** que el panel
+`/admin` (mismo padrón de cuentas `admin`/`socio`, sin registro aparte). Si
+entrás sin sesión, te mandan a `/admin?next=…` y vuelven solas:
+
+| Herramienta | Ruta | Qué hace |
+|-------------|------|----------|
+| **Startup OS** | `/startup-os/` | ERP interno: gastos/aprobaciones, clientes, facturación, suscripciones, anuncios, OKRs, roadmap. |
+| **Lince Teams** | `/teams/` | Espacio de trabajo del equipo: panel de actividad, **tablero kanban** (arrastrar/soltar, prioridades, asignación) y **pizarra colaborativa** (notas, dibujo e imágenes) sincronizada casi en vivo. API en `/api/teams/*`. |
 
 ## Documentación
 

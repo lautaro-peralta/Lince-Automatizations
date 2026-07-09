@@ -357,6 +357,7 @@ export const es = {
 		},
 		userEmailFallback: '',
 		logout: 'Salir',
+		teams: 'Teams ↗',
 		startupOs: 'Startup OS ↗',
 		summary: {
 			title: 'Resumen',

@@ -26,12 +26,18 @@ import clientsRouter from './routes/clients.js';
 import invoicesRouter from './routes/invoices.js';
 import roadmapRouter from './routes/roadmap.js';
 import dashboardRouter from './routes/dashboard.js';
+import teamsRouter from './routes/teams.js';
 
 const app = express();
 
 // Detrás de nginx (que manda X-Forwarded-For): sin esto req.ip es siempre
 // 127.0.0.1 y el rate-limit de /api/prospects agrupa a todos los visitantes.
 app.set('trust proxy', 1);
+
+// La pizarra de Teams embebe imágenes como data URL, así que /api/teams admite
+// cuerpos más grandes. Se declara ANTES del parser global: express.json es
+// idempotente (marca req._body), así que el límite chico de abajo no lo pisa.
+app.use('/api/teams', express.json({ limit: '2mb' }));
 
 // Cuerpo JSON con límite chico: una landing/CRM no necesita payloads grandes.
 app.use(express.json({ limit: '10kb' }));
@@ -71,6 +77,7 @@ app.use('/api/clients', clientsRouter);     // clientes / CRM + salud (Startup O
 app.use('/api/invoices', invoicesRouter);   // facturación (Startup OS)
 app.use('/api/roadmap', roadmapRouter);     // roadmap de iniciativas (Startup OS)
 app.use('/api/dashboard', dashboardRouter); // agregado del panel (Startup OS)
+app.use('/api/teams', teamsRouter);         // tablero + pizarra (Lince Teams)
 
 // 404 y manejador de errores SIEMPRE al final.
 app.use(notFound);

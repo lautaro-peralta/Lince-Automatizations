@@ -162,7 +162,47 @@ de `leads` (prospectos entrantes de la landing): un lead ganado se "gradúa" a
 cliente. El MRR de los clientes `activo` es el MRR real del dashboard, y su `health`
 alimenta el riesgo de churn.
 
-## 6. Tabla `prospectos` (deprecada)
+## 6. Lince Teams — el espacio de trabajo del equipo (tablero + pizarra)
+
+Lince Teams (`web/static/teams/`) es la sección interna para el trabajo del
+equipo. Usa **el mismo Supabase Auth y el mismo padrón** que el panel y el
+Startup OS: los "miembros" son los `profiles` con rol `admin` o `socio`; **no
+hay registro ni aprobación aparte**.
+
+1. **Aplicar el esquema nuevo:** en el SQL Editor, correr
+   `migrations/0005_teams.sql` (idempotente, RLS ON y sin políticas abiertas).
+   Crea:
+   - `team_tasks` → tablero kanban (estado todo/doing/done, prioridad, asignado,
+     creador, fecha límite).
+   - `team_board_items` → pizarra colaborativa (notas, trazos e imágenes; las
+     imágenes se guardan embebidas como data URL para sobrevivir a los redeploys
+     sin firmar URLs).
+   - `team_activity` → bitácora del equipo (alimenta la actividad del panel).
+
+2. **Login unificado (igual que el Startup OS).** No tiene login propio: si
+   entrás a `/teams/` sin sesión, te manda a `/admin?next=/teams/` y vuelve solo.
+   El panel tiene un botón **"Teams ↗"** y Teams enlaza de vuelta a `/admin`.
+   La config (URL/anon key/API) sale en runtime de `/auth-config` — nada
+   hardcodeado. Vale el mismo `FRONTEND_ORIGIN` en el backend que ya usa el
+   Startup OS.
+
+3. **Quién entra.** Cualquier `admin` o `socio` (§5). Toda la API pasa por
+   `requireSocio`; el navegador nunca toca la base directo (RLS ON, service-role
+   en el backend).
+
+**Rutas de la API** (todas con `requireSocio`):
+
+| Función               | Ruta API                | Tablas                            |
+| --------------------- | ----------------------- | --------------------------------- |
+| Panel (agregado)      | `/api/teams/dashboard`  | lee `team_tasks`, `team_activity` |
+| Tablero kanban        | `/api/teams/tasks`      | `team_tasks`                      |
+| Pizarra colaborativa  | `/api/teams/board`      | `team_board_items`                |
+
+> Sin WebSocket en este stack, la sincronización "casi en vivo" es por sondeo
+> ligero: el tablero/panel se refrescan cada pocos segundos y la pizarra usa un
+> sondeo incremental (`GET /api/teams/board?since=…`) que trae solo lo cambiado.
+
+## 7. Tabla `prospectos` (deprecada)
 
 El formulario de contacto (`POST /api/prospects`) guardaba en una tabla
 `prospectos` creada a mano, que **nadie leía**: el panel admin y `/api/stats`

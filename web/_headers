@@ -15,6 +15,13 @@
 /startup-os/*
   X-Robots-Tag: noindex
 
+# Lince Teams es una herramienta interna: tampoco se indexa.
+/teams/*
+  X-Robots-Tag: noindex
+
 # Librerías vendoreadas con la versión en el nombre: cache inmutable.
 /startup-os/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/teams/vendor/*
   Cache-Control: public, max-age=31536000, immutable
