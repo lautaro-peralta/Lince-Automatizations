@@ -18,12 +18,16 @@
 
 	initAuth();
 
-	// Si se llegó con ?next=/startup-os/... (redirigido desde el Startup OS por
-	// falta de sesión), al quedar logueado lo mandamos de vuelta allá.
+	// Si se llegó con ?next=/startup-os/... o /teams/... (redirigido desde una
+	// herramienta interna por falta de sesión), al quedar logueado lo mandamos
+	// de vuelta allá. Solo rutas internas propias (evita open-redirect).
+	const INTERNAL_NEXT = ['/startup-os', '/teams'];
 	$effect(() => {
 		if (!auth.session || typeof window === 'undefined') return;
 		const next = page.url.searchParams.get('next');
-		if (next && next.startsWith('/startup-os')) window.location.href = next;
+		if (next && INTERNAL_NEXT.some((p) => next === p || next.startsWith(p + '/'))) {
+			window.location.href = next;
+		}
 	});
 
 	let email = $state('');
@@ -244,6 +248,12 @@
 				{/each}
 			</nav>
 			<div class="ml-auto flex items-center gap-3 text-[13px] text-sage">
+				<a
+					href="/teams/"
+					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"
+				>
+					{t('admin.teams')}
+				</a>
 				<a
 					href="/startup-os/"
 					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"

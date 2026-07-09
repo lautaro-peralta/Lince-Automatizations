@@ -34,8 +34,14 @@ api/
 | POST   | `/api/reviews/:id/suggest`  | admin   | ✅ (IA) |
 | GET    | `/api/stats`                | admin   | ✅     |
 | *      | `/api/chatbot/*`            | público | ✅     |
+| *      | `/api/me`, `/api/me/partners` | socio | ✅ (Startup OS) |
+| *      | `/api/expenses`, `/api/ads`, `/api/subscriptions`, `/api/okrs`, `/api/clients`, `/api/invoices`, `/api/roadmap`, `/api/dashboard`, `/api/uploads` | socio | ✅ (Startup OS) |
 
 Detalle completo del contrato en [`../docs/API.md`](../docs/API.md).
+
+> **Lince Teams** (tablero, pizarra en tiempo real y transcripción) es un
+> servicio aparte (repo `lince-teams`, Python/FastAPI): no vive en este backend.
+> Comparte el login validando el JWT de Supabase. Ver `deploy/teams-proxy/`.
 
 ## Cómo correrlo en local
 

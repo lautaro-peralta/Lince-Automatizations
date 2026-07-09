@@ -1,0 +1,21 @@
+{
+	// Worker independiente (aparte del sitio SvelteKit) que hace de reverse-proxy
+	// de Lince Teams bajo /teams. Deploy con `wrangler deploy` desde esta carpeta.
+	"name": "lince-teams-proxy",
+	"main": "worker.js",
+	"compatibility_date": "2026-07-03",
+	"workers_dev": false,
+
+	// La ruta /teams/* es más específica que el custom domain del sitio, así que
+	// intercepta esas requests antes que el Worker de SvelteKit. Ajustá el dominio
+	// si el tuyo difiere.
+	"routes": [
+		{ "pattern": "lince-automate.com.ar/teams/*", "zone_name": "lince-automate.com.ar" }
+	],
+
+	// URL del servicio Python de Lince Teams (Render). Cambiala por la tuya.
+	// Podés dejarla acá (es pública) o setearla como secret/var en el panel.
+	"vars": {
+		"TEAMS_ORIGIN": "https://lince-teams.onrender.com"
+	}
+}

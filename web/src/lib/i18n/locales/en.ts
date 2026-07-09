@@ -355,6 +355,7 @@ export const en: Dictionary = {
 		},
 		userEmailFallback: '',
 		logout: 'Sign out',
+		teams: 'Teams ↗',
 		startupOs: 'Startup OS ↗',
 		summary: {
 			title: 'Summary',

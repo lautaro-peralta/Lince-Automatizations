@@ -10,12 +10,25 @@ clientes. Pensado para desplegarse en planes **gratuitos**: Cloudflare Pages
 .
 ├── web/                 # Frontend (SvelteKit + Tailwind v4) → Cloudflare Pages
 │   ├── src/routes/+page.svelte  # landing pública (prerenderizada)
-│   └── src/routes/admin/        # panel interno (SPA con auth)
+│   ├── src/routes/admin/        # panel interno (SPA con auth)
+│   └── static/startup-os/       # ERP interno (finanzas, clientes, estrategia)
 ├── api/                 # Backend (Node + Express) → Render
 ├── supabase/            # Esquema SQL (con RLS) + Edge Function del cron
+├── deploy/              # Blueprints de infra (proxy de Teams, nginx, systemd)
 ├── docs/                # Planeamiento (leer acá primero 👇)
 └── render.yaml          # Blueprint de deploy del backend
 ```
+
+## Herramientas internas (mismo login que el panel)
+
+Ambas comparten el **mismo login de Supabase** que el panel `/admin` (mismo
+padrón de cuentas `admin`/`socio`, sin registro aparte). Si entrás sin sesión,
+te mandan a `/admin?next=…` y vuelven solas:
+
+| Herramienta | Ruta | Qué hace |
+|-------------|------|----------|
+| **Startup OS** | `/startup-os/` | App estática servida por Cloudflare. ERP interno: gastos/aprobaciones, clientes, facturación, suscripciones, anuncios, OKRs, roadmap. |
+| **Lince Teams** | `/teams/` | **Servicio aparte** ([repo `lince-teams`](https://github.com/lautaro-peralta/lince-teams), Python/FastAPI) montado en el mismo origen vía reverse-proxy. Espacio de trabajo del equipo: tablero kanban, pizarra en **tiempo real** (WebSocket) y **transcripción de voz** (Whisper). Comparte el login validando el JWT de Supabase. Proxy en [`deploy/teams-proxy/`](deploy/teams-proxy/). |
 
 ## Documentación
 

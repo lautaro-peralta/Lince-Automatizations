@@ -162,7 +162,37 @@ de `leads` (prospectos entrantes de la landing): un lead ganado se "gradúa" a
 cliente. El MRR de los clientes `activo` es el MRR real del dashboard, y su `health`
 alimenta el riesgo de churn.
 
-## 6. Tabla `prospectos` (deprecada)
+## 6. Lince Teams — el espacio de trabajo del equipo (servicio aparte)
+
+Lince Teams (repo [`lince-teams`](https://github.com/lautaro-peralta/lince-teams),
+Python/FastAPI) es un **servicio separado** con su propio backend, porque necesita
+dos cosas que este stack Node no da: **tiempo real** (WebSocket) y
+**transcripción de voz** (modelo Whisper). No agrega tablas a este esquema: crea
+las suyas (`users`, `tasks`, `board_items`, …) al arrancar, en el **mismo Postgres
+de Supabase** (apuntá su `DATABASE_URL` a este proyecto).
+
+Lo que sí comparte es el **login**: en su "modo unificado" valida el **JWT de
+Supabase** (la misma sesión del panel) y espeja cada cuenta leyendo `public.profiles`.
+Los miembros son los `profiles` con rol `admin` o `socio` (el mismo padrón del
+panel y el Startup OS); **no hay registro ni aprobación propios**.
+
+**Puesta en marcha:**
+
+1. **No corras ninguna migración acá para Teams**: el servicio arma sus tablas
+   solo. Solo asegurate de que las cuentas del equipo tengan rol `admin`/`socio`
+   (§5).
+2. En el servicio de Teams (Render), definí `SUPABASE_URL` + `SUPABASE_ANON_KEY`
+   (activan el modo unificado) y `DATABASE_URL` = este Postgres. Detalle en el
+   [DEPLOY.md de `lince-teams`](https://github.com/lautaro-peralta/lince-teams/blob/master/DEPLOY.md#modo-unificado-un-solo-login-con-lince-automate).
+3. Para el SSO sin doble login, montá Teams en el **mismo origen** bajo `/teams`
+   con el reverse-proxy de [`deploy/teams-proxy/`](../deploy/teams-proxy/). El panel
+   ya tiene el botón **"Teams ↗"** y el redirect `?next=/teams` al iniciar sesión.
+
+> El login unificado no necesita RLS nueva: el servicio se conecta con
+> `DATABASE_URL` (rol `postgres`, que ya bypassa RLS, igual que el service-role
+> del backend Express), así que lee `profiles` directo.
+
+## 7. Tabla `prospectos` (deprecada)
 
 El formulario de contacto (`POST /api/prospects`) guardaba en una tabla
 `prospectos` creada a mano, que **nadie leía**: el panel admin y `/api/stats`
