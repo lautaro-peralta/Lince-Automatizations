@@ -17,10 +17,13 @@ El Worker (`worker.js`) reenvía `/teams/*` al servicio Python quitando el prefi
 
 ## Deploy
 
-1. Desplegá el servicio Python en Render (ver su `DEPLOY.md`), en **modo
-   unificado**: con `SUPABASE_URL` + `SUPABASE_ANON_KEY` y `DATABASE_URL`
-   apuntando al **mismo** Postgres de Supabase que Lince Automate. Anotá su URL
-   (p. ej. `https://lince-teams.onrender.com`).
+1. Desplegá el servicio Python de [`lince-teams`](https://github.com/lautaro-peralta/lince-teams)
+   en **modo unificado** (con `SUPABASE_URL` + `SUPABASE_ANON_KEY` y `DATABASE_URL`
+   apuntando al **mismo** Postgres de Supabase que Lince Automate) y anotá su URL:
+   - **Oracle Cloud** (recomendado para Whisper; la VM no se duerme):
+     guía en el repo, `deploy/DEPLOY-oracle.md`. El origen queda como
+     `https://teams-origin.TU-DOMINIO.com` (registro DNS **en nube gris**).
+   - **Render**: `https://lince-teams.onrender.com`.
 
 2. En su `server/static/config.js`, poné la base bajo el prefijo del proxy:
 
