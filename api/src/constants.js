@@ -47,3 +47,11 @@ export const SUBSCRIPTION_STATUSES = ['activa', 'pausada', 'cancelada'];
 export const BILLING_CYCLES = ['mensual', 'anual'];
 
 export const OKR_STATUSES = ['activo', 'archivado'];
+
+export const CLIENT_STATUSES = ['activo', 'pausado', 'baja'];
+
+export const CLIENT_HEALTH = ['saludable', 'en_riesgo', 'critico'];
+
+export const INVOICE_STATUSES = ['borrador', 'enviada', 'pagada', 'vencida', 'anulada'];
+
+export const ROADMAP_STATUSES = ['idea', 'planeado', 'en_curso', 'hecho', 'pausado'];

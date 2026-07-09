@@ -22,6 +22,9 @@ import adsRouter from './routes/ads.js';
 import uploadsRouter from './routes/uploads.js';
 import subscriptionsRouter from './routes/subscriptions.js';
 import okrsRouter from './routes/okrs.js';
+import clientsRouter from './routes/clients.js';
+import invoicesRouter from './routes/invoices.js';
+import roadmapRouter from './routes/roadmap.js';
 import dashboardRouter from './routes/dashboard.js';
 
 const app = express();
@@ -64,6 +67,9 @@ app.use('/api/ads', adsRouter);             // rendimiento de anuncios (Startup 
 app.use('/api/uploads', uploadsRouter);     // subida de comprobantes (Startup OS)
 app.use('/api/subscriptions', subscriptionsRouter); // suscripciones SaaS (Startup OS)
 app.use('/api/okrs', okrsRouter);           // OKRs y metas (Startup OS)
+app.use('/api/clients', clientsRouter);     // clientes / CRM + salud (Startup OS)
+app.use('/api/invoices', invoicesRouter);   // facturación (Startup OS)
+app.use('/api/roadmap', roadmapRouter);     // roadmap de iniciativas (Startup OS)
 app.use('/api/dashboard', dashboardRouter); // agregado del panel (Startup OS)
 
 // 404 y manejador de errores SIEMPRE al final.

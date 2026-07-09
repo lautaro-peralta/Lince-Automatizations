@@ -2281,6 +2281,231 @@
 		}
 	}
 
+	/* Chips de salud de cliente (color + texto, nunca solo color) */
+	.health-chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		border-radius: 999px;
+		padding: 2px 10px;
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.health-chip .icon {
+		width: 12px;
+		height: 12px;
+	}
+
+	.health-saludable {
+		background: color-mix(in srgb, var(--color-success) 12%, transparent);
+		color: var(--color-moss-deep);
+	}
+
+	.health-en_riesgo {
+		background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+		color: var(--color-rust-deep);
+	}
+
+	.health-critico {
+		background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+		color: var(--color-danger);
+	}
+
+	:root[data-theme='dark'] .health-saludable { color: var(--color-success); }
+	:root[data-theme='dark'] .health-en_riesgo { color: var(--color-warning); }
+
+	/* Selector de salud inline (vista de churn) */
+	.health-select {
+		font: inherit;
+		font-size: 12.5px;
+		padding: 5px 8px;
+		border: 1px solid var(--color-line-strong);
+		border-radius: 8px;
+		background: var(--color-bg);
+		color: var(--color-ink);
+		outline: none;
+		cursor: pointer;
+	}
+
+	.health-select:focus {
+		border-color: var(--color-rust);
+		box-shadow: var(--shadow-glow);
+	}
+
+	/* Fila de cliente en la vista de churn */
+	.chealth {
+		display: grid;
+		grid-template-columns: auto 1fr auto auto;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 10px;
+		border-radius: var(--radius-md);
+	}
+
+	.chealth + .chealth {
+		border-top: 1px solid var(--color-line);
+	}
+
+	.chealth:hover {
+		background: var(--color-surface-2);
+	}
+
+	.chealth .c-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 999px;
+		flex: none;
+	}
+
+	.c-dot.saludable { background: var(--color-success); }
+	.c-dot.en_riesgo { background: var(--color-warning); }
+	.c-dot.critico { background: var(--color-danger); }
+
+	.chealth .c-main {
+		min-width: 0;
+	}
+
+	.chealth .c-main strong {
+		display: block;
+		font-size: 14px;
+	}
+
+	.chealth .c-main small {
+		font-size: 12.5px;
+		color: var(--color-sage);
+	}
+
+	.chealth .c-mrr {
+		font-variant-numeric: tabular-nums;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+	@media (max-width: 600px) {
+		.chealth {
+			grid-template-columns: auto 1fr;
+			grid-template-rows: auto auto;
+		}
+		.chealth .c-mrr,
+		.chealth .health-select {
+			grid-column: 2;
+			justify-self: start;
+		}
+	}
+
+	/* Roadmap: tablero por estado (kanban liviano) */
+	.road-board {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+		gap: 16px;
+	}
+
+	.road-col {
+		background: var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-card);
+		display: flex;
+		flex-direction: column;
+		min-height: 120px;
+	}
+
+	.road-col > header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 12px 14px 10px;
+		border-bottom: 1px solid var(--color-line);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		color: var(--color-sage);
+	}
+
+	.road-col > header .n {
+		background: var(--color-surface-2);
+		border-radius: 999px;
+		padding: 1px 8px;
+		color: var(--color-ink);
+	}
+
+	.road-col-body {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 12px;
+		flex: 1;
+	}
+
+	.road-card {
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-md);
+		background: var(--color-bg);
+		padding: 11px 12px;
+	}
+
+	.road-card .r-title {
+		font-size: 13.5px;
+		font-weight: 600;
+		margin-bottom: 6px;
+	}
+
+	.road-card .r-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		align-items: center;
+		font-size: 11.5px;
+		color: var(--color-sage);
+	}
+
+	.road-card .r-okr {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		color: var(--color-rust-deep);
+	}
+
+	:root[data-theme='dark'] .road-card .r-okr {
+		color: var(--color-rust);
+	}
+
+	.road-card .r-okr .icon {
+		width: 11px;
+		height: 11px;
+	}
+
+	.road-card .r-actions {
+		display: flex;
+		gap: 4px;
+		margin-top: 9px;
+	}
+
+	.road-card select {
+		font: inherit;
+		font-size: 11.5px;
+		padding: 3px 6px;
+		border: 1px solid var(--color-line);
+		border-radius: 6px;
+		background: var(--color-surface);
+		color: var(--color-ink);
+		cursor: pointer;
+	}
+
+	.road-empty-col {
+		font-size: 12px;
+		color: var(--color-sage);
+		padding: 6px 2px;
+		text-align: center;
+	}
+
 	/* ==========================================================================
 	   RESPONSIVE
 	   ========================================================================== */
@@ -2541,7 +2766,21 @@
 				<div class="nav-group-list" id="grp-fin">
 					<div>
 						<a class="nav-item" href="#/gastos" data-route="gastos"><svg class="icon"><use href="#i-wallet"/></svg>Gastos y aprobaciones</a>
+						<a class="nav-item" href="#/facturacion" data-route="facturacion"><svg class="icon"><use href="#i-card"/></svg>Facturación</a>
 						<a class="nav-item" href="#/saas" data-route="saas"><svg class="icon"><use href="#i-blocks"/></svg>Suscripciones SaaS</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="nav-group">
+				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-cli">
+					Clientes
+					<svg class="icon"><use href="#i-chev"/></svg>
+				</button>
+				<div class="nav-group-list" id="grp-cli">
+					<div>
+						<a class="nav-item" href="#/crm" data-route="crm"><svg class="icon"><use href="#i-heart"/></svg>Cartera / CRM</a>
+						<a class="nav-item" href="#/churn" data-route="churn"><svg class="icon"><use href="#i-down"/></svg>Salud y churn</a>
 					</div>
 				</div>
 			</div>
@@ -2566,6 +2805,7 @@
 				<div class="nav-group-list" id="grp-est">
 					<div>
 						<a class="nav-item" href="#/okrs" data-route="okrs"><svg class="icon"><use href="#i-target"/></svg>OKRs y metas</a>
+						<a class="nav-item" href="#/roadmap" data-route="roadmap"><svg class="icon"><use href="#i-map"/></svg>Roadmap</a>
 					</div>
 				</div>
 			</div>
@@ -2753,6 +2993,53 @@
 						<div class="empty" id="renew-empty">
 							<svg class="icon"><use href="#i-check-c"/></svg>
 							Sin renovaciones en los próximos 30 días.
+						</div>
+					</article>
+
+					<!-- ░░ Riesgo de churn (clientes activos con salud comprometida) ░░ -->
+					<article class="card span-7">
+						<div class="card-head">
+							<h2>
+								<svg class="icon"><use href="#i-down"/></svg>
+								Riesgo de churn
+							</h2>
+							<span class="badge badge-neutral" id="churn-count">—</span>
+						</div>
+
+						<div class="table-scroll">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Cliente</th>
+										<th scope="col">MRR</th>
+										<th scope="col">Salud</th>
+									</tr>
+								</thead>
+								<tbody id="churn-tbody"></tbody>
+							</table>
+						</div>
+						<div class="empty" id="churn-empty">
+							<svg class="icon"><use href="#i-check-c"/></svg>
+							<strong style="color:var(--color-ink)">Cartera sana</strong>
+							Ningún cliente activo está marcado en riesgo.
+						</div>
+						<div style="padding:0 18px 14px">
+							<a class="link-btn" href="#/churn"><svg class="icon"><use href="#i-down"/></svg>Ver salud de la cartera</a>
+						</div>
+					</article>
+
+					<!-- ░░ Cobranzas (facturas pendientes) ░░ -->
+					<article class="card span-5">
+						<div class="card-head">
+							<h2>
+								<svg class="icon"><use href="#i-card"/></svg>
+								Cobranzas
+							</h2>
+							<span class="badge badge-neutral" id="collect-badge" hidden></span>
+						</div>
+						<div id="collect-body" style="padding:14px 18px 4px; display:flex; flex-direction:column; gap:12px"></div>
+						<div style="padding:8px 18px 14px">
+							<a class="link-btn" href="#/facturacion"><svg class="icon"><use href="#i-card"/></svg>Ir a facturación</a>
 						</div>
 					</article>
 
@@ -3283,6 +3570,380 @@
 					</div>
 				</div>
 			</section>
+
+			<!-- ============ VISTA: CARTERA / CRM ============ -->
+			<section class="view" id="view-crm">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Clientes · cartera activa</span>
+						<h1>Cartera / CRM</h1>
+					</div>
+					<div class="meta" id="crm-meta">—</div>
+				</div>
+
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl" style="padding-right:6px">Clientes activos de la agencia · el MRR alimenta el dashboard</span>
+					</div>
+					<button class="btn btn-accent" id="crm-add-btn" aria-expanded="false">
+						<svg class="icon"><use href="#i-user-plus"/></svg>
+						Agregar cliente
+					</button>
+				</div>
+
+				<div class="form-collapse" id="crm-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-heart"/></svg><span id="crm-form-title">Agregar un cliente</span></h2>
+							</div>
+							<form class="gasto-form" id="crm-form" novalidate>
+								<input id="c-edit-id" type="hidden" />
+								<div class="field">
+									<label for="c-name">Nombre</label>
+									<input id="c-name" type="text" placeholder="Ej: Andes Pack" maxlength="160" required />
+								</div>
+								<div class="field">
+									<label for="c-contact">Contacto</label>
+									<input id="c-contact" type="text" placeholder="Email / WhatsApp / persona" maxlength="200" />
+								</div>
+								<div class="field">
+									<label for="c-plan">Plan</label>
+									<input id="c-plan" type="text" placeholder="Ej: Scale" maxlength="80" />
+								</div>
+								<div class="field">
+									<label for="c-mrr">MRR</label>
+									<div style="display:flex; gap:8px">
+										<select id="c-currency" aria-label="Moneda" style="font:inherit;font-size:14px;color:var(--color-ink);background:var(--color-bg);border:1px solid var(--color-line-strong);border-radius:8px;padding:8px 6px">
+											<option value="USD">US$</option>
+											<option value="ARS">AR$</option>
+										</select>
+										<input id="c-mrr" type="number" min="0" step="0.01" placeholder="0" style="flex:1;min-width:0" />
+									</div>
+								</div>
+								<div class="field">
+									<label for="c-status">Estado</label>
+									<select id="c-status">
+										<option value="activo">Activo</option>
+										<option value="pausado">Pausado</option>
+										<option value="baja">Baja</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="c-health">Salud</label>
+									<select id="c-health">
+										<option value="saludable">Saludable</option>
+										<option value="en_riesgo">En riesgo</option>
+										<option value="critico">Crítico</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="c-since">Cliente desde</label>
+									<input id="c-since" type="date" />
+								</div>
+								<div class="field wide">
+									<label for="c-notes">Notas / señales</label>
+									<input id="c-notes" type="text" placeholder="Ej: sin login hace 21 días; renovar en agosto" maxlength="1000" />
+								</div>
+								<div class="actions">
+									<span class="rule-hint">El MRR de los clientes <strong>activos</strong> es el MRR real del dashboard.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="crm-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm"><svg class="icon"><use href="#i-check"/></svg>Guardar</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<div id="crm-loading" aria-hidden="true">
+					<div class="skel" style="height:96px;margin-bottom:18px"></div>
+					<div class="skel" style="height:240px"></div>
+				</div>
+
+				<div class="load-error" id="crm-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudo cargar la cartera</strong>
+					<span id="crm-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="crm-retry">Reintentar</button>
+				</div>
+
+				<div id="crm-body" hidden>
+					<div class="kpi-row" id="crm-kpis"></div>
+					<article class="card">
+						<div class="card-head">
+							<h2><svg class="icon"><use href="#i-heart"/></svg>Clientes</h2>
+							<span class="badge badge-neutral" id="crm-count">—</span>
+						</div>
+						<div class="table-scroll">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Cliente</th>
+										<th scope="col">Plan</th>
+										<th scope="col">MRR</th>
+										<th scope="col">Salud</th>
+										<th scope="col">Estado</th>
+										<th scope="col"><span style="position:absolute;clip:rect(0 0 0 0)">Acciones</span></th>
+									</tr>
+								</thead>
+								<tbody id="crm-tbody"></tbody>
+							</table>
+						</div>
+						<div class="empty" id="crm-empty">
+							<svg class="icon" style="color:var(--color-sage)"><use href="#i-heart"/></svg>
+							Sin clientes cargados. Sumá el primero para ver el MRR y la salud de la cartera.
+						</div>
+					</article>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: SALUD Y CHURN ============ -->
+			<section class="view" id="view-churn">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Clientes · retención</span>
+						<h1>Salud y churn</h1>
+					</div>
+					<div class="meta" id="churn-meta">—</div>
+				</div>
+
+				<div id="churnv-loading" aria-hidden="true">
+					<div class="skel" style="height:96px;margin-bottom:18px"></div>
+					<div class="skel" style="height:200px"></div>
+				</div>
+
+				<div class="load-error" id="churnv-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudo cargar la salud de la cartera</strong>
+					<span id="churnv-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="churnv-retry">Reintentar</button>
+				</div>
+
+				<div id="churnv-body" hidden>
+					<div class="kpi-row" id="churnv-kpis"></div>
+					<article class="card">
+						<div class="card-head">
+							<h2><svg class="icon"><use href="#i-shield"/></svg>Clientes por salud</h2>
+							<span class="sub">Cambiá la salud de un cliente y se refleja al instante</span>
+						</div>
+						<div id="churnv-list" style="padding:8px 8px 12px"></div>
+						<div class="empty" id="churnv-empty">
+							<svg class="icon"><use href="#i-check-c"/></svg>
+							<strong style="color:var(--color-ink)">Cartera sana</strong>
+							Ningún cliente activo está marcado en riesgo o crítico.
+						</div>
+					</article>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: FACTURACIÓN ============ -->
+			<section class="view" id="view-facturacion">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Finanzas · cobranzas</span>
+						<h1>Facturación</h1>
+					</div>
+					<div class="meta" id="fact-meta">—</div>
+				</div>
+
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl" style="padding-right:6px">Facturas emitidas y su estado de cobro</span>
+					</div>
+					<button class="btn btn-accent" id="fact-add-btn" aria-expanded="false">
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Nueva factura
+					</button>
+				</div>
+
+				<div class="form-collapse" id="fact-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-card"/></svg><span id="fact-form-title">Nueva factura</span></h2>
+							</div>
+							<form class="gasto-form" id="fact-form" novalidate>
+								<input id="i-edit-id" type="hidden" />
+								<div class="field">
+									<label for="i-client">Cliente</label>
+									<select id="i-client"></select>
+								</div>
+								<div class="field">
+									<label for="i-number">N.º de factura</label>
+									<input id="i-number" type="text" placeholder="Ej: A-0001-00000123" maxlength="60" />
+								</div>
+								<div class="field">
+									<label for="i-amount">Importe</label>
+									<div style="display:flex; gap:8px">
+										<select id="i-currency" aria-label="Moneda" style="font:inherit;font-size:14px;color:var(--color-ink);background:var(--color-bg);border:1px solid var(--color-line-strong);border-radius:8px;padding:8px 6px">
+											<option value="USD">US$</option>
+											<option value="ARS">AR$</option>
+										</select>
+										<input id="i-amount" type="number" min="0" step="0.01" placeholder="0" required style="flex:1;min-width:0" />
+									</div>
+								</div>
+								<div class="field">
+									<label for="i-status">Estado</label>
+									<select id="i-status">
+										<option value="borrador">Borrador</option>
+										<option value="enviada">Enviada</option>
+										<option value="pagada">Pagada</option>
+										<option value="vencida">Vencida</option>
+										<option value="anulada">Anulada</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="i-issued">Fecha de emisión</label>
+									<input id="i-issued" type="date" />
+								</div>
+								<div class="field">
+									<label for="i-due">Vence</label>
+									<input id="i-due" type="date" />
+								</div>
+								<div class="field wide">
+									<label for="i-notes">Notas</label>
+									<input id="i-notes" type="text" placeholder="Detalle / concepto" maxlength="1000" />
+								</div>
+								<div class="actions">
+									<span class="rule-hint">Cobranzas pendientes = facturas <strong>enviadas</strong> + <strong>vencidas</strong>.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="fact-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm"><svg class="icon"><use href="#i-check"/></svg>Guardar</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<div id="fact-loading" aria-hidden="true">
+					<div class="skel" style="height:96px;margin-bottom:18px"></div>
+					<div class="skel" style="height:240px"></div>
+				</div>
+
+				<div class="load-error" id="fact-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudo cargar la facturación</strong>
+					<span id="fact-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="fact-retry">Reintentar</button>
+				</div>
+
+				<div id="fact-body" hidden>
+					<div class="kpi-row" id="fact-kpis"></div>
+					<article class="card">
+						<div class="card-head">
+							<h2><svg class="icon"><use href="#i-card"/></svg>Facturas</h2>
+							<span class="badge badge-neutral" id="fact-count">—</span>
+						</div>
+						<div class="table-scroll">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Factura</th>
+										<th scope="col">Cliente</th>
+										<th scope="col">Importe</th>
+										<th scope="col">Emitida</th>
+										<th scope="col">Estado</th>
+										<th scope="col"><span style="position:absolute;clip:rect(0 0 0 0)">Acciones</span></th>
+									</tr>
+								</thead>
+								<tbody id="fact-tbody"></tbody>
+							</table>
+						</div>
+						<div class="empty" id="fact-empty">
+							<svg class="icon" style="color:var(--color-sage)"><use href="#i-card"/></svg>
+							Sin facturas cargadas. Emití la primera para seguir las cobranzas.
+						</div>
+					</article>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: ROADMAP ============ -->
+			<section class="view" id="view-roadmap">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Estrategia · iniciativas por trimestre</span>
+						<h1>Roadmap</h1>
+					</div>
+					<div class="meta" id="road-meta">—</div>
+				</div>
+
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl" style="padding-right:6px">Iniciativas por trimestre, enlazables a un OKR</span>
+					</div>
+					<button class="btn btn-accent" id="road-add-btn" aria-expanded="false">
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Nueva iniciativa
+					</button>
+				</div>
+
+				<div class="form-collapse" id="road-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-map"/></svg>Nueva iniciativa</h2>
+							</div>
+							<form class="gasto-form" id="road-form" novalidate>
+								<div class="field wide">
+									<label for="r-title">Iniciativa</label>
+									<input id="r-title" type="text" placeholder="Ej: Lanzar facturación v2" maxlength="200" required />
+								</div>
+								<div class="field">
+									<label for="r-quarter">Trimestre</label>
+									<select id="r-quarter"></select>
+								</div>
+								<div class="field">
+									<label for="r-status">Estado</label>
+									<select id="r-status">
+										<option value="idea">Idea</option>
+										<option value="planeado" selected>Planeado</option>
+										<option value="en_curso">En curso</option>
+										<option value="hecho">Hecho</option>
+										<option value="pausado">Pausado</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="r-objective">OKR enlazado</label>
+									<select id="r-objective"></select>
+								</div>
+								<div class="field">
+									<label for="r-owner">Responsable</label>
+									<select id="r-owner"></select>
+								</div>
+								<div class="field wide">
+									<label for="r-notes">Notas</label>
+									<input id="r-notes" type="text" placeholder="Contexto, dependencias, alcance" maxlength="1000" />
+								</div>
+								<div class="actions">
+									<span class="rule-hint">Enlazar a un OKR conecta la ejecución con la estrategia.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="road-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm"><svg class="icon"><use href="#i-plus"/></svg>Crear</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<div id="road-loading" aria-hidden="true">
+					<div class="skel" style="height:140px;margin-bottom:14px"></div>
+					<div class="skel" style="height:140px"></div>
+				</div>
+
+				<div class="load-error" id="road-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudo cargar el roadmap</strong>
+					<span id="road-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="road-retry">Reintentar</button>
+				</div>
+
+				<div id="road-body" hidden>
+					<div class="road-board" id="road-board"></div>
+					<div class="gasto-empty" id="road-empty" hidden>
+						<svg class="icon"><use href="#i-map"/></svg>
+						<strong style="color:var(--color-ink)">Roadmap vacío</strong>
+						Sumá la primera iniciativa para empezar a planificar el trimestre.
+					</div>
+				</div>
+			</section>
 		</main>
 	</div>
 </div>
@@ -3736,7 +4397,64 @@ function renderDashboard() {
 	renderGauge();
 	renderApprovals();
 	renderRenewals();
+	renderChurnWidget();
+	renderCollections();
 	renderDashOkrs();
+}
+
+const HEALTH_LABEL = { saludable: 'Saludable', en_riesgo: 'En riesgo', critico: 'Crítico' };
+const HEALTH_ICON = { saludable: '#i-check-c', en_riesgo: '#i-alert', critico: '#i-alert' };
+
+function renderChurnWidget() {
+	const cli = DASH.clients;
+	const rows = (cli && cli.at_risk) || [];
+	const tbody = $('#churn-tbody');
+	const empty = $('#churn-empty');
+	$('#churn-count').textContent = rows.length
+		? esc(moneyPair(cli.mrr_at_risk)) + ' en juego'
+		: '—';
+	if (!rows.length) {
+		tbody.innerHTML = '';
+		empty.classList.add('show');
+		return;
+	}
+	empty.classList.remove('show');
+	tbody.innerHTML = rows
+		.map(
+			(c) => `<tr>
+				<td><div class="client"><strong>${esc(c.name)}</strong><span>${esc(c.plan || '')}${c.notes ? (c.plan ? ' · ' : '') + esc(c.notes) : ''}</span></div></td>
+				<td class="num">${esc(money(c.mrr, c.currency))}</td>
+				<td><span class="health-chip health-${c.health}"><svg class="icon"><use href="${HEALTH_ICON[c.health]}"/></svg>${HEALTH_LABEL[c.health]}</span></td>
+			</tr>`
+		)
+		.join('');
+}
+
+function renderCollections() {
+	const inv = DASH.invoices;
+	const host = $('#collect-body');
+	const badge = $('#collect-badge');
+	if (!inv) {
+		host.innerHTML = '<p style="color:var(--color-sage); font-size:13.5px">Sin facturas cargadas.</p>';
+		badge.hidden = true;
+		return;
+	}
+	badge.hidden = false;
+	badge.className = 'badge ' + (inv.overdue_count ? 'badge-danger' : 'badge-neutral');
+	badge.innerHTML = inv.overdue_count
+		? `<svg class="icon"><use href="#i-alert"/></svg>${inv.overdue_count} vencida${inv.overdue_count === 1 ? '' : 's'}`
+		: 'al día';
+	host.innerHTML =
+		`<div class="tile" style="background:var(--color-bg)">
+			<span class="label">Pendiente de cobro</span>
+			<div class="value" style="font-size:22px">${esc(moneyPair(inv.outstanding))}</div>
+			<span class="delta muted">enviadas + vencidas</span>
+		</div>` +
+		`<div class="tile" style="background:var(--color-bg)">
+			<span class="label">Cobrado este mes</span>
+			<div class="value" style="font-size:22px">${esc(moneyPair(inv.collected_month))}</div>
+			<span class="delta ${inv.overdue.USD || inv.overdue.ARS ? 'bad' : 'muted'}">${inv.overdue.USD || inv.overdue.ARS ? esc(moneyPair(inv.overdue)) + ' vencido' : 'sin vencidas'}</span>
+		</div>`;
 }
 
 function renderFinKpis() {
@@ -3762,15 +4480,31 @@ function renderFinKpis() {
 
 	const ads = DASH.ads;
 	const subs = DASH.subscriptions;
+	const cli = DASH.clients;
+	const inv = DASH.invoices;
+
+	// MRR es el número titular de un startup: va destacado, con la salud de la
+	// cartera como semáforo (clientes en riesgo/críticos).
+	const mrrSema =
+		cli && cli.at_risk_count
+			? `<span class="sema sema-warning"><svg class="icon"><use href="#i-alert"/></svg>${cli.at_risk_count} en riesgo</span>`
+			: `<span class="sema sema-success"><svg class="icon"><use href="#i-check-c"/></svg>Cartera sana</span>`;
+	const outstanding = inv ? moneyPair(inv.outstanding) : money(0);
+	const hasOutstanding = inv && (inv.outstanding.USD || inv.outstanding.ARS);
 
 	$('#fin-kpis').innerHTML =
 		`<div class="tile tile-featured">
 			<div>
-				<span class="label">Gasto aprobado · ${esc(monthLong(m.period + '-01'))}</span>
-				<div class="value">${esc(moneyPair(m.approved))}</div>
-				${deltaHtml}
+				<span class="label">MRR · ingreso recurrente</span>
+				<div class="value">${esc(cli ? moneyPair(cli.mrr) : money(0))}</div>
+				<span class="delta muted">${cli ? cli.active_count : 0} clientes activos</span>
 			</div>
-			${sema}
+			${mrrSema}
+		</div>` +
+		`<div class="tile">
+			<span class="label">Gasto aprobado · ${esc(monthLong(m.period + '-01'))}</span>
+			<div class="value">${esc(moneyPair(m.approved))}</div>
+			${deltaHtml}
 		</div>` +
 		`<div class="tile">
 			<span class="label">Pendientes de aprobación</span>
@@ -3782,9 +4516,13 @@ function renderFinKpis() {
 			}
 		</div>` +
 		`<div class="tile">
-			<span class="label">Inversión en anuncios</span>
-			<div class="value">${ads ? esc(money(ads.spend)) : '—'}</div>
-			<span class="delta muted">${ads ? esc(monthLong(ads.period)) : 'sin métricas cargadas'}</span>
+			<span class="label">Cobranzas pendientes</span>
+			<div class="value">${esc(outstanding)}</div>
+			${
+				inv && inv.overdue_count
+					? `<span class="delta bad"><svg class="icon"><use href="#i-alert"/></svg>${inv.overdue_count} vencida${inv.overdue_count === 1 ? '' : 's'}</span>`
+					: `<span class="delta muted">${hasOutstanding ? 'a cobrar' : 'nada por cobrar'}</span>`
+			}
 		</div>` +
 		`<div class="tile">
 			<span class="label">SaaS mensual</span>
@@ -3792,9 +4530,9 @@ function renderFinKpis() {
 			<span class="delta muted">${subs.active_count} suscripciones activas</span>
 		</div>` +
 		`<div class="tile">
-			<span class="label">Renovaciones ≤ 30 días</span>
-			<div class="value">${subs.renewing_soon.length}</div>
-			<span class="delta muted">suscripciones por renovar</span>
+			<span class="label">Inversión en anuncios</span>
+			<div class="value">${ads ? esc(money(ads.spend)) : '—'}</div>
+			<span class="delta muted">${ads ? esc(monthLong(ads.period)) : 'sin métricas cargadas'}</span>
 		</div>`;
 }
 
@@ -3981,6 +4719,24 @@ function buildNotifs() {
 				href: '#/saas'
 			});
 		}
+	}
+	const cli = DASH.clients;
+	if (cli && cli.at_risk_count) {
+		items.push({
+			ico: '#i-down',
+			title: `${cli.at_risk_count} cliente${cli.at_risk_count === 1 ? '' : 's'} en riesgo de churn`,
+			sub: moneyPair(cli.mrr_at_risk) + ' de MRR en juego',
+			href: '#/churn'
+		});
+	}
+	const inv = DASH.invoices;
+	if (inv && inv.overdue_count) {
+		items.push({
+			ico: '#i-card',
+			title: `${inv.overdue_count} factura${inv.overdue_count === 1 ? '' : 's'} vencida${inv.overdue_count === 1 ? '' : 's'}`,
+			sub: moneyPair(inv.overdue) + ' sin cobrar',
+			href: '#/facturacion'
+		});
 	}
 	if (!DASH.ads || DASH.ads.period.slice(0, 7) < monthKeyNow()) {
 		items.push({
@@ -5165,6 +5921,741 @@ async function onOkrListClick(ev) {
 }
 
 /* =======================================================================
+   MÓDULO: Clientes / CRM + Salud y churn (API real, estado compartido)
+   ======================================================================= */
+let clientsData = [];
+let clientsLoaded = false;
+let clientsFilter = '';
+let _crmInit = false;
+let _churnInit = false;
+
+const CLIENT_STATUS_BADGE = {
+	activo: '<span class="badge badge-success">Activo</span>',
+	pausado: '<span class="badge badge-neutral">Pausado</span>',
+	baja: '<span class="badge badge-danger">Baja</span>'
+};
+
+const healthChip = (h) =>
+	`<span class="health-chip health-${h}"><svg class="icon"><use href="${HEALTH_ICON[h]}"/></svg>${HEALTH_LABEL[h]}</span>`;
+
+// Suma MRR por moneda de una lista de clientes.
+function mrrByCurrency(list) {
+	const t = { USD: 0, ARS: 0 };
+	list.forEach((c) => {
+		t[c.currency === 'ARS' ? 'ARS' : 'USD'] += Number(c.mrr);
+	});
+	return t;
+}
+
+// Clientes en caché para los selects de facturación (evita doble fetch).
+async function getClientsCached() {
+	if (clientsLoaded) return clientsData;
+	clientsData = (await apiGet('/api/clients')) || [];
+	clientsLoaded = true;
+	return clientsData;
+}
+
+async function loadClients(source) {
+	const L = source === 'churn' ? 'churnv' : 'crm';
+	if (!clientsLoaded) {
+		$('#' + L + '-loading').hidden = false;
+		$('#' + L + '-error').hidden = true;
+		$('#' + L + '-body').hidden = true;
+	}
+	try {
+		clientsData = (await apiGet('/api/clients')) || [];
+		clientsLoaded = true;
+		['crm', 'churnv'].forEach((p) => {
+			$('#' + p + '-loading').hidden = true;
+			$('#' + p + '-error').hidden = true;
+			$('#' + p + '-body').hidden = false;
+		});
+		renderClients();
+		renderChurnView();
+	} catch (e) {
+		if (!clientsLoaded) {
+			$('#' + L + '-loading').hidden = true;
+			$('#' + L + '-error').hidden = false;
+			$('#' + L + '-error-msg').textContent = e.message || 'Error de conexión.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron actualizar los clientes.');
+		}
+	}
+}
+
+/* ---- CRM: cartera completa ---- */
+function initCrm() {
+	if (!ME) return;
+	if (!_crmInit) {
+		_crmInit = true;
+		$('#crm-add-btn').addEventListener('click', () => {
+			const wrap = $('#crm-form-wrap');
+			if (wrap.classList.contains('open')) return setCrmForm(false);
+			fillCrmForm(null);
+			setCrmForm(true);
+		});
+		$('#crm-cancel').addEventListener('click', () => setCrmForm(false));
+		$('#crm-form').addEventListener('submit', onCrmSubmit);
+		$('#crm-tbody').addEventListener('click', onCrmTableClick);
+		$('#crm-retry').addEventListener('click', () => loadClients('crm'));
+	}
+	if (clientsLoaded) renderClients();
+	loadClients('crm');
+}
+
+function setCrmForm(open) {
+	$('#crm-form-wrap').classList.toggle('open', open);
+	$('#crm-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+	if (open) setTimeout(() => $('#c-name').focus(), 60);
+}
+
+function fillCrmForm(c) {
+	$('#c-edit-id').value = c ? c.id : '';
+	$('#crm-form-title').textContent = c ? 'Editar cliente' : 'Agregar un cliente';
+	$('#c-name').value = c ? c.name : '';
+	$('#c-contact').value = c ? c.contact || '' : '';
+	$('#c-plan').value = c ? c.plan || '' : '';
+	$('#c-mrr').value = c ? Number(c.mrr) : '';
+	$('#c-currency').value = c ? c.currency : 'USD';
+	$('#c-status').value = c ? c.status : 'activo';
+	$('#c-health').value = c ? c.health : 'saludable';
+	$('#c-since').value = c ? c.since || '' : '';
+	$('#c-notes').value = c ? c.notes || '' : '';
+}
+
+async function onCrmSubmit(ev) {
+	ev.preventDefault();
+	const name = $('#c-name').value.trim();
+	if (name.length < 2) return $('#c-name').focus();
+	const payload = {
+		name,
+		contact: $('#c-contact').value.trim() || null,
+		plan: $('#c-plan').value.trim() || null,
+		mrr: Number($('#c-mrr').value) || 0,
+		currency: $('#c-currency').value === 'ARS' ? 'ARS' : 'USD',
+		status: $('#c-status').value,
+		health: $('#c-health').value,
+		since: $('#c-since').value || null,
+		notes: $('#c-notes').value.trim() || null
+	};
+	const editId = $('#c-edit-id').value;
+	const btn = $('#crm-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		if (editId) {
+			const updated = await apiSend('/api/clients/' + editId, payload, 'PATCH');
+			const i = clientsData.findIndex((c) => c.id === editId);
+			if (i !== -1) clientsData[i] = updated;
+			toast('success', '#i-check-c', `Cliente actualizado: "${updated.name}".`);
+		} else {
+			const created = await apiSend('/api/clients', payload);
+			clientsData.unshift(created);
+			toast('accent', '#i-heart', `Cliente agregado: "${created.name}".`);
+		}
+		renderClients();
+		renderChurnView();
+		refreshDash(true);
+		setCrmForm(false);
+		$('#crm-form').reset();
+		$('#c-edit-id').value = '';
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo guardar el cliente.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+function onCrmTableClick(ev) {
+	const btn = ev.target.closest('button');
+	if (!btn) return;
+	const tr = ev.target.closest('tr[data-id]');
+	if (!tr) return;
+	const id = tr.dataset.id;
+	const c = clientsData.find((x) => x.id === id);
+	if (!c) return;
+	if (btn.hasAttribute('data-edit')) {
+		fillCrmForm(c);
+		setCrmForm(true);
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	} else if (btn.hasAttribute('data-baja')) {
+		setClientStatus(id, 'baja', `¿Dar de baja a "${c.name}"?`);
+	} else if (btn.hasAttribute('data-activar')) {
+		setClientStatus(id, 'activo', `¿Reactivar a "${c.name}"?`);
+	}
+}
+
+async function setClientStatus(id, status, confirmMsg) {
+	if (!confirm(confirmMsg)) return;
+	try {
+		const updated = await apiSend('/api/clients/' + id, { status }, 'PATCH');
+		const i = clientsData.findIndex((c) => c.id === id);
+		if (i !== -1) clientsData[i] = updated;
+		renderClients();
+		renderChurnView();
+		refreshDash(true);
+		toast('success', '#i-check-c', `"${updated.name}" ahora está de ${updated.status === 'baja' ? 'baja' : updated.status}.`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo actualizar.');
+	}
+}
+
+function renderClients() {
+	const active = clientsData.filter((c) => c.status === 'activo');
+	const mrr = mrrByCurrency(active);
+	const atRisk = active.filter((c) => c.health !== 'saludable');
+	$('#crm-meta').innerHTML = clientsData.length
+		? clientsData.length + ' clientes<br />' + active.length + ' activos'
+		: '—';
+	$('#crm-kpis').innerHTML =
+		`<div class="tile"><span class="label">MRR (activos)</span><div class="value">${esc(moneyPair(mrr))}</div><span class="delta muted">ingreso recurrente</span></div>` +
+		`<div class="tile"><span class="label">Clientes activos</span><div class="value">${active.length}</div><span class="delta muted">de ${clientsData.length} en cartera</span></div>` +
+		`<div class="tile"><span class="label">En riesgo</span><div class="value">${atRisk.length}</div>${atRisk.length ? '<span class="delta bad"><svg class="icon"><use href="#i-alert"/></svg>revisá retención</span>' : '<span class="delta muted">cartera sana</span>'}</div>` +
+		`<div class="tile"><span class="label">MRR anualizado</span><div class="value">${esc(moneyPair({ USD: mrr.USD * 12, ARS: mrr.ARS * 12 }))}</div><span class="delta muted">a ritmo actual</span></div>`;
+
+	const q = clientsFilter.toLowerCase();
+	const rows = clientsData.filter(
+		(c) =>
+			!q ||
+			c.name.toLowerCase().includes(q) ||
+			(c.plan || '').toLowerCase().includes(q) ||
+			(c.contact || '').toLowerCase().includes(q) ||
+			(c.notes || '').toLowerCase().includes(q)
+	);
+	const order = { activo: 0, pausado: 1, baja: 2 };
+	rows.sort((a, b) => (order[a.status] - order[b.status]) || Number(b.mrr) - Number(a.mrr));
+
+	$('#crm-count').textContent = rows.length
+		? rows.length + (rows.length === 1 ? ' cliente' : ' clientes')
+		: '—';
+	const tbody = $('#crm-tbody');
+	const empty = $('#crm-empty');
+	if (!rows.length) {
+		tbody.innerHTML = '';
+		if (clientsData.length) {
+			empty.classList.remove('show');
+			tbody.innerHTML = `<tr><td colspan="6" style="color:var(--color-sage)">Sin resultados para «${esc(clientsFilter)}».</td></tr>`;
+		} else {
+			empty.classList.add('show');
+		}
+		return;
+	}
+	empty.classList.remove('show');
+	tbody.innerHTML = rows
+		.map((c) => {
+			const actions =
+				`<button class="btn btn-ghost btn-sm" data-edit>Editar</button> ` +
+				(c.status === 'baja'
+					? `<button class="btn btn-success btn-sm" data-activar>Reactivar</button>`
+					: `<button class="btn btn-danger btn-sm" data-baja>Baja</button>`);
+			return `<tr data-id="${esc(c.id)}">
+				<td><div class="client"><strong>${esc(c.name)}</strong><span>${esc(c.contact || '')}</span></div></td>
+				<td>${esc(c.plan || '—')}</td>
+				<td class="num">${esc(money(c.mrr, c.currency))}</td>
+				<td>${healthChip(c.health)}</td>
+				<td>${CLIENT_STATUS_BADGE[c.status] || esc(c.status)}</td>
+				<td style="white-space:nowrap; text-align:right">${actions}</td>
+			</tr>`;
+		})
+		.join('');
+}
+
+/* ---- Salud y churn: foco en clientes activos por salud ---- */
+function initChurn() {
+	if (!ME) return;
+	if (!_churnInit) {
+		_churnInit = true;
+		$('#churnv-list').addEventListener('change', onChurnHealthChange);
+		$('#churnv-retry').addEventListener('click', () => loadClients('churn'));
+	}
+	if (clientsLoaded) renderChurnView();
+	loadClients('churn');
+}
+
+async function onChurnHealthChange(ev) {
+	const sel = ev.target.closest('select[data-health-for]');
+	if (!sel) return;
+	const id = sel.dataset.healthFor;
+	const health = sel.value;
+	sel.disabled = true;
+	try {
+		const updated = await apiSend('/api/clients/' + id, { health }, 'PATCH');
+		const i = clientsData.findIndex((c) => c.id === id);
+		if (i !== -1) clientsData[i] = updated;
+		renderChurnView();
+		renderClients();
+		refreshDash(true);
+		toast('success', '#i-check-c', `"${updated.name}": salud ${HEALTH_LABEL[updated.health].toLowerCase()}.`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo actualizar la salud.');
+		sel.disabled = false;
+	}
+}
+
+function renderChurnView() {
+	const active = clientsData.filter((c) => c.status === 'activo');
+	const atRisk = active.filter((c) => c.health !== 'saludable');
+	const mrrRisk = mrrByCurrency(atRisk);
+	const healthy = active.filter((c) => c.health === 'saludable').length;
+	$('#churn-meta').innerHTML = active.length
+		? active.length + ' clientes activos<br />' + atRisk.length + ' en riesgo'
+		: '—';
+	$('#churnv-kpis').innerHTML =
+		`<div class="tile"><span class="label">En riesgo / críticos</span><div class="value">${atRisk.length}</div>${atRisk.length ? '<span class="delta bad"><svg class="icon"><use href="#i-alert"/></svg>priorizá retención</span>' : '<span class="delta muted">ninguno</span>'}</div>` +
+		`<div class="tile"><span class="label">MRR en riesgo</span><div class="value">${esc(moneyPair(mrrRisk))}</div><span class="delta muted">ingreso a defender</span></div>` +
+		`<div class="tile"><span class="label">Saludables</span><div class="value">${healthy}</div><span class="delta muted">de ${active.length} activos</span></div>` +
+		`<div class="tile"><span class="label">Tasa saludable</span><div class="value">${active.length ? Math.round((healthy / active.length) * 100) : 0}%</div><span class="delta muted">de la cartera activa</span></div>`;
+
+	const HEALTH_RANK = { critico: 0, en_riesgo: 1, saludable: 2 };
+	const rows = active
+		.slice()
+		.sort((a, b) => (HEALTH_RANK[a.health] - HEALTH_RANK[b.health]) || Number(b.mrr) - Number(a.mrr));
+	const host = $('#churnv-list');
+	const empty = $('#churnv-empty');
+	if (!active.length) {
+		host.innerHTML = '';
+		empty.classList.add('show');
+		return;
+	}
+	empty.classList.remove('show');
+	host.innerHTML = rows
+		.map((c) => {
+			const opts = ['saludable', 'en_riesgo', 'critico']
+				.map((h) => `<option value="${h}" ${h === c.health ? 'selected' : ''}>${HEALTH_LABEL[h]}</option>`)
+				.join('');
+			return `<div class="chealth" data-id="${esc(c.id)}">
+				<span class="c-dot ${c.health}"></span>
+				<div class="c-main"><strong>${esc(c.name)}</strong><small>${esc(c.plan || 'sin plan')}${c.notes ? ' · ' + esc(c.notes) : ''}</small></div>
+				<span class="c-mrr">${esc(money(c.mrr, c.currency))}</span>
+				<select class="health-select" data-health-for="${esc(c.id)}" aria-label="Salud de ${esc(c.name)}">${opts}</select>
+			</div>`;
+		})
+		.join('');
+}
+
+/* =======================================================================
+   MÓDULO: Facturación (API real)
+   ======================================================================= */
+let invoices = [];
+let invoicesLoaded = false;
+let invoicesFilter = '';
+let _factInit = false;
+
+const INV_BADGE = {
+	borrador: 'badge-neutral',
+	enviada: 'badge-warning',
+	pagada: 'badge-success',
+	vencida: 'badge-danger',
+	anulada: 'badge-neutral'
+};
+const INV_LABEL = {
+	borrador: 'Borrador',
+	enviada: 'Enviada',
+	pagada: 'Pagada',
+	vencida: 'Vencida',
+	anulada: 'Anulada'
+};
+
+function initFact() {
+	if (!ME) return;
+	if (!_factInit) {
+		_factInit = true;
+		$('#fact-add-btn').addEventListener('click', async () => {
+			const wrap = $('#fact-form-wrap');
+			if (wrap.classList.contains('open')) return setFactForm(false);
+			await fillInvoiceClientSelect();
+			fillFactForm(null);
+			setFactForm(true);
+		});
+		$('#fact-cancel').addEventListener('click', () => setFactForm(false));
+		$('#fact-form').addEventListener('submit', onFactSubmit);
+		$('#fact-tbody').addEventListener('click', onFactTableClick);
+		$('#fact-retry').addEventListener('click', loadInvoices);
+	}
+	if (invoicesLoaded) renderInvoices();
+	loadInvoices();
+}
+
+async function fillInvoiceClientSelect() {
+	const sel = $('#i-client');
+	const list = await getClientsCached();
+	sel.innerHTML =
+		'<option value="">— sin cliente asociado —</option>' +
+		list
+			.filter((c) => c.status !== 'baja')
+			.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`)
+			.join('');
+}
+
+async function loadInvoices() {
+	if (!invoicesLoaded) {
+		$('#fact-loading').hidden = false;
+		$('#fact-error').hidden = true;
+		$('#fact-body').hidden = true;
+	}
+	try {
+		invoices = (await apiGet('/api/invoices')) || [];
+		invoicesLoaded = true;
+		$('#fact-loading').hidden = true;
+		$('#fact-error').hidden = true;
+		$('#fact-body').hidden = false;
+		renderInvoices();
+	} catch (e) {
+		if (!invoicesLoaded) {
+			$('#fact-loading').hidden = true;
+			$('#fact-error').hidden = false;
+			$('#fact-error-msg').textContent = e.message || 'Error de conexión.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron actualizar las facturas.');
+		}
+	}
+}
+
+function setFactForm(open) {
+	$('#fact-form-wrap').classList.toggle('open', open);
+	$('#fact-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+	if (open) setTimeout(() => $('#i-amount').focus(), 60);
+}
+
+function fillFactForm(inv) {
+	$('#i-edit-id').value = inv ? inv.id : '';
+	$('#fact-form-title').textContent = inv ? 'Editar factura' : 'Nueva factura';
+	$('#i-client').value = inv ? inv.client_id || '' : '';
+	$('#i-number').value = inv ? inv.number || '' : '';
+	$('#i-amount').value = inv ? Number(inv.amount) : '';
+	$('#i-currency').value = inv ? inv.currency : 'USD';
+	$('#i-status').value = inv ? inv.status : 'borrador';
+	$('#i-issued').value = inv ? inv.issued_on || '' : '';
+	$('#i-due').value = inv ? inv.due_on || '' : '';
+	$('#i-notes').value = inv ? inv.notes || '' : '';
+}
+
+async function onFactSubmit(ev) {
+	ev.preventDefault();
+	const amount = Number($('#i-amount').value);
+	if (!(amount >= 0)) return $('#i-amount').focus();
+	const clientId = $('#i-client').value || null;
+	// client_name es un snapshot obligatorio: sale del cliente elegido o queda
+	// como "Sin cliente" si es una factura suelta.
+	const clientName = clientId
+		? clientsData.find((c) => c.id === clientId)?.name || 'Cliente'
+		: 'Sin cliente';
+	const payload = {
+		client_id: clientId,
+		client_name: clientName,
+		number: $('#i-number').value.trim() || null,
+		amount,
+		currency: $('#i-currency').value === 'ARS' ? 'ARS' : 'USD',
+		status: $('#i-status').value,
+		issued_on: $('#i-issued').value || null,
+		due_on: $('#i-due').value || null,
+		notes: $('#i-notes').value.trim() || null
+	};
+	const editId = $('#i-edit-id').value;
+	const btn = $('#fact-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		if (editId) {
+			const updated = await apiSend('/api/invoices/' + editId, payload, 'PATCH');
+			const i = invoices.findIndex((x) => x.id === editId);
+			if (i !== -1) invoices[i] = updated;
+			toast('success', '#i-check-c', 'Factura actualizada.');
+		} else {
+			const created = await apiSend('/api/invoices', payload);
+			invoices.unshift(created);
+			toast('accent', '#i-card', 'Factura registrada.');
+		}
+		renderInvoices();
+		refreshDash(true);
+		setFactForm(false);
+		$('#fact-form').reset();
+		$('#i-edit-id').value = '';
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo guardar la factura.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+async function onFactTableClick(ev) {
+	const btn = ev.target.closest('button');
+	if (!btn) return;
+	const tr = ev.target.closest('tr[data-id]');
+	if (!tr) return;
+	const id = tr.dataset.id;
+	const inv = invoices.find((x) => x.id === id);
+	if (!inv) return;
+	if (btn.hasAttribute('data-edit')) {
+		await fillInvoiceClientSelect();
+		fillFactForm(inv);
+		setFactForm(true);
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	} else if (btn.hasAttribute('data-mark-paid')) {
+		try {
+			const updated = await apiSend('/api/invoices/' + id, { status: 'pagada' }, 'PATCH');
+			const i = invoices.findIndex((x) => x.id === id);
+			if (i !== -1) invoices[i] = updated;
+			renderInvoices();
+			refreshDash(true);
+			toast('success', '#i-check-c', 'Factura marcada como pagada.');
+		} catch (e) {
+			toast('danger', '#i-x', e.message || 'No se pudo actualizar.');
+		}
+	}
+}
+
+function renderInvoices() {
+	const mesKey = monthKeyNow();
+	const outstanding = { USD: 0, ARS: 0 };
+	const collected = { USD: 0, ARS: 0 };
+	let overdue = 0;
+	invoices.forEach((inv) => {
+		const cur = inv.currency === 'ARS' ? 'ARS' : 'USD';
+		if (inv.status === 'enviada' || inv.status === 'vencida') outstanding[cur] += Number(inv.amount);
+		if (inv.status === 'vencida') overdue++;
+		if (inv.status === 'pagada' && (inv.issued_on || '').slice(0, 7) === mesKey)
+			collected[cur] += Number(inv.amount);
+	});
+	$('#fact-meta').innerHTML = invoices.length ? invoices.length + ' facturas' : '—';
+	$('#fact-kpis').innerHTML =
+		`<div class="tile"><span class="label">Pendiente de cobro</span><div class="value">${esc(moneyPair(outstanding))}</div><span class="delta muted">enviadas + vencidas</span></div>` +
+		`<div class="tile"><span class="label">Vencidas</span><div class="value">${overdue}</div>${overdue ? '<span class="delta bad"><svg class="icon"><use href="#i-alert"/></svg>reclamá el cobro</span>' : '<span class="delta muted">ninguna</span>'}</div>` +
+		`<div class="tile"><span class="label">Cobrado (mes)</span><div class="value">${esc(moneyPair(collected))}</div><span class="delta muted">${esc(monthLong(mesKey + '-01'))}</span></div>` +
+		`<div class="tile"><span class="label">Facturas</span><div class="value">${invoices.length}</div><span class="delta muted">emitidas en total</span></div>`;
+
+	const q = invoicesFilter.toLowerCase();
+	const rows = invoices.filter(
+		(inv) =>
+			!q ||
+			inv.client_name.toLowerCase().includes(q) ||
+			(inv.number || '').toLowerCase().includes(q) ||
+			(inv.notes || '').toLowerCase().includes(q)
+	);
+	$('#fact-count').textContent = rows.length
+		? rows.length + (rows.length === 1 ? ' factura' : ' facturas')
+		: '—';
+	const tbody = $('#fact-tbody');
+	const empty = $('#fact-empty');
+	if (!rows.length) {
+		tbody.innerHTML = '';
+		if (invoices.length) {
+			empty.classList.remove('show');
+			tbody.innerHTML = `<tr><td colspan="6" style="color:var(--color-sage)">Sin resultados para «${esc(invoicesFilter)}».</td></tr>`;
+		} else {
+			empty.classList.add('show');
+		}
+		return;
+	}
+	empty.classList.remove('show');
+	tbody.innerHTML = rows
+		.map((inv) => {
+			const canPay = inv.status === 'enviada' || inv.status === 'vencida';
+			const actions =
+				`<button class="btn btn-ghost btn-sm" data-edit>Editar</button>` +
+				(canPay ? ` <button class="btn btn-success btn-sm" data-mark-paid>Marcar pagada</button>` : '');
+			return `<tr data-id="${esc(inv.id)}">
+				<td><strong>${esc(inv.number || 'sin N.º')}</strong></td>
+				<td>${esc(inv.client_name)}</td>
+				<td class="num">${esc(money(inv.amount, inv.currency))}</td>
+				<td>${inv.issued_on ? esc(dateLabel(inv.issued_on)) : '—'}</td>
+				<td><span class="badge ${INV_BADGE[inv.status]}">${INV_LABEL[inv.status] || esc(inv.status)}</span></td>
+				<td style="white-space:nowrap; text-align:right">${actions}</td>
+			</tr>`;
+		})
+		.join('');
+}
+
+/* =======================================================================
+   MÓDULO: Roadmap (API real) — tablero por estado, enlazable a OKRs
+   ======================================================================= */
+let roadItems = [];
+let roadLoaded = false;
+let _roadInit = false;
+
+const ROAD_COLS = ['idea', 'planeado', 'en_curso', 'hecho', 'pausado'];
+const ROAD_LABEL = {
+	idea: 'Idea',
+	planeado: 'Planeado',
+	en_curso: 'En curso',
+	hecho: 'Hecho',
+	pausado: 'Pausado'
+};
+
+function initRoadmap() {
+	if (!ME) return;
+	if (!_roadInit) {
+		_roadInit = true;
+		$('#road-add-btn').addEventListener('click', async () => {
+			const wrap = $('#road-form-wrap');
+			const open = !wrap.classList.contains('open');
+			if (open) await fillRoadObjectiveSelect();
+			wrap.classList.toggle('open', open);
+			$('#road-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+			if (open) setTimeout(() => $('#r-title').focus(), 60);
+		});
+		$('#road-cancel').addEventListener('click', () => {
+			$('#road-form-wrap').classList.remove('open');
+			$('#road-add-btn').setAttribute('aria-expanded', 'false');
+		});
+		$('#road-form').addEventListener('submit', onRoadSubmit);
+		$('#road-board').addEventListener('click', onRoadBoardClick);
+		$('#road-board').addEventListener('change', onRoadStatusChange);
+		$('#road-retry').addEventListener('click', loadRoadmap);
+		$('#r-quarter').innerHTML = quarterOptions()
+			.map((qq, i) => `<option value="${qq}" ${i === 1 ? 'selected' : ''}>${qq}</option>`)
+			.join('');
+	}
+	// Responsables pueden cambiar entre sesiones.
+	$('#r-owner').innerHTML =
+		'<option value="">— sin responsable —</option>' +
+		SOCIOS.map(
+			(s) => `<option value="${esc(s.id)}" ${s.id === ME.id ? 'selected' : ''}>${esc(s.name)}</option>`
+		).join('');
+	if (roadLoaded) renderRoadmap();
+	loadRoadmap();
+}
+
+async function fillRoadObjectiveSelect() {
+	const sel = $('#r-objective');
+	try {
+		const objs = (await apiGet('/api/okrs?status=activo')) || [];
+		sel.innerHTML =
+			'<option value="">— sin OKR —</option>' +
+			objs.map((o) => `<option value="${esc(o.id)}">${esc(o.quarter)} · ${esc(o.title)}</option>`).join('');
+	} catch (e) {
+		sel.innerHTML = '<option value="">— sin OKR —</option>';
+	}
+}
+
+async function loadRoadmap() {
+	if (!roadLoaded) {
+		$('#road-loading').hidden = false;
+		$('#road-error').hidden = true;
+		$('#road-body').hidden = true;
+	}
+	try {
+		roadItems = (await apiGet('/api/roadmap')) || [];
+		roadLoaded = true;
+		$('#road-loading').hidden = true;
+		$('#road-error').hidden = true;
+		$('#road-body').hidden = false;
+		renderRoadmap();
+	} catch (e) {
+		if (!roadLoaded) {
+			$('#road-loading').hidden = true;
+			$('#road-error').hidden = false;
+			$('#road-error-msg').textContent = e.message || 'Error de conexión.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudo actualizar el roadmap.');
+		}
+	}
+}
+
+async function onRoadSubmit(ev) {
+	ev.preventDefault();
+	const title = $('#r-title').value.trim();
+	if (title.length < 2) return $('#r-title').focus();
+	const btn = $('#road-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		const created = await apiSend('/api/roadmap', {
+			title,
+			quarter: $('#r-quarter').value,
+			status: $('#r-status').value,
+			objective_id: $('#r-objective').value || null,
+			owner: $('#r-owner').value || null,
+			notes: $('#r-notes').value.trim() || null
+		});
+		roadItems.unshift(created);
+		renderRoadmap();
+		$('#road-form').reset();
+		$('#r-quarter').selectedIndex = 1;
+		$('#road-form-wrap').classList.remove('open');
+		$('#road-add-btn').setAttribute('aria-expanded', 'false');
+		toast('accent', '#i-map', `Iniciativa creada: "${created.title}".`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo crear la iniciativa.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+async function onRoadStatusChange(ev) {
+	const sel = ev.target.closest('select[data-move]');
+	if (!sel) return;
+	const card = ev.target.closest('[data-road]');
+	const id = card.dataset.road;
+	sel.disabled = true;
+	try {
+		const updated = await apiSend('/api/roadmap/' + id, { status: sel.value }, 'PATCH');
+		const i = roadItems.findIndex((r) => r.id === id);
+		if (i !== -1) roadItems[i] = updated;
+		renderRoadmap();
+		toast('success', '#i-check-c', `"${updated.title}" → ${ROAD_LABEL[updated.status]}.`);
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo mover la iniciativa.');
+		sel.disabled = false;
+	}
+}
+
+async function onRoadBoardClick(ev) {
+	const btn = ev.target.closest('button[data-road-del]');
+	if (!btn) return;
+	const card = ev.target.closest('[data-road]');
+	const id = card.dataset.road;
+	const item = roadItems.find((r) => r.id === id);
+	if (!item) return;
+	if (!confirm(`¿Eliminar la iniciativa "${item.title}"?`)) return;
+	try {
+		await apiSend('/api/roadmap/' + id, null, 'DELETE');
+		roadItems = roadItems.filter((r) => r.id !== id);
+		renderRoadmap();
+		toast('danger', '#i-x', 'Iniciativa eliminada.');
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo eliminar.');
+	}
+}
+
+function roadCard(r) {
+	const opts = ROAD_COLS.map(
+		(s) => `<option value="${s}" ${s === r.status ? 'selected' : ''}>${ROAD_LABEL[s]}</option>`
+	).join('');
+	const okr = r.objective_title
+		? `<span class="r-okr"><svg class="icon"><use href="#i-target"/></svg>${esc(r.objective_title)}</span>`
+		: '';
+	const owner = r.owner_name ? `<span>${esc(r.owner_name)}</span>` : '';
+	const sep = okr && owner ? '<span>·</span>' : '';
+	return `<div class="road-card" data-road="${esc(r.id)}">
+		<div class="r-title">${esc(r.title)}</div>
+		<div class="r-meta">${owner}${sep}${okr}${r.notes ? `<span>·</span><span>${esc(r.notes)}</span>` : ''}</div>
+		<div class="r-actions">
+			<select data-move aria-label="Mover de estado">${opts}</select>
+			<button class="icon-btn" data-road-del aria-label="Eliminar iniciativa" style="width:28px;height:28px"><svg class="icon" style="width:13px;height:13px"><use href="#i-x"/></svg></button>
+		</div>
+	</div>`;
+}
+
+function renderRoadmap() {
+	$('#road-meta').innerHTML = roadItems.length
+		? roadItems.length + ' iniciativa' + (roadItems.length === 1 ? '' : 's')
+		: '—';
+	$('#road-empty').hidden = roadItems.length > 0;
+	if (!roadItems.length) {
+		$('#road-board').innerHTML = '';
+		return;
+	}
+	$('#road-board').innerHTML = ROAD_COLS.map((col) => {
+		const items = roadItems.filter((r) => r.status === col);
+		const cards = items.length
+			? items.map(roadCard).join('')
+			: '<div class="road-empty-col">—</div>';
+		return `<section class="road-col">
+			<header>${ROAD_LABEL[col]}<span class="n">${items.length}</span></header>
+			<div class="road-col-body">${cards}</div>
+		</section>`;
+	}).join('');
+}
+
+/* =======================================================================
    Router por hash + búsqueda contextual
    ======================================================================= */
 const VIEWS = {
@@ -5174,17 +6665,29 @@ const VIEWS = {
 		search: 'Filtrar gastos…',
 		onSearch(q) { gastosFilter = q; if (gastosLoaded) renderGastoList(); }
 	},
+	facturacion: {
+		el: '#view-facturacion', cat: 'Finanzas', name: 'Facturación', init: initFact,
+		search: 'Filtrar facturas…',
+		onSearch(q) { invoicesFilter = q; if (invoicesLoaded) renderInvoices(); }
+	},
 	saas: {
 		el: '#view-saas', cat: 'Finanzas', name: 'Suscripciones SaaS', init: initSaas,
 		search: 'Filtrar suscripciones…',
 		onSearch(q) { subsFilter = q; if (subsLoaded) renderSubs(); }
 	},
+	crm: {
+		el: '#view-crm', cat: 'Clientes', name: 'Cartera / CRM', init: initCrm,
+		search: 'Filtrar clientes…',
+		onSearch(q) { clientsFilter = q; if (clientsLoaded) renderClients(); }
+	},
+	churn: { el: '#view-churn', cat: 'Clientes', name: 'Salud y churn', init: initChurn, search: null },
 	anuncios: { el: '#view-ads', cat: 'Marketing', name: 'Rendimiento de anuncios', init: initAds, search: null },
 	okrs: {
 		el: '#view-okrs', cat: 'Estrategia', name: 'OKRs y metas', init: initOkrs,
 		search: 'Filtrar objetivos…',
 		onSearch(q) { okrFilter = q; if (okrsLoaded) renderOkrs(); }
-	}
+	},
+	roadmap: { el: '#view-roadmap', cat: 'Estrategia', name: 'Roadmap', init: initRoadmap, search: null }
 };
 
 const searchBox = $('#search-box');
@@ -5216,6 +6719,8 @@ function route() {
 		gastosFilter = '';
 		subsFilter = '';
 		okrFilter = '';
+		clientsFilter = '';
+		invoicesFilter = '';
 	}
 
 	$$('.nav-item').forEach((a) => {

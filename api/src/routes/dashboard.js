@@ -6,6 +6,8 @@
  *       totales del mes por moneda (aprobado / rechazado / mes anterior);
  *     · anuncios: resumen del último período cargado (ROAS/CAC combinados);
  *     · suscripciones: costo mensual activo por moneda y próximas renovaciones;
+ *     · clientes: MRR real de clientes activos y cartera en riesgo de churn;
+ *     · facturación: cobranzas pendientes y cobrado del mes;
  *     · okrs: objetivos activos con su avance.
  *
  * Todo se calcula acá para que el panel muestre SIEMPRE datos reales y no
@@ -38,7 +40,7 @@ router.get('/', requireSocio, async (_req, res, next) => {
     const prevMonthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
     const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-    const [pendingQ, recentQ, adsQ, subsQ, okrsQ] = await Promise.all([
+    const [pendingQ, recentQ, adsQ, subsQ, clientsQ, invoicesQ, okrsQ] = await Promise.all([
       supabase
         .from('expenses')
         .select('*')
@@ -53,6 +55,8 @@ router.get('/', requireSocio, async (_req, res, next) => {
         .select('period, spend, revenue, conversions')
         .order('period', { ascending: false }),
       supabase.from('subscriptions').select('*').neq('status', 'cancelada'),
+      supabase.from('clients').select('*'),
+      supabase.from('invoices').select('amount, currency, status, issued_on'),
       supabase
         .from('okr_objectives')
         .select('*')
@@ -60,7 +64,7 @@ router.get('/', requireSocio, async (_req, res, next) => {
         .order('quarter', { ascending: false })
         .order('created_at', { ascending: true }),
     ]);
-    for (const q of [pendingQ, recentQ, adsQ, subsQ, okrsQ]) {
+    for (const q of [pendingQ, recentQ, adsQ, subsQ, clientsQ, invoicesQ, okrsQ]) {
       if (q.error) throw q.error;
     }
 
@@ -128,6 +132,53 @@ router.get('/', requireSocio, async (_req, res, next) => {
         renews_on: s.renews_on,
       }));
 
+    // ── Clientes: MRR real (activos) + riesgo de churn ───────────────────────
+    const clients = clientsQ.data || [];
+    const activeClients = clients.filter((c) => c.status === 'activo');
+    const mrr = zeroByCurrency();
+    activeClients.forEach((c) => addByCurrency(mrr, c.currency, c.mrr));
+    // En riesgo: clientes activos con salud comprometida, del que más MRR pone
+    // en juego al que menos (así se prioriza a quién retener primero).
+    const HEALTH_RANK = { critico: 0, en_riesgo: 1 };
+    const atRisk = activeClients
+      .filter((c) => c.health === 'critico' || c.health === 'en_riesgo')
+      .sort((a, b) => {
+        if (HEALTH_RANK[a.health] !== HEALTH_RANK[b.health])
+          return HEALTH_RANK[a.health] - HEALTH_RANK[b.health];
+        return Number(b.mrr) - Number(a.mrr);
+      })
+      .slice(0, 6)
+      .map((c) => ({
+        id: c.id,
+        name: c.name,
+        plan: c.plan,
+        mrr: Number(c.mrr),
+        currency: c.currency,
+        health: c.health,
+        notes: c.notes,
+      }));
+    const mrrAtRisk = zeroByCurrency();
+    activeClients
+      .filter((c) => c.health === 'critico' || c.health === 'en_riesgo')
+      .forEach((c) => addByCurrency(mrrAtRisk, c.currency, c.mrr));
+
+    // ── Facturación: cobranzas pendientes + cobrado del mes ───────────────────
+    const invoices = invoicesQ.data || [];
+    const outstanding = zeroByCurrency(); // enviada + vencida
+    const overdue = zeroByCurrency(); // solo vencida
+    const collectedMonth = zeroByCurrency(); // pagada, emitida este mes
+    let overdueCount = 0;
+    for (const inv of invoices) {
+      if (inv.status === 'enviada' || inv.status === 'vencida')
+        addByCurrency(outstanding, inv.currency, inv.amount);
+      if (inv.status === 'vencida') {
+        addByCurrency(overdue, inv.currency, inv.amount);
+        overdueCount++;
+      }
+      if (inv.status === 'pagada' && (inv.issued_on || '').slice(0, 7) === thisKey)
+        addByCurrency(collectedMonth, inv.currency, inv.amount);
+    }
+
     // ── OKRs activos con avance ──────────────────────────────────────────────
     const objectives = okrsQ.data || [];
     let okrs = [];
@@ -188,6 +239,20 @@ router.get('/', requireSocio, async (_req, res, next) => {
             ARS: Number(monthlyCost.ARS.toFixed(2)),
           },
           renewing_soon: renewingSoon,
+        },
+        clients: {
+          active_count: activeClients.length,
+          total_count: clients.length,
+          mrr,
+          at_risk: atRisk,
+          at_risk_count: atRisk.length,
+          mrr_at_risk: mrrAtRisk,
+        },
+        invoices: {
+          outstanding,
+          overdue,
+          overdue_count: overdueCount,
+          collected_month: collectedMonth,
         },
         okrs,
       },
