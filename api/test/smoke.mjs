@@ -182,16 +182,6 @@ async function testRoutes() {
       ['POST', '/api/roadmap', {}, 401],
       ['PATCH', '/api/roadmap/abc', {}, 401],
       ['DELETE', '/api/roadmap/abc', null, 401],
-      // Lince Teams: requireSocio corta antes que la validación => 401 sin token.
-      ['GET', '/api/teams/dashboard', null, 401],
-      ['GET', '/api/teams/tasks', null, 401],
-      ['POST', '/api/teams/tasks', {}, 401],
-      ['PATCH', '/api/teams/tasks/abc', {}, 401],
-      ['DELETE', '/api/teams/tasks/abc', null, 401],
-      ['GET', '/api/teams/board', null, 401],
-      ['POST', '/api/teams/board', {}, 401],
-      ['PATCH', '/api/teams/board/abc', {}, 401],
-      ['DELETE', '/api/teams/board/abc', null, 401],
       ['GET', '/nope', null, 404],
     ];
     for (const [m, p, b, exp] of cases) {

@@ -55,11 +55,3 @@ export const CLIENT_HEALTH = ['saludable', 'en_riesgo', 'critico'];
 export const INVOICE_STATUSES = ['borrador', 'enviada', 'pagada', 'vencida', 'anulada'];
 
 export const ROADMAP_STATUSES = ['idea', 'planeado', 'en_curso', 'hecho', 'pausado'];
-
-// ─── Teams (tablero + pizarra) ───────────────────────────────────────────────
-
-export const TASK_STATUSES = ['todo', 'doing', 'done'];
-
-export const TASK_PRIORITIES = ['low', 'medium', 'high'];
-
-export const BOARD_KINDS = ['note', 'stroke', 'image'];

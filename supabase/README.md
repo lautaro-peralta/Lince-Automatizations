@@ -162,45 +162,35 @@ de `leads` (prospectos entrantes de la landing): un lead ganado se "gradúa" a
 cliente. El MRR de los clientes `activo` es el MRR real del dashboard, y su `health`
 alimenta el riesgo de churn.
 
-## 6. Lince Teams — el espacio de trabajo del equipo (tablero + pizarra)
+## 6. Lince Teams — el espacio de trabajo del equipo (servicio aparte)
 
-Lince Teams (`web/static/teams/`) es la sección interna para el trabajo del
-equipo. Usa **el mismo Supabase Auth y el mismo padrón** que el panel y el
-Startup OS: los "miembros" son los `profiles` con rol `admin` o `socio`; **no
-hay registro ni aprobación aparte**.
+Lince Teams (repo [`lince-teams`](https://github.com/lautaro-peralta/lince-teams),
+Python/FastAPI) es un **servicio separado** con su propio backend, porque necesita
+dos cosas que este stack Node no da: **tiempo real** (WebSocket) y
+**transcripción de voz** (modelo Whisper). No agrega tablas a este esquema: crea
+las suyas (`users`, `tasks`, `board_items`, …) al arrancar, en el **mismo Postgres
+de Supabase** (apuntá su `DATABASE_URL` a este proyecto).
 
-1. **Aplicar el esquema nuevo:** en el SQL Editor, correr
-   `migrations/0005_teams.sql` (idempotente, RLS ON y sin políticas abiertas).
-   Crea:
-   - `team_tasks` → tablero kanban (estado todo/doing/done, prioridad, asignado,
-     creador, fecha límite).
-   - `team_board_items` → pizarra colaborativa (notas, trazos e imágenes; las
-     imágenes se guardan embebidas como data URL para sobrevivir a los redeploys
-     sin firmar URLs).
-   - `team_activity` → bitácora del equipo (alimenta la actividad del panel).
+Lo que sí comparte es el **login**: en su "modo unificado" valida el **JWT de
+Supabase** (la misma sesión del panel) y espeja cada cuenta leyendo `public.profiles`.
+Los miembros son los `profiles` con rol `admin` o `socio` (el mismo padrón del
+panel y el Startup OS); **no hay registro ni aprobación propios**.
 
-2. **Login unificado (igual que el Startup OS).** No tiene login propio: si
-   entrás a `/teams/` sin sesión, te manda a `/admin?next=/teams/` y vuelve solo.
-   El panel tiene un botón **"Teams ↗"** y Teams enlaza de vuelta a `/admin`.
-   La config (URL/anon key/API) sale en runtime de `/auth-config` — nada
-   hardcodeado. Vale el mismo `FRONTEND_ORIGIN` en el backend que ya usa el
-   Startup OS.
+**Puesta en marcha:**
 
-3. **Quién entra.** Cualquier `admin` o `socio` (§5). Toda la API pasa por
-   `requireSocio`; el navegador nunca toca la base directo (RLS ON, service-role
-   en el backend).
+1. **No corras ninguna migración acá para Teams**: el servicio arma sus tablas
+   solo. Solo asegurate de que las cuentas del equipo tengan rol `admin`/`socio`
+   (§5).
+2. En el servicio de Teams (Render), definí `SUPABASE_URL` + `SUPABASE_ANON_KEY`
+   (activan el modo unificado) y `DATABASE_URL` = este Postgres. Detalle en el
+   [DEPLOY.md de `lince-teams`](https://github.com/lautaro-peralta/lince-teams/blob/master/DEPLOY.md#modo-unificado-un-solo-login-con-lince-automate).
+3. Para el SSO sin doble login, montá Teams en el **mismo origen** bajo `/teams`
+   con el reverse-proxy de [`deploy/teams-proxy/`](../deploy/teams-proxy/). El panel
+   ya tiene el botón **"Teams ↗"** y el redirect `?next=/teams` al iniciar sesión.
 
-**Rutas de la API** (todas con `requireSocio`):
-
-| Función               | Ruta API                | Tablas                            |
-| --------------------- | ----------------------- | --------------------------------- |
-| Panel (agregado)      | `/api/teams/dashboard`  | lee `team_tasks`, `team_activity` |
-| Tablero kanban        | `/api/teams/tasks`      | `team_tasks`                      |
-| Pizarra colaborativa  | `/api/teams/board`      | `team_board_items`                |
-
-> Sin WebSocket en este stack, la sincronización "casi en vivo" es por sondeo
-> ligero: el tablero/panel se refrescan cada pocos segundos y la pizarra usa un
-> sondeo incremental (`GET /api/teams/board?since=…`) que trae solo lo cambiado.
+> El login unificado no necesita RLS nueva: el servicio se conecta con
+> `DATABASE_URL` (rol `postgres`, que ya bypassa RLS, igual que el service-role
+> del backend Express), así que lee `profiles` directo.
 
 ## 7. Tabla `prospectos` (deprecada)
 
