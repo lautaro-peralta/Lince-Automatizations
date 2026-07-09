@@ -16,7 +16,7 @@
 import { Router } from 'express';
 import { supabase } from '../db/supabase.js';
 import { requireSocio } from '../middleware/auth.js';
-import { APPROVAL_THRESHOLD } from '../constants.js';
+import { APPROVAL_THRESHOLDS } from '../constants.js';
 import { attachDetails } from './expenses.js';
 
 const router = Router();
@@ -219,7 +219,7 @@ router.get('/', requireSocio, async (_req, res, next) => {
     return res.json({
       data: {
         generated_at: now.toISOString(),
-        approval_threshold: APPROVAL_THRESHOLD,
+        approval_thresholds: APPROVAL_THRESHOLDS,
         expenses: {
           pending,
           pending_count: pending.length,

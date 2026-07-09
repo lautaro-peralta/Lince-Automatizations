@@ -444,11 +444,20 @@
 		white-space: nowrap;
 	}
 
+	/* Grupo de acciones de la derecha. El margin-left:auto vive acá (no en la
+	   búsqueda) para que el toggle de tema, las notis y el perfil queden fijos
+	   en la esquina derecha aunque la búsqueda esté oculta. */
+	.topbar-actions {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin-left: auto;
+	}
+
 	.search {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		margin-left: auto;
 		padding: 7px 12px;
 		width: min(280px, 28vw);
 		border: 1px solid var(--color-line-strong);
@@ -1261,8 +1270,23 @@
 		display: none;
 	}
 
+	/* Al activarse una vista pasa de display:none a block, así que la animación
+	   se dispara sola en cada cambio de sección: mismo suavizado (fade + leve
+	   desplazamiento con ease-out-expo) que el reveal del resto del sitio. */
 	.view.active {
 		display: block;
+		animation: view-in 0.4s var(--ease-out-expo) both;
+	}
+
+	@keyframes view-in {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
 	}
 
 	/* ---- Toasts ---- */
@@ -2838,6 +2862,11 @@
 				<span id="crumb-cat">Management</span>
 			</div>
 
+			<!-- Acciones de la derecha agrupadas: el contenedor lleva el margin-left
+			     auto, así el toggle de tema, las notis y el perfil quedan siempre
+			     fijos en la esquina derecha aunque la búsqueda esté oculta (en las
+			     vistas sin filtro o en mobile). -->
+			<div class="topbar-actions">
 			<label class="search" id="search-box">
 				<svg class="icon" style="width:15px;height:15px"><use href="#i-search"/></svg>
 				<input id="search-input" type="search" placeholder="Filtrar…" aria-label="Filtrar la vista actual" />
@@ -2880,6 +2909,7 @@
 						<button class="danger" id="logout-btn"><svg class="icon"><use href="#i-logout"/></svg>Cerrar sesión</button>
 					</div>
 				</div>
+			</div>
 			</div>
 		</header>
 
@@ -3235,7 +3265,7 @@
 							<span class="r-ico"><svg class="icon"><use href="#i-check-c"/></svg></span>
 							<div>
 								<strong>Doble control por monto</strong>
-								<p>Menos de 1.000 (en la moneda del gasto) → 1 aprobación de otro socio. 1.000 o más → 2 socios distintos.</p>
+								<p>Montos normales → 1 aprobación de otro socio. Montos críticos (más de US$ 50 o AR$ 50.000) → 2 socios distintos.</p>
 							</div>
 						</div>
 						<div class="rule">
@@ -4127,7 +4157,9 @@ let ME = null; // { id, email, full_name, role } del usuario logueado
 let SOCIOS = []; // socios del Startup OS (de /api/me/partners)
 let DASH = null; // último payload de /api/dashboard (alimenta panel + campana)
 const AV_CLASSES = ['av-lau', 'av-ian', 'av-ago'];
-const THRESHOLD = 1000; // espejo de APPROVAL_THRESHOLD (el server manda)
+// Espejo de APPROVAL_THRESHOLDS del server (el server manda). Un gasto es
+// crítico —2 aprobaciones— cuando SUPERA el umbral de su moneda.
+const THRESHOLDS = { USD: 50, ARS: 50000 };
 
 const firstNameOf = (full) => (full || '').trim().split(/\s+/)[0] || 'Socio';
 function initialsOf(full) {
@@ -5008,7 +5040,8 @@ let gastosLoaded = false;
 let gastosFilter = '';
 let pendingRejectId = null; // rechazo iniciado desde el dashboard
 
-const requiredFor = (amount) => (amount >= THRESHOLD ? 2 : 1);
+const requiredFor = (amount, currency) =>
+	amount > (THRESHOLDS[currency === 'ARS' ? 'ARS' : 'USD']) ? 2 : 1;
 
 const ACT_ES = { registrado: 'registro', aprobado: 'aprobo', rechazado: 'rechazo' };
 
@@ -5330,9 +5363,10 @@ function setGastoForm(open) {
 
 function updateRuleHint() {
 	const m = Number($('#f-monto').value) || 0;
+	const cur = $('#f-moneda').value === 'ARS' ? 'ARS' : 'USD';
 	$('#form-rule-hint').innerHTML =
-		requiredFor(m) === 2
-			? 'Monto alto: requiere <strong>2 aprobaciones</strong> de socios distintos.'
+		requiredFor(m, cur) === 2
+			? 'Monto crítico: requiere <strong>2 aprobaciones</strong> de socios distintos.'
 			: 'Requiere <strong>1 aprobación</strong> de otro socio.';
 }
 
@@ -5406,6 +5440,7 @@ function initGastos() {
 		);
 		$('#gasto-cancel').addEventListener('click', () => setGastoForm(false));
 		$('#f-monto').addEventListener('input', updateRuleHint);
+		$('#f-moneda').addEventListener('change', updateRuleHint);
 		$('#f-receipt-file').addEventListener('change', onReceiptFile);
 		// Si el socio escribe a mano, el texto manda sobre un archivo ya subido.
 		$('#f-receipt').addEventListener('input', () => {

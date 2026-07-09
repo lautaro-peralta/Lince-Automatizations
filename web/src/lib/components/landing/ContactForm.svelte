@@ -16,6 +16,34 @@
 
 	let formEl: HTMLFormElement;
 
+	// Límite por dispositivo: evita que desde una misma computadora se envíen
+	// cientos de formularios. Es una barrera de UX (localStorage se puede borrar);
+	// el tope real y a prueba de manipulación vive en /api/prospects (por IP).
+	const SUBMIT_LIMIT = 5; // envíos permitidos por navegador…
+	const SUBMIT_WINDOW_MS = 24 * 60 * 60 * 1000; // …cada 24 h.
+	const SUBMIT_KEY = 'lince_lead_submits';
+
+	function recentSubmits(): number[] {
+		try {
+			const raw = localStorage.getItem(SUBMIT_KEY);
+			const arr = raw ? JSON.parse(raw) : [];
+			const cutoff = Date.now() - SUBMIT_WINDOW_MS;
+			return Array.isArray(arr) ? arr.filter((t) => typeof t === 'number' && t > cutoff) : [];
+		} catch {
+			return []; // localStorage no disponible: el límite del servidor sigue vigente.
+		}
+	}
+
+	function recordSubmit() {
+		try {
+			const arr = recentSubmits();
+			arr.push(Date.now());
+			localStorage.setItem(SUBMIT_KEY, JSON.stringify(arr));
+		} catch {
+			/* Sin localStorage no guardamos nada; el servidor sigue limitando por IP. */
+		}
+	}
+
 	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		wasValidated = true;
@@ -38,6 +66,13 @@
 			return;
 		}
 
+		// Límite por dispositivo: si ya se enviaron varios desde este navegador en
+		// las últimas 24 h, no molestamos al servidor y avisamos amablemente.
+		if (recentSubmits().length >= SUBMIT_LIMIT) {
+			feedback = { text: t('form.rateLimited'), kind: 'err' };
+			return;
+		}
+
 		loading = true;
 		feedback = { text: t('form.sending'), kind: '' };
 
@@ -51,14 +86,15 @@
 					empresa: empresa.trim(),
 					telefono: telefono.trim(),
 					mensaje: message.trim(),
-					website,
-				},
+					website
+				}
 			});
+			recordSubmit();
 			reset();
 			wasValidated = false;
 			feedback = {
 				text: t('form.success'),
-				kind: 'ok',
+				kind: 'ok'
 			};
 		} catch (e) {
 			const err = e as ApiError;
@@ -76,7 +112,7 @@
 	const fieldClass =
 		'w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] text-ink ' +
 		'outline-none transition-[border-color,box-shadow] focus:border-rust focus:shadow-glow ' +
-		"data-[invalid=true]:border-danger";
+		'data-[invalid=true]:border-danger';
 	const labelClass = 'text-[13px] font-semibold text-moss';
 </script>
 
