@@ -361,7 +361,6 @@ export const en: Dictionary = {
 			passwordSaved: 'Done, your password was updated.',
 			passwordTooShort: 'Password must be at least 8 characters.',
 			passwordWeak: "Your password doesn't meet all the requirements yet.",
-			passwordSameAsOld: 'Your new password must be different from the previous one.',
 			passwordCommon: 'That password is too common or unsafe. Choose another one.',
 			passwordServerError: "We couldn't save the password: {message}",
 			passwordServerGeneric: "We couldn't save the password. Try again in a moment."

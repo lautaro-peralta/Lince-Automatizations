@@ -73,15 +73,15 @@ export function loginErrorMessage(error: { message?: string } | null): string {
  * Traduce el error de Supabase al FIJAR una contraseña nueva.
  *
  * La checklist de fortaleza corre en el cliente, pero la política REAL la aplica
- * Supabase (largo mínimo, complejidad, "distinta de la anterior", contraseñas
- * filtradas). Si el servidor rechaza, el mensaje tiene que hablar de "guardar la
- * contraseña" —esta pantalla—, no de "iniciar sesión" (usar loginErrorMessage
- * acá daba un "No pudimos iniciar sesión…" fuera de contexto).
+ * Supabase (largo mínimo, complejidad, contraseñas filtradas). Si el servidor
+ * rechaza, el mensaje tiene que hablar de "guardar la contraseña" —esta
+ * pantalla—, no de "iniciar sesión" (usar loginErrorMessage acá daba un "No
+ * pudimos iniciar sesión…" fuera de contexto).
+ *
+ * No tratamos "igual a la anterior" como caso propio: no queremos validar eso.
  */
 export function passwordUpdateErrorMessage(error: { message?: string } | null): string {
 	const m = (error?.message || '').toLowerCase();
-	if (m.includes('different from the old') || m.includes('should be different'))
-		return t('admin.login.passwordSameAsOld');
 	if (m.includes('at least') || m.includes('too short') || m.includes('length'))
 		return t('admin.login.passwordWeak');
 	if (
