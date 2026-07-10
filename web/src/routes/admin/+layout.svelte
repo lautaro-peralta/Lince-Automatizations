@@ -4,13 +4,18 @@
 		auth,
 		initAuth,
 		loginErrorMessage,
+		passwordUpdateErrorMessage,
 		sendPasswordReset,
 		updatePassword
 	} from '$lib/admin/auth.svelte';
 	import { supabase } from '$lib/supabase';
 	import Button from '$lib/components/Button.svelte';
+	import Brand from '$lib/components/Brand.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import LangToggle from '$lib/components/LangToggle.svelte';
+	import PasswordField from '$lib/components/admin/PasswordField.svelte';
+	import PasswordStrength from '$lib/components/admin/PasswordStrength.svelte';
+	import { isPasswordValid } from '$lib/utils/password';
 	import { t } from '$lib/i18n/index.svelte';
 	import IconLogout from '~icons/lucide/log-out';
 
@@ -44,6 +49,7 @@
 	let newPassword = $state('');
 	let savingPassword = $state(false);
 	let pwError = $state('');
+	const pwValid = $derived(isPasswordValid(newPassword));
 
 	const tabs = $derived([
 		{ href: '/admin', label: t('admin.tabs.summary') },
@@ -92,14 +98,17 @@
 	async function onSetPassword(event: SubmitEvent) {
 		event.preventDefault();
 		pwError = '';
-		if (newPassword.length < 8) {
-			pwError = t('admin.login.passwordTooShort');
+		if (!pwValid) {
+			pwError = t('admin.login.passwordWeak');
 			return;
 		}
 		savingPassword = true;
 		try {
 			const { error } = await updatePassword(newPassword);
-			if (error) pwError = loginErrorMessage(error);
+			// La política real la aplica Supabase: si rechaza (largo, complejidad,
+			// "distinta de la anterior", contraseña filtrada), mostramos un mensaje
+			// acorde a esta pantalla, no el de login.
+			if (error) pwError = passwordUpdateErrorMessage(error);
 			else newPassword = '';
 			// Al limpiar auth.recovery, la vista pasa sola al panel (ya hay sesión).
 		} finally {
@@ -123,38 +132,44 @@
 	</div>
 {:else if auth.recovery}
 	<!-- ELEGIR CONTRASEÑA NUEVA (llegó desde el email de recuperación) -->
-	<main class="grid min-h-dvh place-items-center bg-bg px-5">
+	<main class="grid min-h-dvh place-items-center bg-bg px-5 py-10">
 		<form
-			class="w-full max-w-[360px] rounded-xl border border-line bg-surface p-7 shadow-card"
+			class="w-full max-w-[380px] rounded-xl border border-line bg-surface p-7 shadow-card"
 			onsubmit={onSetPassword}
 		>
-			<div class="mb-5 flex items-start justify-between gap-3">
-				<div>
-					<h1 class="font-display text-[20px] font-semibold">{t('admin.login.recoverTitle')}</h1>
-					<p class="text-sm text-sage">{t('admin.login.recoverSubtitle')}</p>
-				</div>
+			<div class="mb-6 flex items-start justify-between gap-3">
+				<Brand label={t('admin.brandLabel')} />
 				<div class="flex items-center gap-2">
 					<LangToggle />
 					<ThemeToggle />
 				</div>
 			</div>
 
+			<h1 class="font-display text-[20px] font-semibold">{t('admin.login.recoverTitle')}</h1>
+			<p class="mb-5 text-sm text-sage">{t('admin.login.recoverSubtitle')}</p>
+
 			<label class="text-[13px] font-semibold text-moss" for="newpass"
 				>{t('admin.login.newPassword')}</label
 			>
-			<input
-				id="newpass"
-				class="mt-1.5 mb-5 w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] outline-none focus:border-rust focus:shadow-glow"
-				bind:value={newPassword}
-				type="password"
-				required
-				autocomplete="new-password"
-				placeholder={t('admin.login.newPasswordPh')}
-			/>
+			<div class="mt-1.5">
+				<PasswordField
+					id="newpass"
+					bind:value={newPassword}
+					autocomplete="new-password"
+					required
+					placeholder={t('admin.login.newPasswordPh')}
+					describedby="pw-rules"
+					invalid={!!pwError && !pwValid}
+				/>
+			</div>
 
-			<Button type="submit" full disabled={savingPassword}>
-				{savingPassword ? t('admin.login.savingPassword') : t('admin.login.savePassword')}
-			</Button>
+			<PasswordStrength id="pw-rules" value={newPassword} />
+
+			<div class="mt-5">
+				<Button type="submit" full disabled={savingPassword || !pwValid}>
+					{savingPassword ? t('admin.login.savingPassword') : t('admin.login.savePassword')}
+				</Button>
+			</div>
 
 			{#if pwError}
 				<p class="mt-4 text-[13px] text-danger" role="alert">{pwError}</p>
@@ -163,21 +178,20 @@
 	</main>
 {:else if !auth.session}
 	<!-- LOGIN -->
-	<main class="grid min-h-dvh place-items-center bg-bg px-5">
+	<main class="grid min-h-dvh place-items-center bg-bg px-5 py-10">
 		<form
-			class="w-full max-w-[360px] rounded-xl border border-line bg-surface p-7 shadow-card"
+			class="w-full max-w-[380px] rounded-xl border border-line bg-surface p-7 shadow-card"
 			onsubmit={onLogin}
 		>
-			<div class="mb-5 flex items-start justify-between gap-3">
-				<div>
-					<h1 class="font-display text-[20px] font-semibold">{t('admin.brand')}</h1>
-					<p class="text-sm text-sage">{t('admin.login.subtitle')}</p>
-				</div>
+			<div class="mb-6 flex items-start justify-between gap-3">
+				<Brand label={t('admin.brandLabel')} />
 				<div class="flex items-center gap-2">
 					<LangToggle />
 					<ThemeToggle />
 				</div>
 			</div>
+
+			<h1 class="mb-5 font-display text-[20px] font-semibold">{t('admin.login.subtitle')}</h1>
 
 			<label class="text-[13px] font-semibold text-moss" for="email">{t('admin.login.email')}</label
 			>
@@ -194,14 +208,14 @@
 			<label class="text-[13px] font-semibold text-moss" for="password"
 				>{t('admin.login.password')}</label
 			>
-			<input
-				id="password"
-				class="mt-1.5 mb-5 w-full rounded-[8px] border border-line-strong bg-bg px-3.5 py-2.5 text-[15px] outline-none focus:border-rust focus:shadow-glow"
-				bind:value={password}
-				type="password"
-				required
-				autocomplete="current-password"
-			/>
+			<div class="mt-1.5 mb-5">
+				<PasswordField
+					id="password"
+					bind:value={password}
+					autocomplete="current-password"
+					required
+				/>
+			</div>
 
 			<Button type="submit" full disabled={submitting}>
 				{submitting ? t('admin.login.submitting') : t('admin.login.submit')}
@@ -231,7 +245,7 @@
 		<header
 			class="sticky top-0 z-40 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-line bg-bg/90 px-[clamp(16px,4vw,32px)] py-3 backdrop-blur-md"
 		>
-			<div class="font-display text-[18px] font-semibold">{t('admin.brand')}</div>
+			<Brand label={t('admin.brandLabel')} size="sm" />
 			<nav class="flex flex-wrap gap-1">
 				{#each tabs as tab (tab.href)}
 					<a
