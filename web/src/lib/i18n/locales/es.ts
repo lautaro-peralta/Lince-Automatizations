@@ -362,7 +362,11 @@ export const es = {
 			savingPassword: 'Guardando…',
 			passwordSaved: 'Listo, tu contraseña quedó actualizada.',
 			passwordTooShort: 'La contraseña debe tener al menos 8 caracteres.',
-			passwordWeak: 'La contraseña todavía no cumple todos los requisitos.'
+			passwordWeak: 'La contraseña todavía no cumple todos los requisitos.',
+			passwordSameAsOld: 'La contraseña nueva tiene que ser distinta de la anterior.',
+			passwordCommon: 'Esa contraseña es demasiado común o insegura. Elegí otra.',
+			passwordServerError: 'No pudimos guardar la contraseña: {message}',
+			passwordServerGeneric: 'No pudimos guardar la contraseña. Reintentá en un momento.'
 		},
 		tabs: {
 			summary: 'Resumen',

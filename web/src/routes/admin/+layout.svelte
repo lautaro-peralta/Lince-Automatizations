@@ -4,6 +4,7 @@
 		auth,
 		initAuth,
 		loginErrorMessage,
+		passwordUpdateErrorMessage,
 		sendPasswordReset,
 		updatePassword
 	} from '$lib/admin/auth.svelte';
@@ -104,7 +105,10 @@
 		savingPassword = true;
 		try {
 			const { error } = await updatePassword(newPassword);
-			if (error) pwError = loginErrorMessage(error);
+			// La política real la aplica Supabase: si rechaza (largo, complejidad,
+			// "distinta de la anterior", contraseña filtrada), mostramos un mensaje
+			// acorde a esta pantalla, no el de login.
+			if (error) pwError = passwordUpdateErrorMessage(error);
 			else newPassword = '';
 			// Al limpiar auth.recovery, la vista pasa sola al panel (ya hay sesión).
 		} finally {

@@ -42,8 +42,7 @@ export function initAuth() {
 
 /** Envía el email de recuperación de contraseña. */
 export function sendPasswordReset(email: string) {
-	const redirectTo =
-		typeof window !== 'undefined' ? `${window.location.origin}/admin` : undefined;
+	const redirectTo = typeof window !== 'undefined' ? `${window.location.origin}/admin` : undefined;
 	return supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo });
 }
 
@@ -68,4 +67,32 @@ export function loginErrorMessage(error: { message?: string } | null): string {
 	return error?.message
 		? t('errors.auth.genericWith', { message: error.message })
 		: t('errors.auth.generic');
+}
+
+/**
+ * Traduce el error de Supabase al FIJAR una contraseña nueva.
+ *
+ * La checklist de fortaleza corre en el cliente, pero la política REAL la aplica
+ * Supabase (largo mínimo, complejidad, "distinta de la anterior", contraseñas
+ * filtradas). Si el servidor rechaza, el mensaje tiene que hablar de "guardar la
+ * contraseña" —esta pantalla—, no de "iniciar sesión" (usar loginErrorMessage
+ * acá daba un "No pudimos iniciar sesión…" fuera de contexto).
+ */
+export function passwordUpdateErrorMessage(error: { message?: string } | null): string {
+	const m = (error?.message || '').toLowerCase();
+	if (m.includes('different from the old') || m.includes('should be different'))
+		return t('admin.login.passwordSameAsOld');
+	if (m.includes('at least') || m.includes('too short') || m.includes('length'))
+		return t('admin.login.passwordWeak');
+	if (
+		m.includes('weak') ||
+		m.includes('pwned') ||
+		m.includes('leaked') ||
+		m.includes('easy to guess')
+	)
+		return t('admin.login.passwordCommon');
+	if (m.includes('failed to fetch') || m.includes('network')) return t('errors.auth.network');
+	return error?.message
+		? t('admin.login.passwordServerError', { message: error.message })
+		: t('admin.login.passwordServerGeneric');
 }
