@@ -13,9 +13,9 @@
 		{ "pattern": "lince-automate.com.ar/teams/*", "zone_name": "lince-automate.com.ar" }
 	],
 
-	// URL del servicio Python de Lince Teams (Render). Cambiala por la tuya.
+	// URL del servicio Python de Lince Teams (OCI). Cambiala por la tuya.
 	// Podés dejarla acá (es pública) o setearla como secret/var en el panel.
 	"vars": {
-		"TEAMS_ORIGIN": "https://lince-teams.onrender.com"
+		"TEAMS_ORIGIN": "https://teams-origin.lince-automate.com.ar.com"
 	}
 }
