@@ -331,6 +331,7 @@ export const es = {
 
 	admin: {
 		brand: 'Lince · Panel',
+		brandLabel: 'Panel',
 		loading: 'Cargando panel…',
 		login: {
 			subtitle: 'Acceso para el equipo',
@@ -338,18 +339,30 @@ export const es = {
 			password: 'Contraseña',
 			submit: 'Entrar',
 			submitting: 'Entrando…',
+			showPassword: 'Mostrar contraseña',
+			hidePassword: 'Ocultar contraseña',
 			forgot: '¿Olvidaste tu contraseña?',
 			resetSending: 'Enviando…',
 			resetSent: 'Si ese email tiene una cuenta, te enviamos un enlace para restablecerla.',
 			resetError: 'No pudimos enviar el email. Reintentá en un momento.',
 			recoverTitle: 'Elegí una contraseña nueva',
-			recoverSubtitle: 'Ingresá tu nueva contraseña para terminar.',
+			recoverSubtitle: 'Creá una contraseña segura para terminar.',
 			newPassword: 'Contraseña nueva',
-			newPasswordPh: 'Mínimo 8 caracteres',
+			newPasswordPh: 'Escribí tu contraseña nueva',
+			requirementsTitle: 'Tu contraseña debe tener:',
+			ruleLength: 'Al menos 8 caracteres',
+			ruleUppercase: 'Una letra mayúscula',
+			ruleLowercase: 'Una letra minúscula',
+			ruleNumber: 'Un número',
+			ruleSpecial: 'Un carácter especial (!@#$…)',
+			strengthWeak: 'Débil',
+			strengthMedium: 'Media',
+			strengthStrong: 'Fuerte',
 			savePassword: 'Guardar contraseña',
 			savingPassword: 'Guardando…',
 			passwordSaved: 'Listo, tu contraseña quedó actualizada.',
-			passwordTooShort: 'La contraseña debe tener al menos 8 caracteres.'
+			passwordTooShort: 'La contraseña debe tener al menos 8 caracteres.',
+			passwordWeak: 'La contraseña todavía no cumple todos los requisitos.'
 		},
 		tabs: {
 			summary: 'Resumen',

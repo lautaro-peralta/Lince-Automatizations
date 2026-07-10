@@ -329,6 +329,7 @@ export const en: Dictionary = {
 
 	admin: {
 		brand: 'Lince · Panel',
+		brandLabel: 'Panel',
 		loading: 'Loading panel…',
 		login: {
 			subtitle: 'Team access',
@@ -336,18 +337,30 @@ export const en: Dictionary = {
 			password: 'Password',
 			submit: 'Sign in',
 			submitting: 'Signing in…',
+			showPassword: 'Show password',
+			hidePassword: 'Hide password',
 			forgot: 'Forgot your password?',
 			resetSending: 'Sending…',
 			resetSent: 'If that email has an account, we sent a link to reset it.',
 			resetError: "We couldn't send the email. Try again in a moment.",
 			recoverTitle: 'Choose a new password',
-			recoverSubtitle: 'Enter your new password to finish.',
+			recoverSubtitle: 'Create a strong password to finish.',
 			newPassword: 'New password',
-			newPasswordPh: 'At least 8 characters',
+			newPasswordPh: 'Type your new password',
+			requirementsTitle: 'Your password must have:',
+			ruleLength: 'At least 8 characters',
+			ruleUppercase: 'An uppercase letter',
+			ruleLowercase: 'A lowercase letter',
+			ruleNumber: 'A number',
+			ruleSpecial: 'A special character (!@#$…)',
+			strengthWeak: 'Weak',
+			strengthMedium: 'Medium',
+			strengthStrong: 'Strong',
 			savePassword: 'Save password',
 			savingPassword: 'Saving…',
 			passwordSaved: 'Done, your password was updated.',
-			passwordTooShort: 'Password must be at least 8 characters.'
+			passwordTooShort: 'Password must be at least 8 characters.',
+			passwordWeak: "Your password doesn't meet all the requirements yet."
 		},
 		tabs: {
 			summary: 'Summary',
