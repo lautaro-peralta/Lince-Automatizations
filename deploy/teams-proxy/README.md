@@ -5,6 +5,14 @@ Monta **Lince Teams** (servicio Python del repo
 origen** que el sitio, bajo `https://lince-automate.com.ar/teams`, para que
 comparta el login del panel **sin doble inicio de sesión**.
 
+> ⚠️ **Cuál usar.** Como el sitio corre como **Worker en un custom domain**, un
+> Worker aparte en una *route* `/teams/*` **no intercepta** (el custom domain
+> gana). Por eso el proxy vive **integrado en `web/src/hooks.server.ts`** — es el
+> que funciona en este setup. Solo configurás la variable **`TEAMS_ORIGIN`** del
+> Worker del sitio (en `web/wrangler.jsonc` o en el dashboard) y redesplegás el
+> sitio. Este Worker aparte queda como alternativa para un sitio que **no** esté
+> en un custom-domain Worker (p. ej. Cloudflare Pages puro).
+
 ## Por qué
 
 La sesión de Supabase se guarda en el `localStorage` del navegador, que es

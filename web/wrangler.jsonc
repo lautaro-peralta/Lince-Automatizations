@@ -24,7 +24,11 @@
         "NODE_ENV": "production",
         "PUBLIC_API_URL": "https://api.lince-automate.com.ar",
         "PUBLIC_SUPABASE_URL": "https://uapszwevkwjeskmltdgf.supabase.co",
-        "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHN6d2V2a3dqZXNrbWx0ZGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjE5MDEsImV4cCI6MjA5NzI5NzkwMX0.LK-B4q4SJldmqpHq6731yyAoBZkmOapgh0Lg6kyE6SI"
+        "PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHN6d2V2a3dqZXNrbWx0ZGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjE5MDEsImV4cCI6MjA5NzI5NzkwMX0.LK-B4q4SJldmqpHq6731yyAoBZkmOapgh0Lg6kyE6SI",
+        // Hostname público del túnel de Cloudflare del servicio Lince Teams
+        // (mapea a localhost:8000 en la VM). hooks.server.ts reenvía /teams/* acá.
+        // Reemplazá por tu hostname real (o seteala en el dashboard del Worker).
+        "TEAMS_ORIGIN": "https://teams-origin.lince-automate.com.ar"
     },
 
     "assets": {
