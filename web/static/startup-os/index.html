@@ -308,6 +308,14 @@
 		opacity: 0.85;
 	}
 
+	/* Enlaces a las otras apps del ecosistema (Panel, Lince Teams): la flecha ↗
+	   queda a la derecha para indicar que navegan fuera de Startup OS. */
+	.ext-arrow {
+		margin-left: auto;
+		font-size: 12px;
+		opacity: 0.5;
+	}
+
 	/* Grupos colapsables */
 	.nav-group {
 		margin-top: 18px;
@@ -2842,6 +2850,18 @@
 				<div class="nav-group-list" id="grp-int">
 					<div>
 						<a class="nav-item" href="#/ia" data-route="ia"><svg class="icon"><use href="#i-zap"/></svg>Conectar IA (MCP)</a>
+					</div>
+				</div>
+			</div>
+			<div class="nav-group">
+				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-apps">
+					Aplicaciones
+					<svg class="icon"><use href="#i-chev"/></svg>
+				</button>
+				<div class="nav-group-list" id="grp-apps">
+					<div>
+						<a class="nav-item nav-ext" href="/admin"><svg class="icon"><use href="#i-blocks"/></svg>Panel<span class="ext-arrow" aria-hidden="true">↗</span></a>
+						<a class="nav-item nav-ext" href="/teams/"><svg class="icon"><use href="#i-users"/></svg>Lince Teams<span class="ext-arrow" aria-hidden="true">↗</span></a>
 					</div>
 				</div>
 			</div>
