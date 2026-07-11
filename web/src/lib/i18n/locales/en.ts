@@ -376,6 +376,7 @@ export const en: Dictionary = {
 		logout: 'Sign out',
 		teams: 'Teams ↗',
 		startupOs: 'Startup OS ↗',
+		integrations: 'Integrations ↗',
 		summary: {
 			title: 'Summary',
 			subtitle: 'A quick look at how the business is doing.',
