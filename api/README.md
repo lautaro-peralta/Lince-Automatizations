@@ -36,8 +36,12 @@ api/
 | *      | `/api/chatbot/*`            | público | ✅     |
 | *      | `/api/me`, `/api/me/partners` | socio | ✅ (Startup OS) |
 | *      | `/api/expenses`, `/api/ads`, `/api/subscriptions`, `/api/okrs`, `/api/clients`, `/api/invoices`, `/api/roadmap`, `/api/dashboard`, `/api/uploads` | socio | ✅ (Startup OS) |
+| *      | `/api/mcp/tokens[/:id]`     | socio   | ✅ (tokens para IA) |
+| POST   | `/mcp`                      | socio (token `lmcp_` o JWT) | ✅ (servidor MCP) |
 
-Detalle completo del contrato en [`../docs/API.md`](../docs/API.md).
+Detalle completo del contrato en [`../docs/API.md`](../docs/API.md). El
+servidor MCP —que deja que Claude u otros clientes de IA operen el Startup
+OS— está documentado en [`../docs/MCP.md`](../docs/MCP.md).
 
 > **Lince Teams** (tablero, pizarra en tiempo real y transcripción) es un
 > servicio aparte (repo `lince-teams`, Python/FastAPI): no vive en este backend.

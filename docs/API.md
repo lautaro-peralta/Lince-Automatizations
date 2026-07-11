@@ -110,3 +110,17 @@ Conteos por estado para el panel de resumen.
 > Hoy la demo de la landing corre con su árbol embebido (sigue funcionando sin
 > backend). Estos endpoints permiten servir el flujo desde la base y registrar
 > conversaciones; el cliente puede migrar a ellos una vez desplegado.
+
+---
+
+## Conectar IA (MCP) · socio
+
+El backend expone un servidor MCP para Claude y otros clientes de IA, más los
+endpoints para gestionar sus tokens. Guía completa en [`MCP.md`](MCP.md).
+
+| Método | Ruta                   | Notas |
+|--------|------------------------|-------|
+| POST   | `/mcp`                 | Servidor MCP (Streamable HTTP, stateless). Auth: `Bearer lmcp_...` o JWT vigente |
+| GET    | `/api/mcp/tokens`      | Mis tokens (id, label, fechas; nunca el secreto) |
+| POST   | `/api/mcp/tokens`      | `{ "label": "..." }` → `201 { data: { id, label, token } }` — el `token` viaja UNA sola vez |
+| DELETE | `/api/mcp/tokens/:id`  | Revoca un token propio (la fila queda para auditoría) |
