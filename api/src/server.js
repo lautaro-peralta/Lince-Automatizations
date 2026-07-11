@@ -26,6 +26,8 @@ import clientsRouter from './routes/clients.js';
 import invoicesRouter from './routes/invoices.js';
 import roadmapRouter from './routes/roadmap.js';
 import dashboardRouter from './routes/dashboard.js';
+import mcpTokensRouter from './routes/mcpTokens.js';
+import mcpRouter from './routes/mcp.js';
 
 const app = express();
 
@@ -71,6 +73,8 @@ app.use('/api/clients', clientsRouter);     // clientes / CRM + salud (Startup O
 app.use('/api/invoices', invoicesRouter);   // facturación (Startup OS)
 app.use('/api/roadmap', roadmapRouter);     // roadmap de iniciativas (Startup OS)
 app.use('/api/dashboard', dashboardRouter); // agregado del panel (Startup OS)
+app.use('/api/mcp/tokens', mcpTokensRouter); // tokens para clientes MCP (Startup OS)
+app.use('/mcp', mcpRouter); // servidor MCP: Claude y otros clientes de IA
 
 // 404 y manejador de errores SIEMPRE al final.
 app.use(notFound);

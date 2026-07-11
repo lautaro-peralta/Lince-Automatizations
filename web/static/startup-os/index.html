@@ -2833,6 +2833,18 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="nav-group">
+				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-int">
+					Integraciones
+					<svg class="icon"><use href="#i-chev"/></svg>
+				</button>
+				<div class="nav-group-list" id="grp-int">
+					<div>
+						<a class="nav-item" href="#/ia" data-route="ia"><svg class="icon"><use href="#i-zap"/></svg>Conectar IA (MCP)</a>
+					</div>
+				</div>
+			</div>
 		</nav>
 
 		<div class="side-foot">
@@ -3972,6 +3984,111 @@
 						<strong style="color:var(--color-ink)">Roadmap vacío</strong>
 						Sumá la primera iniciativa para empezar a planificar el trimestre.
 					</div>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: CONECTAR IA (MCP) ============ -->
+			<section class="view" id="view-ia">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Integraciones · IA</span>
+						<h1>Conectar IA (MCP)</h1>
+					</div>
+					<div class="meta">Claude, Cursor, VS Code y cualquier cliente MCP</div>
+				</div>
+
+				<article class="card" style="margin-bottom:18px">
+					<div class="card-head">
+						<h2><svg class="icon"><use href="#i-zap"/></svg>Cómo funciona</h2>
+						<span class="sub">La IA opera con TUS permisos: las mismas reglas que en la app (nadie aprueba su propio gasto, etc.)</span>
+					</div>
+					<div style="padding:0 18px 16px;font-size:0.92rem;line-height:1.55">
+						<p style="margin:0 0 10px">
+							Generá un token, pegalo en tu cliente MCP y listo: la IA puede leer el
+							dashboard, registrar gastos, aprobar los ajenos, hacer check-in de OKRs,
+							emitir facturas y más. El token se muestra <strong>una sola vez</strong>;
+							si lo perdés, revocalo y generá otro.
+						</p>
+						<div class="mini-label" style="margin:0 0 8px">
+							<span>Endpoint MCP</span>
+							<strong style="user-select:all;font-family:var(--font-mono,monospace)" id="ia-endpoint">—</strong>
+						</div>
+						<div class="mini-label">
+							<span>Claude Code</span>
+							<strong style="user-select:all;font-family:var(--font-mono,monospace);font-size:0.78rem" id="ia-snippet">—</strong>
+						</div>
+					</div>
+				</article>
+
+				<div class="acting-bar">
+					<div class="acting">
+						<span class="lbl" style="padding-right:6px">Tus tokens (el secreto no se vuelve a mostrar)</span>
+					</div>
+					<button class="btn btn-accent" id="ia-add-btn" aria-expanded="false">
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Generar token
+					</button>
+				</div>
+
+				<div class="form-collapse" id="ia-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-lock"/></svg>Nuevo token de acceso</h2>
+							</div>
+							<form class="gasto-form" id="ia-form" novalidate>
+								<div class="field wide">
+									<label for="ia-label">Nombre (para reconocerlo después)</label>
+									<input id="ia-label" type="text" maxlength="80" placeholder="Ej: Claude Desktop de Lautaro" required />
+								</div>
+								<div class="actions">
+									<span class="rule-hint">El token hereda tus permisos. Revocalo apenas dejes de usarlo.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="ia-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm">
+										<svg class="icon"><use href="#i-plus"/></svg>
+										Generar
+									</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<article class="card" id="ia-new" hidden style="margin-bottom:18px">
+					<div class="card-head">
+						<h2><svg class="icon"><use href="#i-check-c"/></svg>Token generado: copialo AHORA</h2>
+						<span class="sub">No se vuelve a mostrar. Pegalo en tu cliente MCP como Bearer token.</span>
+					</div>
+					<div style="padding:0 18px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+						<code id="ia-new-token" style="user-select:all;word-break:break-all;font-size:0.85rem;flex:1;min-width:240px"></code>
+						<button class="btn btn-ghost btn-sm" id="ia-copy">Copiar</button>
+					</div>
+				</article>
+
+				<div id="ia-loading" aria-hidden="true">
+					<div class="skel" style="height:160px"></div>
+				</div>
+
+				<div class="load-error" id="ia-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudieron cargar los tokens</strong>
+					<span id="ia-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="ia-retry">Reintentar</button>
+				</div>
+
+				<div id="ia-body" hidden>
+					<article class="card">
+						<div class="card-head">
+							<h2><svg class="icon"><use href="#i-shield"/></svg>Tokens generados</h2>
+							<span class="sub">Un token revocado deja de funcionar al instante</span>
+						</div>
+						<div id="ia-list" style="padding:8px 8px 12px"></div>
+						<div class="empty" id="ia-empty" hidden>
+							<svg class="icon"><use href="#i-zap"/></svg>
+							<strong style="color:var(--color-ink)">Sin tokens todavía</strong>
+							Generá el primero para conectar Claude u otro cliente MCP.
+						</div>
+					</article>
 				</div>
 			</section>
 		</main>
@@ -6691,6 +6808,133 @@ function renderRoadmap() {
 }
 
 /* =======================================================================
+   Conectar IA (MCP): tokens de acceso para Claude y otros clientes
+   ======================================================================= */
+let _iaInit = false;
+let iaTokens = [];
+let iaLoaded = false;
+
+const mcpEndpoint = () => (API_URL || location.origin) + '/mcp';
+
+function setIaForm(open) {
+	$('#ia-form-wrap').classList.toggle('open', open);
+	$('#ia-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+	if (open) setTimeout(() => $('#ia-label').focus(), 60);
+}
+
+function renderIaTokens() {
+	const list = $('#ia-list');
+	$('#ia-empty').hidden = iaTokens.length > 0;
+	list.innerHTML = iaTokens
+		.map((t) => {
+			const revoked = Boolean(t.revoked_at);
+			const used = t.last_used_at ? 'último uso ' + whenLabel(t.last_used_at) : 'sin uso todavía';
+			return `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--color-line);${revoked ? 'opacity:.55' : ''}">
+				<svg class="icon" style="flex:none"><use href="${revoked ? '#i-x' : '#i-lock'}"/></svg>
+				<div style="flex:1;min-width:180px">
+					<strong>${esc(t.label)}</strong>
+					<div style="font-size:0.8rem;color:var(--color-sage)">
+						creado ${whenLabel(t.created_at)} · ${revoked ? 'revocado ' + whenLabel(t.revoked_at) : esc(used)}
+					</div>
+				</div>
+				${revoked ? '' : `<button class="btn btn-ghost btn-sm" data-ia-revoke="${esc(t.id)}">Revocar</button>`}
+			</div>`;
+		})
+		.join('');
+}
+
+async function loadIaTokens() {
+	$('#ia-error').hidden = true;
+	if (!iaLoaded) {
+		$('#ia-loading').style.display = '';
+		$('#ia-body').hidden = true;
+	}
+	try {
+		iaTokens = await apiGet('/api/mcp/tokens');
+		iaLoaded = true;
+		$('#ia-loading').style.display = 'none';
+		$('#ia-body').hidden = false;
+		renderIaTokens();
+	} catch (e) {
+		$('#ia-loading').style.display = 'none';
+		if (!iaLoaded) {
+			$('#ia-error').hidden = false;
+			$('#ia-error-msg').textContent = e.message || 'Error de red.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron recargar los tokens.');
+		}
+	}
+}
+
+async function onIaSubmit(ev) {
+	ev.preventDefault();
+	const label = $('#ia-label').value.trim();
+	if (label.length < 2) {
+		toast('warn', '#i-alert', 'Poné un nombre para reconocer el token.');
+		return;
+	}
+	const btn = $('#ia-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		const created = await apiSend('/api/mcp/tokens', { label });
+		$('#ia-new-token').textContent = created.token;
+		$('#ia-new').hidden = false;
+		$('#ia-label').value = '';
+		setIaForm(false);
+		toast('success', '#i-check-c', `Token "${created.label}" generado: copialo ahora.`);
+		loadIaTokens();
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo generar el token.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+async function onIaRevoke(ev) {
+	const btn = ev.target.closest('button[data-ia-revoke]');
+	if (!btn) return;
+	const t = iaTokens.find((x) => x.id === btn.dataset.iaRevoke);
+	if (!t) return;
+	if (!confirm(`¿Revocar "${t.label}"? El cliente que lo use deja de funcionar al instante.`)) return;
+	btn.disabled = true;
+	try {
+		await apiSend('/api/mcp/tokens/' + t.id, undefined, 'DELETE');
+		toast('success', '#i-check-c', `Token "${t.label}" revocado.`);
+		loadIaTokens();
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo revocar.');
+		btn.disabled = false;
+	}
+}
+
+function initIa() {
+	if (!ME) return;
+	if (!_iaInit) {
+		_iaInit = true;
+		$('#ia-endpoint').textContent = mcpEndpoint();
+		$('#ia-snippet').textContent =
+			`claude mcp add --transport http startup-os ${mcpEndpoint()} --header "Authorization: Bearer TU_TOKEN"`;
+		$('#ia-add-btn').addEventListener('click', () =>
+			setIaForm(!$('#ia-form-wrap').classList.contains('open'))
+		);
+		$('#ia-cancel').addEventListener('click', () => setIaForm(false));
+		$('#ia-form').addEventListener('submit', onIaSubmit);
+		$('#ia-retry').addEventListener('click', loadIaTokens);
+		$('#ia-list').addEventListener('click', onIaRevoke);
+		$('#ia-copy').addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText($('#ia-new-token').textContent);
+				toast('success', '#i-check-c', 'Token copiado al portapapeles.');
+			} catch (e) {
+				toast('warn', '#i-alert', 'No se pudo copiar: seleccionalo a mano.');
+			}
+		});
+	}
+	if (iaLoaded) renderIaTokens();
+	loadIaTokens();
+}
+
+/* =======================================================================
    Router por hash + búsqueda contextual
    ======================================================================= */
 const VIEWS = {
@@ -6722,7 +6966,8 @@ const VIEWS = {
 		search: 'Filtrar objetivos…',
 		onSearch(q) { okrFilter = q; if (okrsLoaded) renderOkrs(); }
 	},
-	roadmap: { el: '#view-roadmap', cat: 'Estrategia', name: 'Roadmap', init: initRoadmap, search: null }
+	roadmap: { el: '#view-roadmap', cat: 'Estrategia', name: 'Roadmap', init: initRoadmap, search: null },
+	ia: { el: '#view-ia', cat: 'Integraciones', name: 'Conectar IA (MCP)', init: initIa, search: null }
 };
 
 const searchBox = $('#search-box');

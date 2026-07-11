@@ -27,7 +27,7 @@ te mandan a `/admin?next=…` y vuelven solas:
 
 | Herramienta | Ruta | Qué hace |
 |-------------|------|----------|
-| **Startup OS** | `/startup-os/` | App estática servida por Cloudflare. ERP interno: gastos/aprobaciones, clientes, facturación, suscripciones, anuncios, OKRs, roadmap. |
+| **Startup OS** | `/startup-os/` | App estática servida por Cloudflare. ERP interno: gastos/aprobaciones, clientes, facturación, suscripciones, anuncios, OKRs, roadmap. Incluye la vista **Conectar IA (MCP)** para operarlo desde Claude u otros clientes de IA (ver [`docs/MCP.md`](docs/MCP.md)). |
 | **Lince Teams** | `/teams/` | **Servicio aparte** ([repo `lince-teams`](https://github.com/lautaro-peralta/lince-teams), Python/FastAPI) montado en el mismo origen vía reverse-proxy. Espacio de trabajo del equipo: tablero kanban, pizarra en **tiempo real** (WebSocket) y **transcripción de voz** (Whisper). Comparte el login validando el JWT de Supabase. Proxy en [`deploy/teams-proxy/`](deploy/teams-proxy/). |
 
 ## Documentación
@@ -37,6 +37,7 @@ te mandan a `/admin?next=…` y vuelven solas:
 | [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) | Visión general, diagrama, decisiones, fiabilidad y seguridad |
 | [`docs/MODELO-DATOS.md`](docs/MODELO-DATOS.md) | Tablas, relaciones, estados y RLS |
 | [`docs/API.md`](docs/API.md) | Contrato de endpoints |
+| [`docs/MCP.md`](docs/MCP.md) | Servidor MCP: conectar Claude y otras IA al Startup OS |
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | Paso a paso Supabase + Render + Cloudflare Pages |
 | [`docs/COSTOS.md`](docs/COSTOS.md) | Evaluación de costos (planes gratis vs producción) |
 
