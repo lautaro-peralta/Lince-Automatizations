@@ -308,6 +308,14 @@
 		opacity: 0.85;
 	}
 
+	/* Enlaces a las otras apps del ecosistema (Panel, Lince Teams): la flecha ↗
+	   queda a la derecha para indicar que navegan fuera de Startup OS. */
+	.ext-arrow {
+		margin-left: auto;
+		font-size: 12px;
+		opacity: 0.5;
+	}
+
 	/* Grupos colapsables */
 	.nav-group {
 		margin-top: 18px;
@@ -881,6 +889,19 @@
 		grid-template-columns: repeat(2, 1fr);
 		gap: 14px;
 		padding: 16px 18px 18px;
+	}
+
+	.pipe-kpis {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 14px;
+		padding: 16px 18px 18px;
+	}
+
+	@media (max-width: 720px) {
+		.pipe-kpis {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
 	.tile {
@@ -2845,6 +2866,18 @@
 					</div>
 				</div>
 			</div>
+			<div class="nav-group">
+				<button class="nav-group-btn" aria-expanded="true" aria-controls="grp-apps">
+					Aplicaciones
+					<svg class="icon"><use href="#i-chev"/></svg>
+				</button>
+				<div class="nav-group-list" id="grp-apps">
+					<div>
+						<a class="nav-item nav-ext" href="/admin"><svg class="icon"><use href="#i-blocks"/></svg>Panel<span class="ext-arrow" aria-hidden="true">↗</span></a>
+						<a class="nav-item nav-ext" href="/teams/"><svg class="icon"><use href="#i-users"/></svg>Lince Teams<span class="ext-arrow" aria-hidden="true">↗</span></a>
+					</div>
+				</div>
+			</div>
 		</nav>
 
 		<div class="side-foot">
@@ -2985,6 +3018,18 @@
 								<span class="badge gauge-alert" id="gauge-badge" hidden></span>
 							</div>
 						</div>
+					</article>
+
+					<!-- ░░ Comercial: pipeline del Panel (leads + presupuestos) ░░ -->
+					<article class="card span-12" id="pipe-card" hidden>
+						<div class="card-head">
+							<h2>
+								<svg class="icon"><use href="#i-heart"/></svg>
+								Comercial
+							</h2>
+							<a class="btn btn-ghost btn-sm" href="/admin">Ver en Panel ↗</a>
+						</div>
+						<div class="pipe-kpis" id="pipe-kpis"></div>
 					</article>
 
 					<!-- ░░ Aprobaciones pendientes (reales, accionables) ░░ -->
@@ -4549,6 +4594,43 @@ function renderDashboard() {
 	renderChurnWidget();
 	renderCollections();
 	renderDashOkrs();
+	renderPipeline();
+}
+
+// Resumen comercial: trae los conteos por estado de leads y presupuestos desde
+// la MISMA API que el Panel (mismo backend/DB) y los muestra en el dashboard,
+// para tener finanzas + comercial en una sola vista. El endpoint /api/stats es
+// admin-only: si falla (p. ej. un socio sin permiso), la tarjeta no se muestra
+// y no se vuelve a intentar. No agrega gráficos ni peticiones extra por render.
+let PIPE_DISABLED = false;
+async function renderPipeline() {
+	if (PIPE_DISABLED) return;
+	let stats;
+	try {
+		stats = await apiGet('/api/stats');
+	} catch {
+		PIPE_DISABLED = true;
+		$('#pipe-card').hidden = true;
+		return;
+	}
+	const L = stats.leads || {};
+	const B = stats.budgets || {};
+	const nuevos = L.nuevo || 0;
+	const enConv = (L.contactado || 0) + (L.en_conversacion || 0);
+	const presPend = (B.enviado || 0) + (B.sin_respuesta || 0) + (B.recordado || 0);
+	const ganados = B.ganado || 0;
+	const tile = (label, value, sub) =>
+		`<div class="tile" style="background:var(--color-bg)">
+			<span class="label">${label}</span>
+			<div class="value">${value}</div>
+			<span class="delta muted">${sub}</span>
+		</div>`;
+	$('#pipe-kpis').innerHTML =
+		tile('Leads nuevos', nuevos, 'sin contactar') +
+		tile('En conversación', enConv, 'leads activos') +
+		tile('Presupuestos pendientes', presPend, 'esperan respuesta') +
+		tile('Presupuestos ganados', ganados, 'cerrados');
+	$('#pipe-card').hidden = false;
 }
 
 const HEALTH_LABEL = { saludable: 'Saludable', en_riesgo: 'En riesgo', critico: 'Crítico' };
