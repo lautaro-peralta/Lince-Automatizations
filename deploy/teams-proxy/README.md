@@ -5,6 +5,14 @@ Monta **Lince Teams** (servicio Python del repo
 origen** que el sitio, bajo `https://lince-automate.com.ar/teams`, para que
 comparta el login del panel **sin doble inicio de sesión**.
 
+> ⚠️ **Cuál usar.** Como el sitio corre como **Worker en un custom domain**, un
+> Worker aparte en una *route* `/teams/*` **no intercepta** (el custom domain
+> gana). Por eso el proxy vive **integrado en `web/src/hooks.server.ts`** — es el
+> que funciona en este setup. Solo configurás la variable **`TEAMS_ORIGIN`** del
+> Worker del sitio (en `web/wrangler.jsonc` o en el dashboard) y redesplegás el
+> sitio. Este Worker aparte queda como alternativa para un sitio que **no** esté
+> en un custom-domain Worker (p. ej. Cloudflare Pages puro).
+
 ## Por qué
 
 La sesión de Supabase se guarda en el `localStorage` del navegador, que es
@@ -17,10 +25,13 @@ El Worker (`worker.js`) reenvía `/teams/*` al servicio Python quitando el prefi
 
 ## Deploy
 
-1. Desplegá el servicio Python en Render (ver su `DEPLOY.md`), en **modo
-   unificado**: con `SUPABASE_URL` + `SUPABASE_ANON_KEY` y `DATABASE_URL`
-   apuntando al **mismo** Postgres de Supabase que Lince Automate. Anotá su URL
-   (p. ej. `https://lince-teams.onrender.com`).
+1. Desplegá el servicio Python de [`lince-teams`](https://github.com/lautaro-peralta/lince-teams)
+   en **modo unificado** (con `SUPABASE_URL` + `SUPABASE_ANON_KEY` y `DATABASE_URL`
+   apuntando al **mismo** Postgres de Supabase que Lince Automate) y anotá su URL:
+   - **Oracle Cloud** (recomendado para Whisper; la VM no se duerme):
+     guía en el repo, `deploy/DEPLOY-oracle.md`. El origen queda como
+     `https://teams-origin.TU-DOMINIO.com` (registro DNS **en nube gris**).
+   - **Render**: `https://lince-teams.onrender.com`.
 
 2. En su `server/static/config.js`, poné la base bajo el prefijo del proxy:
 
