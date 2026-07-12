@@ -269,7 +269,7 @@
 					{t('admin.teams')}
 				</a>
 				<a
-					href="/teams/#integrations"
+					href="/startup-os/#/integraciones"
 					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"
 				>
 					{t('admin.integrations')}
