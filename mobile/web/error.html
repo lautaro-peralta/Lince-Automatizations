@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Lince — Sin conexión</title>
+<!-- Página local de error de Capacitor (server.errorPath): se muestra cuando
+     el WebView no puede cargar el origen remoto (sin red, servidor caído).
+     Sin dependencias y sin plugins: acá el puente no está garantizado. -->
+<style>
+  :root {
+    --bg: #f7f5f0; --ink: #1b2b23; --moss: #3d5a45; --rust: #c9622e;
+    --card: #efeae0; --sage: #6e8579; --line-strong: rgba(27, 43, 35, 0.22);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.55 'Source Sans 3', system-ui, sans-serif;
+    min-height: 100vh; display: grid; place-items: center;
+    padding: 24px calc(24px + env(safe-area-inset-right, 0px))
+             calc(24px + env(safe-area-inset-bottom, 0px))
+             calc(24px + env(safe-area-inset-left, 0px));
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--line-strong);
+    border-radius: 16px; padding: 36px 28px; max-width: 420px; width: 100%;
+    text-align: center;
+  }
+  .mark { display: flex; gap: 6px; justify-content: center; margin-bottom: 18px; }
+  .mark i { width: 14px; height: 14px; background: var(--rust); border-radius: 2.5px;
+            transform: rotate(45deg); }
+  .mark i:nth-child(2) { width: 18px; height: 18px; }
+  .mark i:nth-child(3) { opacity: 0.55; }
+  h1 { font-family: Georgia, serif; font-weight: 500; font-size: 1.6rem;
+       letter-spacing: -0.01em; margin-bottom: 10px; }
+  p { color: var(--sage); font-size: 14.5px; margin-bottom: 24px; }
+  button {
+    background: var(--ink); color: var(--bg); border: 1.5px solid var(--ink);
+    border-radius: 7px; padding: 13px 24px; font: 600 15px/1 inherit;
+    font-family: inherit; cursor: pointer; min-height: 44px; width: 100%;
+  }
+  button:active { opacity: 0.85; }
+  .hint { font-family: ui-monospace, monospace; font-size: 11px;
+          letter-spacing: 0.06em; text-transform: uppercase; color: var(--sage);
+          margin-top: 16px; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="mark" aria-hidden="true"><i></i><i></i><i></i></div>
+  <h1>Sin conexión</h1>
+  <p>No se pudo cargar Lince. Revisá tu conexión a internet e intentá de nuevo.</p>
+  <button onclick="location.replace('https://lince-automate.com.ar/admin')">Reintentar</button>
+  <p class="hint">lince-automate.com.ar</p>
+</div>
+</body>
+</html>

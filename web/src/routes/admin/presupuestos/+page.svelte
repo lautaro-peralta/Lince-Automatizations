@@ -158,7 +158,38 @@
 	<p class="mb-2 font-mono text-[12px] text-sage">
 		{t('admin.budgets.count', { n: budgets.length })}
 	</p>
-	<div class="overflow-x-auto rounded-[10px] border border-line">
+
+	<!-- Móvil: tarjetas apiladas (la tabla de 7 columnas no entra en el teléfono). -->
+	<ul class="space-y-3 sm:hidden">
+		{#each budgets as b (b.id)}
+			<li class="rounded-[10px] border border-line bg-surface p-4">
+				<div class="mb-1 flex items-baseline justify-between gap-3">
+					<span class="text-[15px] font-semibold">{b.customer_name}</span>
+					<span class="font-mono text-[11px] whitespace-nowrap text-sage"
+						>{fmtDate(b.sent_at || b.created_at)}</span
+					>
+				</div>
+				<p class="text-[14px]">{b.customer_contact}</p>
+				<p class="mt-1 text-[15px] font-semibold">{fmtMoney(b.amount)}</p>
+				{#if b.description}
+					<p class="mt-2 border-t border-line pt-2 text-[13px] text-sage">{b.description}</p>
+				{/if}
+				<div class="mt-3 flex items-center justify-between gap-3">
+					<span class="font-mono text-[11px] tracking-wide text-sage uppercase"
+						>{t('admin.budgets.colFollowups')}: {b.followup_count || 0}</span
+					>
+					<RowStatus
+						value={b.status || 'enviado'}
+						options={BUDGET_STATUSES}
+						labels={statusLabels}
+						save={(v) => patchBudget(b.id, v)}
+					/>
+				</div>
+			</li>
+		{/each}
+	</ul>
+
+	<div class="hidden overflow-x-auto rounded-[10px] border border-line sm:block">
 		<table class="w-full border-collapse text-[14px]">
 			<thead>
 				<tr class="bg-surface text-left font-mono text-[11px] tracking-wide text-sage uppercase">

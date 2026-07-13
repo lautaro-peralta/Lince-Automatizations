@@ -24,8 +24,19 @@
 			})();
 		</script>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="text-scale" content="scale" />
+		<!-- Dentro de la app móvil Lince (WebView con UA "LinceApp") se carga el
+		     shell compartido: barra inferior entre apps, botón atrás, status bar.
+		     En el navegador normal este script ni se solicita. -->
+		<script>
+			if (navigator.userAgent.indexOf('LinceApp') !== -1) {
+				var linceShell = document.createElement('script');
+				linceShell.src = '/app-shell.js';
+				linceShell.defer = true;
+				document.head.appendChild(linceShell);
+			}
+		</script>
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<link rel="apple-touch-icon" href="/favicon.png" />
 		%sveltekit.head%
