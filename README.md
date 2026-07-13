@@ -13,6 +13,7 @@ clientes. Pensado para desplegarse en planes **gratuitos**: Cloudflare Pages
 │   ├── src/routes/admin/        # panel interno (SPA con auth)
 │   └── static/startup-os/       # ERP interno (finanzas, clientes, estrategia)
 ├── api/                 # Backend (Node + Express) → Render
+├── mobile/              # App móvil iOS/Android (Capacitor; ver mobile/README.md)
 ├── supabase/            # Esquema SQL (con RLS) + Edge Function del cron
 ├── deploy/              # Blueprints de infra (proxy de Teams, nginx, systemd)
 ├── docs/                # Planeamiento (leer acá primero 👇)
@@ -29,6 +30,14 @@ te mandan a `/admin?next=…` y vuelven solas:
 |-------------|------|----------|
 | **Startup OS** | `/startup-os/` | App estática servida por Cloudflare. ERP interno: gastos/aprobaciones, clientes, facturación, suscripciones, anuncios, OKRs, roadmap. Incluye **Conectar IA (MCP)** (ver [`docs/MCP.md`](docs/MCP.md)) y la vista **Integraciones** (`#/integraciones`), donde se **configuran** las herramientas del equipo (Google Drive, GitHub y más). |
 | **Lince Teams** | `/teams/` | **Servicio aparte** ([repo `lince-teams`](https://github.com/lautaro-peralta/lince-teams), Python/FastAPI) montado en el mismo origen vía reverse-proxy. Espacio de trabajo del equipo: tablero kanban, pizarra en **tiempo real** (WebSocket) y **transcripción de voz** (Whisper). Es el **motor de integraciones**: expone la API (`/teams/api/integrations`) que la vista de Startup OS gestiona vía el login unificado, y las **usa** en los adjuntos de tareas. Comparte el login validando el JWT de Supabase. Proxy en [`deploy/teams-proxy/`](deploy/teams-proxy/). |
+
+> **App móvil (iOS/Android).** Las tres herramientas también se usan desde la
+> app nativa de [`mobile/`](mobile/README.md) (Capacitor): mismo login, todas
+> las funciones, micrófono nativo para Teams y barra inferior para saltar
+> entre apps. El APK de Android sale del workflow **Mobile Android APK**
+> (Actions); iOS va por TestFlight. Las webs están optimizadas para táctil
+> (kanban arrastrable con el dedo, pizarra con zoom de pellizco, tablas en
+> tarjetas) y, dentro de la app, cargan `web/static/app-shell.js`.
 
 ## Documentación
 

@@ -17,8 +17,17 @@ todo desplegable en planes gratuitos y con foco en que **funcione fiablemente**.
 | Base de datos   | Postgres                   | **Supabase**          |
 | Auth (panel)    | Supabase Auth              | Supabase              |
 | Tareas programadas | `pg_cron` + Edge Function | Supabase            |
+| App móvil       | Capacitor (shell `server.url` → mismo origen) | APK por GitHub Actions / TestFlight |
 
 Las decisiones (y sus alternativas descartadas) están al final.
+
+**App móvil** (`mobile/`): un shell nativo de Capacitor carga
+`https://lince-automate.com.ar/admin` en el WebView. Al ser el mismo origen
+que el navegador, comparte la sesión de Supabase y el 100% de las funciones
+sin CORS ni auth aparte; cada deploy del frontend actualiza la app. Dentro de
+la app (UA `LinceApp`), las webs cargan `web/static/app-shell.js` (barra
+inferior Panel/Startup OS/Teams, botón atrás, status bar). Detalle en
+[`mobile/README.md`](../mobile/README.md).
 
 ## Diagrama
 

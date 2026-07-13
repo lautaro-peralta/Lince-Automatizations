@@ -1,0 +1,31 @@
+{
+  "name": "lince-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App móvil de Lince (iOS/Android): shell nativo de Capacitor que carga el origen unificado con Panel, Startup OS y Teams.",
+  "scripts": {
+    "sync": "cap sync",
+    "sync:android": "cap sync android",
+    "sync:ios": "cap sync ios",
+    "open:android": "cap open android",
+    "open:ios": "cap open ios",
+    "apk": "cap sync android && cd android && ./gradlew assembleRelease",
+    "assets": "capacitor-assets generate --ios --android --iconBackgroundColor '#F7F5F0' --iconBackgroundColorDark '#11140E' --splashBackgroundColor '#F7F5F0' --splashBackgroundColorDark '#11140E'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.0.0",
+    "typescript": "^5.6.0"
+  },
+  "overrides": {
+    "sharp": "0.33.5"
+  }
+}

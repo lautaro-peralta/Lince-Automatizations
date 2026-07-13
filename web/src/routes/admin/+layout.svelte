@@ -243,14 +243,14 @@
 	<!-- PANEL -->
 	<div class="min-h-dvh bg-bg">
 		<header
-			class="sticky top-0 z-40 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-line bg-bg/90 px-[clamp(16px,4vw,32px)] py-3 backdrop-blur-md"
+			class="sticky top-0 z-40 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-line bg-bg/90 px-[clamp(16px,4vw,32px)] pt-[calc(12px+var(--sat))] pb-3 backdrop-blur-md"
 		>
 			<Brand label={t('admin.brandLabel')} size="sm" />
 			<nav class="flex flex-wrap gap-1">
 				{#each tabs as tab (tab.href)}
 					<a
 						href={tab.href}
-						class="rounded-[8px] px-3 py-1.5 text-[14px] font-medium transition-colors"
+						class="inline-flex items-center rounded-[8px] px-3 py-1.5 text-[14px] font-medium transition-colors pointer-coarse:min-h-11"
 						class:bg-ink={page.url.pathname === tab.href}
 						class:text-bg={page.url.pathname === tab.href}
 						class:text-moss={page.url.pathname !== tab.href}
@@ -262,21 +262,26 @@
 				{/each}
 			</nav>
 			<div class="ml-auto flex items-center gap-3 text-[13px] text-sage">
+				<!-- Dentro de la app móvil, la barra inferior del shell reemplaza estos
+				     enlaces cruzados (data-shell-hide los oculta). Integraciones se
+				     conserva: es un deep-link a una vista, no un cambio de app. -->
 				<a
 					href="/teams/"
-					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"
+					data-shell-hide
+					class="inline-flex items-center rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink pointer-coarse:min-h-11"
 				>
 					{t('admin.teams')}
 				</a>
 				<a
-					href="/startup-os/#/integraciones"
-					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"
+          href="/startup-os/#/integraciones"
+          class="inline-flex items-center rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink pointer-coarse:min-h-11"
 				>
 					{t('admin.integrations')}
 				</a>
 				<a
 					href="/startup-os/"
-					class="rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink"
+					data-shell-hide
+					class="inline-flex items-center rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink pointer-coarse:min-h-11"
 				>
 					{t('admin.startupOs')}
 				</a>
@@ -290,7 +295,9 @@
 			</div>
 		</header>
 
-		<main class="mx-auto max-w-[1100px] px-[clamp(16px,4vw,32px)] py-8">
+		<main
+			class="mx-auto max-w-[1100px] px-[clamp(16px,4vw,32px)] pt-8 pb-[calc(32px+var(--sab)+var(--lince-nav,0px))]"
+		>
 			{@render children()}
 		</main>
 	</div>
