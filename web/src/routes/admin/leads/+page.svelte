@@ -105,7 +105,50 @@
 	</p>
 {:else}
 	<p class="mb-2 font-mono text-[12px] text-sage">{t('admin.leads.count', { n: leads.length })}</p>
-	<div class="overflow-x-auto rounded-[10px] border border-line">
+
+	<!-- Móvil: tarjetas apiladas (la tabla de 7 columnas no entra en el teléfono). -->
+	<ul class="space-y-3 sm:hidden">
+		{#each leads as lead (lead.id)}
+			<li class="rounded-[10px] border border-line bg-surface p-4">
+				<div class="mb-1 flex items-baseline justify-between gap-3">
+					<span class="text-[15px] font-semibold">{lead.name}</span>
+					<span class="font-mono text-[11px] whitespace-nowrap text-sage"
+						>{fmtDate(lead.created_at)}</span
+					>
+				</div>
+				{#if lead.business}
+					<p class="text-[13px] text-sage">{lead.business}</p>
+				{/if}
+				<p class="mt-1 text-[14px]">{lead.contact}</p>
+				{#if lead.message}
+					<p class="mt-2 border-t border-line pt-2 text-[13px] text-sage">{lead.message}</p>
+				{/if}
+				<div class="mt-3 flex flex-col gap-2">
+					<div class="flex items-center justify-between gap-3">
+						<span class="font-mono text-[11px] tracking-wide text-sage uppercase"
+							>{t('admin.leads.colStatus')}</span
+						>
+						<RowStatus
+							value={lead.status || 'nuevo'}
+							options={LEAD_STATUSES}
+							labels={statusLabels}
+							save={(v) => patchLead(lead.id, { status: v as Lead['status'] })}
+						/>
+					</div>
+					<div>
+						<span class="font-mono text-[11px] tracking-wide text-sage uppercase"
+							>{t('admin.leads.colNotes')}</span
+						>
+						<div class="mt-1">
+							<NotesInput value={lead.notes || ''} save={(v) => patchLead(lead.id, { notes: v })} />
+						</div>
+					</div>
+				</div>
+			</li>
+		{/each}
+	</ul>
+
+	<div class="hidden overflow-x-auto rounded-[10px] border border-line sm:block">
 		<table class="w-full border-collapse text-[14px]">
 			<thead>
 				<tr class="bg-surface text-left font-mono text-[11px] tracking-wide text-sage uppercase">

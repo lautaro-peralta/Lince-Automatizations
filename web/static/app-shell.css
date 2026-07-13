@@ -1,0 +1,59 @@
+/* Lince App Shell — barra inferior de la app móvil (la inyecta app-shell.js).
+   Cadenas de fallback en cada color para servir a los tres sistemas de tokens
+   sin depender de ninguno: admin/Startup OS exponen --color-* (claro y oscuro)
+   y Teams expone --card/--ink/--sage/...; el último valor es el hex del
+   design system por si no hay ninguno. */
+
+html.lince-app { --lince-nav: 0px; }
+html.lince-app.lince-shell-has-nav { --lince-nav: 56px; }
+
+/* Elementos que la barra reemplaza dentro de la app (enlaces cruzados). */
+html.lince-app [data-shell-hide] { display: none !important; }
+
+.lince-shell-nav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 200;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  height: calc(56px + var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)));
+  padding: 4px 8px calc(4px + var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)));
+  background: var(--color-surface, var(--card, #efeae0));
+  border-top: 1px solid var(--color-line-strong, var(--line-strong, rgba(27, 43, 35, 0.22)));
+}
+
+.lince-shell-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 44px; /* target táctil (design system §4) */
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--color-sage, var(--sage, #6e8579));
+  font-family: var(--font-mono, var(--mono, 'JetBrains Mono', ui-monospace, monospace));
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s, background 0.15s;
+}
+
+.lince-shell-item svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.lince-shell-item:active {
+  background: var(--color-line, var(--line, rgba(27, 43, 35, 0.12)));
+}
+
+.lince-shell-item.active {
+  color: var(--color-rust, var(--rust, #c9622e));
+  background: var(--color-rust-soft, rgba(201, 98, 46, 0.12));
+}

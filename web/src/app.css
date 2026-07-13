@@ -71,6 +71,12 @@
    ========================================================================== */
 :root {
 	color-scheme: light;
+
+	/* Safe areas (notch / home indicator). En la app móvil, Capacitor inyecta
+	   --safe-area-inset-* en Android; en iOS/navegadores vale env() y fuera de
+	   todo, 0. Se usan desde Tailwind como var(--sat)/var(--sab). */
+	--sat: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+	--sab: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
 }
 
 :root[data-theme='dark'] {
