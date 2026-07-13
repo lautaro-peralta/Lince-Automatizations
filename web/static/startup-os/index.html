@@ -2940,7 +2940,7 @@
 				<div class="nav-group-list" id="grp-int">
 					<div>
 						<a class="nav-item" href="#/ia" data-route="ia"><svg class="icon"><use href="#i-zap"/></svg>Conectar IA (MCP)</a>
-						<a class="nav-item nav-ext" href="/teams/#integrations" title="Herramientas del equipo en Lince Teams (Google Drive, GitHub y más)"><svg class="icon"><use href="#i-paperclip"/></svg>Herramientas (Drive, GitHub)<span class="ext-arrow" aria-hidden="true">↗</span></a>
+						<a class="nav-item" href="#/integraciones" data-route="integraciones"><svg class="icon"><use href="#i-paperclip"/></svg>Herramientas (Drive, GitHub)</a>
 					</div>
 				</div>
 			</div>
@@ -4212,6 +4212,81 @@
 							Generá el primero para conectar Claude u otro cliente MCP.
 						</div>
 					</article>
+				</div>
+			</section>
+
+			<!-- ============ VISTA: INTEGRACIONES (Drive, GitHub, …) ============ -->
+			<section class="view" id="view-integraciones">
+				<div class="page-head">
+					<div>
+						<span class="kicker">Integraciones</span>
+						<h1>Herramientas conectadas</h1>
+					</div>
+					<div class="meta">Configuradas acá; usables en todas las apps</div>
+				</div>
+
+				<article class="card" style="margin-bottom:18px">
+					<div class="card-head">
+						<h2><svg class="icon"><use href="#i-paperclip"/></svg>Cómo funciona</h2>
+						<span class="sub">Conectá las herramientas del equipo (Google Drive, GitHub y más). Quedan disponibles para el Panel, Startup OS y Lince Teams (adjuntos en tareas). Los tokens se guardan en el servidor y no se vuelven a mostrar.</span>
+					</div>
+				</article>
+
+				<div class="acting-bar">
+					<div class="acting"><span class="lbl" style="padding-right:6px">Conexiones del equipo</span></div>
+					<button class="btn btn-accent" id="int-add-btn" aria-expanded="false" hidden>
+						<svg class="icon"><use href="#i-plus"/></svg>
+						Conectar herramienta
+					</button>
+				</div>
+
+				<div class="form-collapse" id="int-form-wrap">
+					<div>
+						<article class="card" style="margin-bottom:18px">
+							<div class="card-head">
+								<h2><svg class="icon"><use href="#i-plus"/></svg><span id="int-form-title">Nueva conexión</span></h2>
+							</div>
+							<form class="gasto-form" id="int-form" novalidate>
+								<div class="field wide">
+									<label for="int-provider">Herramienta</label>
+									<select id="int-provider">
+										<option value="github">GitHub</option>
+										<option value="google_drive">Google Drive</option>
+										<option value="other">Otra herramienta</option>
+									</select>
+								</div>
+								<div id="int-fields"></div>
+								<div class="actions">
+									<span class="rule-hint">Los tokens quedan en el servidor. Solo administradores pueden configurar.</span>
+									<button type="button" class="btn btn-ghost btn-sm" id="int-cancel">Cancelar</button>
+									<button type="submit" class="btn btn-accent btn-sm">
+										<svg class="icon"><use href="#i-check"/></svg>
+										<span id="int-submit-label">Conectar</span>
+									</button>
+								</div>
+							</form>
+						</article>
+					</div>
+				</div>
+
+				<div id="int-loading" aria-hidden="true">
+					<div class="skel" style="height:120px"></div>
+				</div>
+
+				<div class="load-error" id="int-error" hidden>
+					<svg class="icon"><use href="#i-alert"/></svg>
+					<strong>No se pudieron cargar las integraciones</strong>
+					<span id="int-error-msg"></span>
+					<button class="btn btn-ghost btn-sm" id="int-retry">Reintentar</button>
+				</div>
+
+				<div id="int-body" hidden>
+					<div id="int-empty" class="empty">
+						<svg class="icon"><use href="#i-paperclip"/></svg>
+						<strong style="color:var(--color-ink)">Sin conexiones todavía</strong>
+						Conectá Google Drive, GitHub u otra herramienta para el equipo.
+					</div>
+					<div id="int-list"></div>
 				</div>
 			</section>
 		</main>
@@ -7095,6 +7170,302 @@ function initIa() {
 }
 
 /* =======================================================================
+   Integraciones (Drive, GitHub, …) — configuración centralizada acá.
+   Los datos y la API viven en Lince Teams (mismo origen, /teams/api) y se
+   comparten por el login unificado de Supabase; así quedan disponibles en
+   todas las apps. Acá está la UI de gestión (alta/edición/baja + issues).
+   ======================================================================= */
+const TEAMS_BASE = '/teams'; // Lince Teams, proxeado en el mismo origen
+
+let intItems = [];
+let intLoaded = false;
+let intInit = false;
+let intEditing = null; // id de la conexión en edición, o null
+
+const INT_ORDER = ['github', 'google_drive', 'other'];
+const INT_META = {
+	github: {
+		label: 'GitHub', color: 'var(--color-ink)',
+		svg: '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>',
+	},
+	google_drive: {
+		label: 'Google Drive', color: 'var(--color-success)',
+		svg: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.71 3.5 1.15 15l3.29 5.5 6.56-11.34zM22.85 15 16.29 3.5H9.71l6.56 11.5zM5.29 21h13.42l3.14-5.5H8.43z"/></svg>',
+	},
+	other: {
+		label: 'Otras herramientas', color: 'var(--color-moss)',
+		svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+	},
+};
+const DRIVE_KIND = {
+	file: 'Archivo', folder: 'Carpeta', document: 'Documento',
+	spreadsheet: 'Hoja de cálculo', presentation: 'Presentación',
+};
+
+// Cliente HTTP hacia la API de Teams (mismo origen), con el JWT de Supabase.
+async function teamsApi(path, { method = 'GET', body } = {}) {
+	const { data: { session } } = await supabase.auth.getSession();
+	const headers = { 'Content-Type': 'application/json' };
+	if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
+	const res = await fetch(`${TEAMS_BASE}/api${path}`, {
+		method, headers, body: body ? JSON.stringify(body) : undefined,
+	});
+	const text = await res.text();
+	let data = null;
+	try { data = text ? JSON.parse(text) : null; } catch (e) { data = { detail: text }; }
+	if (!res.ok) {
+		const err = new Error((data && (data.detail || data.message)) || `Error ${res.status}`);
+		err.status = res.status;
+		throw err;
+	}
+	return data;
+}
+
+function intHost(url) {
+	try { return new URL(url).host.replace(/^www\./, ''); } catch (e) { return url || ''; }
+}
+
+function intFieldsHtml(provider, item) {
+	const v = (s) => esc(s || '');
+	const inp = 'padding:8px 11px;border:1px solid var(--color-line);border-radius:8px;background:var(--color-bg);color:var(--color-ink);width:100%';
+	if (provider === 'github') {
+		const repo = item && item.config && item.config.owner ? item.config.owner + '/' + item.config.repo : '';
+		const tokPh = item && item.has_token ? '•••••••• guardado — dejá vacío para conservarlo' : 'github_pat_… (opcional)';
+		return `
+			<div class="field wide"><label for="int-f-repo">Repositorio</label>
+				<input id="int-f-repo" type="text" value="${v(repo)}" placeholder="owner/repo o https://github.com/owner/repo" style="${inp}" /></div>
+			<div class="field wide"><label for="int-f-token">Token de acceso (PAT) — opcional, para repos privados y crear issues</label>
+				<input id="int-f-token" type="password" autocomplete="off" placeholder="${tokPh}" style="${inp}" /></div>
+			${item && item.has_token ? `<label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--color-sage);margin:-4px 0 4px"><input type="checkbox" id="int-f-token-clear" style="width:auto" /> Quitar el token guardado</label>` : ''}
+			<div class="field wide"><label for="int-f-name">Nombre (opcional)</label>
+				<input id="int-f-name" type="text" value="${v(item && item.name)}" placeholder="Se usa owner/repo si lo dejás vacío" style="${inp}" /></div>`;
+	}
+	if (provider === 'google_drive') {
+		return `
+			<div class="field wide"><label for="int-f-url">Enlace de Google Drive / Docs / Sheets / Slides</label>
+				<input id="int-f-url" type="url" value="${v(item && item.url)}" placeholder="https://drive.google.com/…" style="${inp}" /></div>
+			<div class="field wide"><label for="int-f-name">Nombre (opcional)</label>
+				<input id="int-f-name" type="text" value="${v(item && item.name)}" placeholder="Google Drive" style="${inp}" /></div>`;
+	}
+	return `
+		<div class="field wide"><label for="int-f-name">Nombre</label>
+			<input id="int-f-name" type="text" value="${v(item && item.name)}" placeholder="Figma, Notion, Trello…" style="${inp}" /></div>
+		<div class="field wide"><label for="int-f-url">Enlace</label>
+			<input id="int-f-url" type="url" value="${v(item && item.url)}" placeholder="https://…" style="${inp}" /></div>`;
+}
+
+function setIntForm(open, item) {
+	intEditing = (open && item) ? item.id : null;
+	$('#int-form-wrap').classList.toggle('open', open);
+	$('#int-add-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+	if (!open) return;
+	const provider = item ? item.provider : $('#int-provider').value;
+	const sel = $('#int-provider');
+	sel.value = provider;
+	sel.disabled = !!item; // el proveedor no se cambia al editar
+	$('#int-form-title').textContent = item ? 'Editar conexión' : 'Nueva conexión';
+	$('#int-submit-label').textContent = item ? 'Guardar' : 'Conectar';
+	$('#int-fields').innerHTML = intFieldsHtml(provider, item);
+	setTimeout(() => { const f = $('#int-fields input'); if (f) f.focus(); }, 60);
+}
+
+function intCardHtml(item) {
+	const m = INT_META[item.provider] || INT_META.other;
+	const isAdmin = ME && ME.role === 'admin';
+	let sub = intHost(item.url);
+	if (item.provider === 'github' && item.config && item.config.owner) {
+		sub = item.config.owner + '/' + item.config.repo + (item.has_token ? ' · token ✓' : '');
+	} else if (item.provider === 'google_drive' && item.drive) {
+		sub = DRIVE_KIND[item.drive.kind] || sub;
+	}
+	const canPrev = item.provider === 'google_drive' && item.drive && item.drive.embeddable;
+	return `<article class="card" style="margin-bottom:12px">
+		<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;flex-wrap:wrap">
+			<span style="flex:none;width:28px;height:28px;color:${m.color};display:inline-flex;align-items:center;justify-content:center">${m.svg}</span>
+			<div style="flex:1;min-width:140px">
+				<strong style="display:block;overflow-wrap:anywhere">${esc(item.name)}</strong>
+				<span style="font-size:0.8rem;color:var(--color-sage);overflow-wrap:anywhere">${esc(sub)}</span>
+			</div>
+			${item.url ? `<a class="btn btn-ghost btn-sm" href="${esc(item.url)}" target="_blank" rel="noopener">Abrir ↗</a>` : ''}
+			${item.provider === 'github' ? `<button class="btn btn-ghost btn-sm" data-int-gh="${item.id}">Ver issues</button>` : ''}
+			${canPrev ? `<button class="btn btn-ghost btn-sm" data-int-prev="${item.id}">Vista previa</button>` : ''}
+			${isAdmin ? `<button class="btn btn-ghost btn-sm" data-int-edit="${item.id}">Editar</button>` : ''}
+			${isAdmin ? `<button class="btn btn-ghost btn-sm" data-int-del="${item.id}">Quitar</button>` : ''}
+		</div>
+		<div data-int-panel="${item.id}" data-kind="" hidden style="padding:0 16px 14px"></div>
+	</article>`;
+}
+
+function renderIntList() {
+	$('#int-empty').classList.toggle('show', intItems.length === 0);
+	let html = '';
+	for (const provider of INT_ORDER) {
+		const group = intItems.filter((i) => i.provider === provider);
+		if (!group.length) continue;
+		const m = INT_META[provider];
+		html += `<div style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono,monospace);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-sage);margin:18px 0 8px">
+			<span style="width:16px;height:16px;color:${m.color};display:inline-flex">${m.svg}</span>${m.label} · ${group.length}</div>`;
+		html += group.map(intCardHtml).join('');
+	}
+	$('#int-list').innerHTML = html;
+}
+
+async function loadInt() {
+	$('#int-error').hidden = true;
+	if (!intLoaded) { $('#int-loading').style.display = ''; $('#int-body').hidden = true; }
+	try {
+		intItems = await teamsApi('/integrations');
+		intLoaded = true;
+		$('#int-loading').style.display = 'none';
+		$('#int-body').hidden = false;
+		renderIntList();
+	} catch (e) {
+		$('#int-loading').style.display = 'none';
+		if (!intLoaded) {
+			$('#int-error').hidden = false;
+			$('#int-error-msg').textContent = e.message || 'Error de red.';
+		} else {
+			toast('danger', '#i-x', e.message || 'No se pudieron recargar.');
+		}
+	}
+}
+
+async function onIntSubmit(ev) {
+	ev.preventDefault();
+	const provider = $('#int-provider').value;
+	const body = {};
+	const nameEl = $('#int-f-name');
+	if (nameEl && nameEl.value.trim()) body.name = nameEl.value.trim();
+	if (provider === 'github') {
+		const repo = $('#int-f-repo').value.trim();
+		if (repo) body.url = repo; // el backend acepta owner/repo o URL
+		const clear = $('#int-f-token-clear');
+		const tok = $('#int-f-token').value.trim();
+		if (clear && clear.checked) body.token = '';
+		else if (tok) body.token = tok;
+	} else {
+		body.url = ($('#int-f-url').value || '').trim();
+	}
+	if (!intEditing) body.provider = provider;
+	const btn = $('#int-form button[type="submit"]');
+	btn.disabled = true;
+	try {
+		if (intEditing) await teamsApi('/integrations/' + intEditing, { method: 'PATCH', body });
+		else await teamsApi('/integrations', { method: 'POST', body });
+		toast('success', '#i-check', intEditing ? 'Conexión actualizada.' : 'Herramienta conectada.');
+		setIntForm(false);
+		loadInt();
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo guardar.');
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+function onIntListClick(ev) {
+	const b = ev.target.closest('button');
+	if (!b) return;
+	if (b.dataset.intGh) return toggleGh(b.dataset.intGh);
+	if (b.dataset.intPrev) return togglePrev(b.dataset.intPrev);
+	if (b.dataset.intEdit) {
+		const it = intItems.find((x) => String(x.id) === b.dataset.intEdit);
+		if (it) setIntForm(true, it);
+		return;
+	}
+	if (b.dataset.intDel) return onIntDelete(b.dataset.intDel);
+}
+
+async function onIntDelete(id) {
+	const it = intItems.find((x) => String(x.id) === String(id));
+	if (!it) return;
+	if (!confirm(`¿Quitar la conexión "${it.name}"? No borra nada en la herramienta externa.`)) return;
+	try {
+		await teamsApi('/integrations/' + id, { method: 'DELETE' });
+		toast('success', '#i-check', 'Conexión eliminada.');
+		loadInt();
+	} catch (e) {
+		toast('danger', '#i-x', e.message || 'No se pudo eliminar.');
+	}
+}
+
+function togglePrev(id) {
+	const panel = $(`[data-int-panel="${id}"]`);
+	const item = intItems.find((x) => String(x.id) === String(id));
+	if (!panel || !item) return;
+	if (!panel.hidden && panel.dataset.kind === 'prev') { panel.hidden = true; panel.innerHTML = ''; panel.dataset.kind = ''; return; }
+	panel.hidden = false;
+	panel.dataset.kind = 'prev';
+	panel.innerHTML = `<iframe src="${esc(item.drive.embed_url)}" style="width:100%;height:360px;border:1px solid var(--color-line);border-radius:8px;background:var(--color-bg)" loading="lazy" referrerpolicy="no-referrer"></iframe>`;
+}
+
+async function toggleGh(id) {
+	const panel = $(`[data-int-panel="${id}"]`);
+	const item = intItems.find((x) => String(x.id) === String(id));
+	if (!panel || !item) return;
+	if (!panel.hidden && panel.dataset.kind === 'gh') { panel.hidden = true; panel.innerHTML = ''; panel.dataset.kind = ''; return; }
+	panel.hidden = false;
+	panel.dataset.kind = 'gh';
+	panel.innerHTML = '<div style="color:var(--color-sage);font-size:0.85rem">Cargando issues de GitHub…</div>';
+	try {
+		const data = await teamsApi(`/integrations/${id}/github/issues`);
+		renderGh(panel, item, data);
+	} catch (e) {
+		panel.innerHTML = `<div style="color:var(--color-danger);font-size:0.85rem">${esc(e.message)}</div>`;
+	}
+}
+
+function renderGh(panel, item, data) {
+	const row = (i) => `<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px dashed var(--color-line)">
+		<a href="${esc(i.url)}" target="_blank" rel="noopener" style="font-family:var(--font-mono,monospace);font-size:12px;color:var(--color-sage);text-decoration:none;padding-top:2px">#${i.number}</a>
+		<div style="flex:1;min-width:0">
+			<a href="${esc(i.url)}" target="_blank" rel="noopener" style="color:var(--color-ink);text-decoration:none;font-weight:500;font-size:0.9rem;overflow-wrap:anywhere">${esc(i.title)}</a>
+			${(i.labels && i.labels.length) ? `<div style="margin-top:3px">${i.labels.map((l) => `<span style="font-family:var(--font-mono,monospace);font-size:10px;background:var(--color-line);color:var(--color-sage);padding:1px 6px;border-radius:20px;margin-right:4px">${esc(l.name)}</span>`).join('')}</div>` : ''}
+		</div></div>`;
+	const inp = 'flex:1;padding:7px 10px;border:1px solid var(--color-line);border-radius:8px;background:var(--color-bg);color:var(--color-ink)';
+	panel.innerHTML = `
+		${item.has_token
+			? `<div style="display:flex;gap:8px;margin-bottom:8px"><input id="gh-new-${item.id}" type="text" placeholder="Título de un nuevo issue…" style="${inp}" /><button class="btn btn-accent btn-sm" data-int-ghnew="${item.id}">Crear issue</button></div>`
+			: `<div style="font-size:0.8rem;color:var(--color-sage);margin-bottom:8px">Agregá un token (Editar) para crear issues.</div>`}
+		<div style="font-family:var(--font-mono,monospace);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-sage);margin:6px 0">Issues abiertos · ${data.issues.length}</div>
+		${data.issues.length ? data.issues.map(row).join('') : '<div style="color:var(--color-sage);font-size:0.85rem">Sin issues abiertos.</div>'}
+		${data.pulls.length ? `<div style="font-family:var(--font-mono,monospace);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-sage);margin:10px 0 6px">Pull requests · ${data.pulls.length}</div>${data.pulls.map(row).join('')}` : ''}`;
+	const newBtn = panel.querySelector(`[data-int-ghnew="${item.id}"]`);
+	if (newBtn) newBtn.addEventListener('click', async () => {
+		const field = panel.querySelector(`#gh-new-${item.id}`);
+		const title = (field.value || '').trim();
+		if (!title) { toast('warn', '#i-alert', 'Escribí un título para el issue.'); return; }
+		newBtn.disabled = true;
+		try {
+			const created = await teamsApi(`/integrations/${item.id}/github/issues`, { method: 'POST', body: { title } });
+			toast('success', '#i-check', `Issue #${created.number} creado en GitHub.`);
+			renderGh(panel, item, await teamsApi(`/integrations/${item.id}/github/issues`));
+		} catch (e) {
+			toast('danger', '#i-x', e.message || 'No se pudo crear el issue.');
+			newBtn.disabled = false;
+		}
+	});
+}
+
+function initIntegraciones() {
+	if (!ME) return;
+	$('#int-add-btn').hidden = ME.role !== 'admin';
+	if (!intInit) {
+		intInit = true;
+		$('#int-add-btn').addEventListener('click', () => setIntForm(!$('#int-form-wrap').classList.contains('open')));
+		$('#int-cancel').addEventListener('click', () => setIntForm(false));
+		$('#int-provider').addEventListener('change', () => {
+			if (!intEditing) $('#int-fields').innerHTML = intFieldsHtml($('#int-provider').value, null);
+		});
+		$('#int-form').addEventListener('submit', onIntSubmit);
+		$('#int-retry').addEventListener('click', loadInt);
+		$('#int-list').addEventListener('click', onIntListClick);
+		$('#int-fields').innerHTML = intFieldsHtml('github', null);
+	}
+	if (intLoaded) renderIntList();
+	loadInt();
+}
+
+/* =======================================================================
    Router por hash + búsqueda contextual
    ======================================================================= */
 const VIEWS = {
@@ -7127,7 +7498,8 @@ const VIEWS = {
 		onSearch(q) { okrFilter = q; if (okrsLoaded) renderOkrs(); }
 	},
 	roadmap: { el: '#view-roadmap', cat: 'Estrategia', name: 'Roadmap', init: initRoadmap, search: null },
-	ia: { el: '#view-ia', cat: 'Integraciones', name: 'Conectar IA (MCP)', init: initIa, search: null }
+	ia: { el: '#view-ia', cat: 'Integraciones', name: 'Conectar IA (MCP)', init: initIa, search: null },
+	integraciones: { el: '#view-integraciones', cat: 'Integraciones', name: 'Herramientas conectadas', init: initIntegraciones, search: null }
 };
 
 const searchBox = $('#search-box');
