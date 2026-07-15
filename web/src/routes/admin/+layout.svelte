@@ -58,6 +58,23 @@
 		{ href: '/admin/resenas', label: t('admin.tabs.reviews') }
 	]);
 
+	// Identidad para el widget de perfil (avatar + nombre), consistente con el
+	// header de Startup OS y Teams. Nombre desde user_metadata; si no, el usuario
+	// del email. Las iniciales alimentan el avatar circular.
+	const displayName = $derived(
+		auth.session?.user?.user_metadata?.full_name?.trim() ||
+			auth.session?.user?.email?.split('@')[0] ||
+			'Cuenta'
+	);
+	const initials = $derived(
+		displayName
+			.split(/\s+/)
+			.slice(0, 2)
+			.map((w) => w[0] ?? '')
+			.join('')
+			.toUpperCase()
+	);
+
 	async function onLogin(event: SubmitEvent) {
 		event.preventDefault();
 		loginError = '';
@@ -263,8 +280,7 @@
 			</nav>
 			<div class="ml-auto flex items-center gap-3 text-[13px] text-sage">
 				<!-- Dentro de la app móvil, la barra inferior del shell reemplaza estos
-				     enlaces cruzados (data-shell-hide los oculta). Integraciones se
-				     conserva: es un deep-link a una vista, no un cambio de app. -->
+				     enlaces cruzados (data-shell-hide los oculta). -->
 				<a
 					href="/teams/"
 					data-shell-hide
@@ -273,21 +289,23 @@
 					{t('admin.teams')}
 				</a>
 				<a
-          href="/startup-os/#/integraciones"
-          class="inline-flex items-center rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink pointer-coarse:min-h-11"
-				>
-					{t('admin.integrations')}
-				</a>
-				<a
 					href="/startup-os/"
 					data-shell-hide
 					class="inline-flex items-center rounded-[8px] border border-line-strong px-3 py-1.5 text-[13px] font-medium text-moss transition-colors hover:border-ink hover:text-ink pointer-coarse:min-h-11"
 				>
 					{t('admin.startupOs')}
 				</a>
-				<span class="hidden sm:inline">{auth.session.user?.email}</span>
 				<LangToggle />
 				<ThemeToggle />
+				<span class="flex items-center gap-2" title={auth.session.user?.email}>
+					<span
+						class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-moss text-[12px] font-semibold text-bg"
+						aria-hidden="true">{initials}</span
+					>
+					<span class="hidden max-w-[140px] truncate text-[13px] font-medium text-ink sm:inline"
+						>{displayName}</span
+					>
+				</span>
 				<Button size="sm" variant="ghost" onclick={logout}>
 					<IconLogout class="text-[15px]" />
 					{t('admin.logout')}

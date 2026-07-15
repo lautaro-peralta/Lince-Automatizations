@@ -378,7 +378,6 @@ export const es = {
 		logout: 'Salir',
 		teams: 'Teams ↗',
 		startupOs: 'Startup OS ↗',
-		integrations: 'Integraciones ↗',
 		summary: {
 			title: 'Resumen',
 			subtitle: 'Una mirada rápida del estado del negocio.',
