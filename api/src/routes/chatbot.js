@@ -14,8 +14,16 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
+import { createRateLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
+
+// Los POST son públicos y escriben en la base: sin límite, cualquiera puede
+// crear sesiones/mensajes hasta llenar el tier gratuito de Supabase. Los topes
+// son holgados para una conversación real (cada turno inserta el mensaje del
+// visitante y el del bot) pero cortan el abuso masivo desde una misma IP.
+const sessionLimit = createRateLimiter({ max: 10, dayMax: 60 });
+const messageLimit = createRateLimiter({ max: 60, dayMax: 600 });
 
 // GET /api/chatbot/flows/:slug — público (el demo es público)
 router.get('/flows/:slug', async (req, res, next) => {
@@ -40,7 +48,7 @@ const sessionSchema = z.object({
   flow_id: z.string().uuid().optional(),
   flow_slug: z.string().max(120).optional(),
 });
-router.post('/sessions', async (req, res, next) => {
+router.post('/sessions', sessionLimit, async (req, res, next) => {
   try {
     const parsed = sessionSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -80,7 +88,7 @@ const messageSchema = z.object({
   state: z.record(z.any()).optional(),
   completed: z.boolean().optional(),
 });
-router.post('/sessions/:id/messages', async (req, res, next) => {
+router.post('/sessions/:id/messages', messageLimit, async (req, res, next) => {
   try {
     const parsed = messageSchema.safeParse(req.body);
     if (!parsed.success) {

@@ -12,10 +12,17 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { supabase } from '../db/supabase.js';
 import { requireAdmin } from '../middleware/auth.js';
+import { createRateLimiter } from '../middleware/rateLimit.js';
 import { LEAD_STATUSES } from '../constants.js';
 import { notifyNewLead } from '../lib/notify.js';
 
 const router = Router();
+
+// El POST es público y escribe en la base + dispara notificaciones: mismo
+// límite por IP que el formulario de prospectos (ráfaga + tope diario). Sin
+// esto, un bot que le pegue directo a la API (salteando el honeypot del
+// formulario) puede llenar la tabla y quemar la cuota de emails.
+const rateLimit = createRateLimiter({ max: 5, dayMax: 20 });
 
 // Validación del lead entrante. El backend NUNCA confía en el cliente.
 const leadSchema = z.object({
@@ -37,8 +44,8 @@ const updateSchema = z
     message: 'Nada para actualizar.',
   });
 
-// POST /api/leads — público
-router.post('/', async (req, res, next) => {
+// POST /api/leads — público (con rate limit por IP)
+router.post('/', rateLimit, async (req, res, next) => {
   try {
     const parsed = leadSchema.safeParse(req.body);
     if (!parsed.success) {

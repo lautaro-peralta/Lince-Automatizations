@@ -33,7 +33,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 		// preserva método, headers y el handshake del WebSocket.
 		const rest = pathname.replace(/^\/teams/, '') || '/';
 		const target = new URL(rest + search, teamsOrigin);
-		return fetch(new Request(target, event.request));
+		const upstream = await fetch(new Request(target, event.request));
+		// El 101 del WebSocket vuelve tal cual: envolverlo rompería el socket.
+		if (upstream.status === 101) return upstream;
+		// El servicio Python no manda cabeceras de seguridad; se agregan acá.
+		// Ojo: micrófono HABILITADO (self) — Teams lo usa para transcribir.
+		const proxied = new Response(upstream.body, upstream);
+		proxied.headers.set('X-Content-Type-Options', 'nosniff');
+		proxied.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+		proxied.headers.set('X-Frame-Options', 'SAMEORIGIN');
+		proxied.headers.set('Permissions-Policy', 'geolocation=(), microphone=(self), camera=()');
+		// Herramienta interna: no debe indexarse en buscadores.
+		proxied.headers.set('X-Robots-Tag', 'noindex');
+		return proxied;
 	}
 
 	// ── Resto: respuesta normal del panel/landing + cabeceras de seguridad ─────

@@ -28,7 +28,9 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content={t('meta.title')} />
 	<meta property="og:description" content={t('meta.ogDescription')} />
-	<meta property="og:image" content="/og-lince.jpg" />
+	<!-- URL absoluta: muchos scrapers (WhatsApp incluido) no resuelven rutas
+	     relativas en og:image y la preview saldría sin imagen. -->
+	<meta property="og:image" content="https://lince-automate.com.ar/og-lince.jpg" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
