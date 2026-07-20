@@ -40,6 +40,10 @@
 		class="wrap flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 text-[12.5px] text-sage"
 	>
 		<span>© {new Date().getFullYear()} Lince Automatizaciones · {t('footer.rights')}</span>
+		<span class="flex flex-wrap gap-4">
+			<a class="footer-link" href="/legal/privacidad">{t('footer.privacy')}</a>
+			<a class="footer-link" href="/legal/terminos">{t('footer.terms')}</a>
+		</span>
 		<span class="font-mono">{t('footer.location')}</span>
 	</div>
 </footer>

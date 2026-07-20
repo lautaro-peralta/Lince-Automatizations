@@ -237,7 +237,9 @@ export const es = {
 		contactLabel: 'Contacto',
 		hours: 'Respondemos en menos de 24 hs',
 		location: 'Rosario · Santa Fe · Argentina',
-		rights: 'Todos los derechos reservados.'
+		rights: 'Todos los derechos reservados.',
+		privacy: 'Política de privacidad',
+		terms: 'Términos y condiciones'
 	},
 
 	meta: {
@@ -263,6 +265,8 @@ export const es = {
 		phonePh: 'Número o WhatsApp',
 		submit: 'Contar mi caso',
 		submitting: 'Enviando…',
+		privacyPre: 'Al enviar el formulario aceptás nuestra',
+		privacyLink: 'política de privacidad',
 		invalid: 'Revisá los campos marcados, por favor.',
 		requireEmailOrPhone: 'Dejanos un email o un teléfono para poder responderte.',
 		sending: 'Enviando…',

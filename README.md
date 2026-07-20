@@ -49,6 +49,7 @@ te mandan a `/admin?next=…` y vuelven solas:
 | [`docs/MCP.md`](docs/MCP.md) | Servidor MCP: conectar Claude y otras IA al Startup OS |
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | Paso a paso Supabase + Render + Cloudflare Pages |
 | [`docs/COSTOS.md`](docs/COSTOS.md) | Evaluación de costos (planes gratis vs producción) |
+| [`docs/LEGAL.md`](docs/LEGAL.md) | Cuestiones legales del emprendimiento (impuestos, datos personales, contratos, marca) + modelos en [`docs/legal/`](docs/legal/) |
 
 ## Arrancar en local (resumen)
 

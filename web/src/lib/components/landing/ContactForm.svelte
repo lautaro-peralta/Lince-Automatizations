@@ -208,6 +208,15 @@
 		{loading ? t('form.submitting') : t('form.submit')}
 	</Button>
 
+	<!-- Deber de información de la Ley 25.326: la política queda a un clic
+	     del punto exacto donde se entregan los datos. -->
+	<p class="text-[12.5px] text-sage">
+		{t('form.privacyPre')}
+		<a class="underline transition-colors hover:text-rust" href="/legal/privacidad"
+			>{t('form.privacyLink')}</a
+		>.
+	</p>
+
 	<p
 		class="min-h-[20px] text-sm"
 		class:text-moss={feedback.kind === 'ok'}

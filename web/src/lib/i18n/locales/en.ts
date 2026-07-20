@@ -235,7 +235,9 @@ export const en: Dictionary = {
 		contactLabel: 'Contact',
 		hours: 'We reply within 24 hours',
 		location: 'Rosario · Santa Fe · Argentina',
-		rights: 'All rights reserved.'
+		rights: 'All rights reserved.',
+		privacy: 'Privacy policy',
+		terms: 'Terms & conditions'
 	},
 
 	meta: {
@@ -261,6 +263,8 @@ export const en: Dictionary = {
 		phonePh: 'Number or WhatsApp',
 		submit: 'Tell us about my case',
 		submitting: 'Sending…',
+		privacyPre: 'By submitting this form you accept our',
+		privacyLink: 'privacy policy',
 		invalid: 'Please review the highlighted fields.',
 		requireEmailOrPhone: 'Leave an email or a phone number so we can get back to you.',
 		sending: 'Sending…',
